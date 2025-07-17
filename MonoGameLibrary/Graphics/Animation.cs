@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+
+namespace MonoGameLibrary.Graphics;
+
+public class Animation
+{
+    /// <summary>
+    /// The texture regions that make up the frames of this animation. The order of the
+    /// regions within the collection is the display order of the frames.
+    /// </summary>
+    public List<TextureRegion> Frames { get; set; }
+
+    /// <summary>
+    /// The amount of time to delay between each frame before moving to the next.
+    /// </summary>
+    public TimeSpan Delay { get; set; }
+
+    public Animation()
+    {
+        Frames = new List<TextureRegion>();
+        Delay = TimeSpan.FromMilliseconds(100);
+    }
+
+    public Animation(List<TextureRegion> frames, TimeSpan delay)
+    {
+        Frames = frames;
+        Delay = delay;
+    }
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+    <Texture>images/things</Texture>
+    <Regions>
+        <Region name="torch-yellow-1" x="0" y="0" width="16" height="16" />
+        <Region name="torch-yellow-2" x="16" y="0" width="16" height="16" />
+        <Region name="torch-yellow-3" x="32" y="0" width="16" height="16" />
+        <Region name="lever-yellow" x="48" y="0" width="16" height="16" />
+        <Region name="torch-blue-1" x="0" y="16" width="16" height="16" />
+        <Region name="torch-blue-2" x="16" y="16" width="16" height="16" />
+        <Region name="torch-blue-3" x="32" y="16" width="16" height="16" />
+        <Region name="lever-blue" x="48" y="16" width="16" height="16" />
+        <Region name="torch-red-1" x="0" y="32" width="16" height="16" />
+        <Region name="torch-red-2" x="16" y="32" width="16" height="16" />
+        <Region name="torch-red-3" x="32" y="32" width="16" height="16" />
+        <Region name="lever-red" x="48" y="32" width="16" height="16" />
+        <Region name="torch-green-1" x="0" y="48" width="16" height="16" />
+        <Region name="torch-green-2" x="16" y="48" width="16" height="16" />
+        <Region name="torch-green-3" x="32" y="48" width="16" height="16" />
+        <Region name="lever-green" x="48" y="48" width="16" height="16" />
+        <Region name="road-segment" x="0" y="76" width="2" height="20" />
+        <Region name="grub-1" x="0" y="64" width="20" height="12" />
+        <Region name="grub-2" x="20" y="64" width="20" height="12" />
+    </Regions>
+    <Animations>
+        <Animation name="torch-yellow-animation" delay="200">
+            <Frame region="torch-yellow-1" />
+            <Frame region="torch-yellow-2" />
+            <Frame region="torch-yellow-3" />
+        </Animation>
+        <Animation name="torch-blue-animation" delay="200">
+            <Frame region="torch-blue-1" />
+            <Frame region="torch-blue-2" />
+            <Frame region="torch-blue-3" />
+        </Animation>
+        <Animation name="torch-red-animation" delay="200">
+            <Frame region="torch-red-1" />
+            <Frame region="torch-red-2" />
+            <Frame region="torch-red-3" />
+        </Animation>
+        <Animation name="torch-green-animation" delay="200">
+            <Frame region="torch-green-1" />
+            <Frame region="torch-green-2" />
+            <Frame region="torch-green-3" />
+        </Animation>
+        <Animation name="grub-animation" delay="200">
+            <Frame region="grub-1" />
+            <Frame region="grub-2" />
+        </Animation>
+    </Animations>
+</TextureAtlas>
