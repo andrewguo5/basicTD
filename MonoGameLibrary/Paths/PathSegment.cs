@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Reflection.Metadata;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary;
 
 namespace MonoGameLibrary.Paths;
 

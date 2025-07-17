@@ -1,4 +1,4 @@
-namespace MonoGameLibrary.MonoGameLibrary;
+namespace MonoGameLibrary;
 
 class Constants
 {
