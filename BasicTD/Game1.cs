@@ -17,13 +17,10 @@ public class Game1 : Core
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-
         base.Initialize();
 
         // Start with the Line Scene
-        // ChangeScene(new Scenes.LineScene());
-        ChangeScene(new Scenes.MultiArcScene());
+        ChangeScene(new Scenes.LineScene());
     }
 
     protected override void LoadContent()

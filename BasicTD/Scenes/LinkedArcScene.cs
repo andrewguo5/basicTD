@@ -69,7 +69,7 @@ public class LinkedArcScene : Scene
         TorchCreep = new Creep(Path, CreepSpeed, Torch);
 
         // Scene management
-        NextScene = new LineScene();
+        NextScene = new BasicMapScene();
     }
 
     public override void LoadContent()
