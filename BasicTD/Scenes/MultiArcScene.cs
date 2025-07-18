@@ -73,7 +73,7 @@ public class MultiArcScene : Scene
         }
 
         // Scene management
-        NextScene = new LineScene();
+        NextScene = new LinkedArcScene();
     }
 
     public override void LoadContent()
@@ -94,7 +94,7 @@ public class MultiArcScene : Scene
     public override void UnloadContent()
     {
         base.UnloadContent();
-        Core.SpriteBatch.Dispose();
+        
         WhitePixel.Dispose();
     }
 

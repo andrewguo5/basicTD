@@ -95,7 +95,7 @@ public class LineScene : Scene
     public override void UnloadContent()
     {
         base.UnloadContent();
-        Core.SpriteBatch.Dispose();
+        
         WhitePixel.Dispose();
     }
 
