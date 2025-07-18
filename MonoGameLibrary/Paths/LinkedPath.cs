@@ -15,7 +15,7 @@ namespace MonoGameLibrary.Paths
     /// </summary>
     public class LinkedPath : Path
     {
-        private List<Path> _paths;
+        public List<Path> Paths;
 
         /// Represents the starting point of the path.
         /// </summary>
@@ -23,22 +23,22 @@ namespace MonoGameLibrary.Paths
         {
             get
             {
-                if (_paths.Count == 0)
+                if (Paths.Count == 0)
                 {
                     return Vector2.Zero; // Default starting point if no paths are linked.
                 }
                 else
                 {
                     // The starting point is the starting point of the first path in the linked paths.
-                    return _paths[0].StartingPoint;
+                    return Paths[0].StartingPoint;
                 }
             }
             set
             {
-                if (_paths.Count > 0)
+                if (Paths.Count > 0)
                 {
                     // Set the starting point of the first path in the linked paths.
-                    _paths[0].StartingPoint = value;
+                    Paths[0].StartingPoint = value;
                 }
             }
         }
@@ -51,14 +51,14 @@ namespace MonoGameLibrary.Paths
         {
             get
             {
-                if (_paths.Count == 0)
+                if (Paths.Count == 0)
                 {
                     return StartingPoint;
                 }
                 else
                 {
                     // The ending point is the ending point of the last path in the linked paths.
-                    return _paths[_paths.Count - 1].EndingPoint;
+                    return Paths[Paths.Count - 1].EndingPoint;
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace MonoGameLibrary.Paths
             get
             {
                 List<Vector2> controlPoints = new List<Vector2>();
-                foreach (var path in _paths)
+                foreach (var path in Paths)
                 {
                     if (path.StartingPoint != this.StartingPoint)
                     {
@@ -93,7 +93,7 @@ namespace MonoGameLibrary.Paths
             get
             {
                 float totalLength = 0f;
-                foreach (var path in _paths)
+                foreach (var path in Paths)
                 {
                     totalLength += path.Length;
                 }
@@ -103,37 +103,37 @@ namespace MonoGameLibrary.Paths
 
         public LinkedPath()
         {
-            _paths = new List<Path>();
+            Paths = new List<Path>();
         }
 
         public LinkedPath(IEnumerable<Path> paths)
         {
-            _paths = new List<Path>(paths);
+            Paths = new List<Path>(paths);
         }
 
         public void AddPath(Path path)
         {
             if (path != null)
             {
-                _paths.Add(path);
+                Paths.Add(path);
             }
         }
 
         public void ClearPaths()
         {
-            _paths.Clear();
+            Paths.Clear();
         }
 
         public override Vector2 ComputePositionFromDistance(float distance)
         {
-            if (_paths.Count == 0)
+            if (Paths.Count == 0)
             {
                 return StartingPoint; // If no paths are linked, return the starting point.
             }
 
             float accumulatedDistance = 0f;
 
-            foreach (var path in _paths)
+            foreach (var path in Paths)
             {
                 float pathLength = path.Length;
                 if (accumulatedDistance + pathLength >= distance)
@@ -195,7 +195,7 @@ namespace MonoGameLibrary.Paths
 
         public override void Draw(SpriteBatch spriteBatch, Texture2D pixel)
         {
-            foreach (Path _path in _paths) {
+            foreach (Path _path in Paths) {
                 _path.Draw(spriteBatch, pixel);
             }
         }

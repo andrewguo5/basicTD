@@ -22,7 +22,8 @@ public class Game1 : Core
         base.Initialize();
 
         // Start with the Line Scene
-        ChangeScene(new Scenes.LineScene());
+        // ChangeScene(new Scenes.LineScene());
+        ChangeScene(new Scenes.MultiArcScene());
     }
 
     protected override void LoadContent()

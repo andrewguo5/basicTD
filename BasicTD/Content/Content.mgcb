@@ -43,3 +43,6 @@
 #begin paths/beginner-map.xml
 /copy:paths/beginner-map.xml
 
+#begin paths/multi-path.xml
+/copy:paths/multi-path.xml
+

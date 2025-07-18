@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinkedPath>
+    <Paths>
+        <Path type="ArcPath" startingPoint="90,120" centerPoint="170,120" arcAngle="90"/>
+        <Path type="ArcPath" startingPoint="500,40" centerPoint="500,120" arcAngle="90"/>
+        <Path type="ArcPath" startingPoint="830,200" centerPoint="830,120" arcAngle="90"/>
+        <Path type="ArcPath" startingPoint="1080,120" centerPoint="1160,120" arcAngle="-90"/>
+
+        <Path type="ArcPath" startingPoint="90,360" centerPoint="170,360" arcAngle="180"/>
+        <Path type="ArcPath" startingPoint="500,280" centerPoint="500,360" arcAngle="180"/>
+        <Path type="ArcPath" startingPoint="830,440" centerPoint="830,360" arcAngle="180"/>
+        <Path type="ArcPath" startingPoint="1080,360" centerPoint="1160,360" arcAngle="-180"/>
+
+        <Path type="ArcPath" startingPoint="90,600" centerPoint="170,600" arcAngle="270"/>
+        <Path type="ArcPath" startingPoint="500,520" centerPoint="500,600" arcAngle="270"/>
+        <Path type="ArcPath" startingPoint="830,680" centerPoint="830,600" arcAngle="270"/>
+        <Path type="ArcPath" startingPoint="1080,600" centerPoint="1160,600" arcAngle="-270"/>
+    </Paths>
+</LinkedPath>
