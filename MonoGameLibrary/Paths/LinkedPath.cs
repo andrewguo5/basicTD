@@ -3,22 +3,17 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using MonoGameLibrary.Graphics;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameLibrary.Paths
 {
-    /// <summary>
-    /// Represents a set of paths linked together.
-    /// This class can be used to create complex paths by linking multiple Path objects.
-    /// </summary>
     public class LinkedPath : Path
     {
         public List<Path> Paths;
 
-        /// Represents the starting point of the path.
-        /// </summary>
         public override Vector2 StartingPoint
         {
             get
@@ -29,7 +24,6 @@ namespace MonoGameLibrary.Paths
                 }
                 else
                 {
-                    // The starting point is the starting point of the first path in the linked paths.
                     return Paths[0].StartingPoint;
                 }
             }
@@ -37,16 +31,11 @@ namespace MonoGameLibrary.Paths
             {
                 if (Paths.Count > 0)
                 {
-                    // Set the starting point of the first path in the linked paths.
                     Paths[0].StartingPoint = value;
                 }
             }
         }
 
-        /// <summary>
-        /// The end point of the path is always computed based on 
-        /// the starting point and the path's parameters.
-        /// </summary>
         public override Vector2 EndingPoint
         {
             get
@@ -57,16 +46,11 @@ namespace MonoGameLibrary.Paths
                 }
                 else
                 {
-                    // The ending point is the ending point of the last path in the linked paths.
                     return Paths[Paths.Count - 1].EndingPoint;
                 }
             }
         }
 
-        /// <summary>
-        /// A list of relevant control points for the path, if any.
-        /// Useful for visualizing the path for debug purposes.
-        /// </summary>
         public override List<Vector2> ControlPoints
         {
             get
@@ -122,6 +106,14 @@ namespace MonoGameLibrary.Paths
         public void ClearPaths()
         {
             Paths.Clear();
+        }
+
+        public override void LoadSprites(TextureAtlas atlas)
+        {
+            foreach (var path in Paths)
+            {
+                path.LoadSprites(atlas);
+            }
         }
 
         public override Vector2 ComputePositionFromDistance(float distance)
@@ -195,7 +187,8 @@ namespace MonoGameLibrary.Paths
 
         public override void Draw(SpriteBatch spriteBatch, Texture2D pixel)
         {
-            foreach (Path _path in Paths) {
+            foreach (Path _path in Paths)
+            {
                 _path.Draw(spriteBatch, pixel);
             }
         }

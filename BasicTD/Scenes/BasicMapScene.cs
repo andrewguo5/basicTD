@@ -14,6 +14,7 @@ namespace BasicTD.Scenes;
 public class BasicMapScene : Scene
 {
     // Sprites
+    private TextureAtlas Atlas;
     private Sprite StartMarker;
     private Sprite EndMarker;
     private Sprite ControlPointMarker;
@@ -64,6 +65,7 @@ public class BasicMapScene : Scene
 
         // Load the path from the XML file
         Path = LinkedPath.FromFile(Core.Content, "paths/beginner-map.xml");
+        Path.LoadSprites(Atlas);
 
         // Create the creeps
         TorchCreep = new Creep(Path, CreepSpeed, Torch);
@@ -75,13 +77,13 @@ public class BasicMapScene : Scene
     public override void LoadContent()
     {
         // Create the texture atlas from the XML configuration file
-        TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+        Atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
 
         // Sprites for a starting point, an ending point, and a blue torch
-        StartMarker = atlas.CreateSprite("lever-blue");
-        EndMarker = atlas.CreateSprite("lever-red");
-        ControlPointMarker = atlas.CreateSprite("lever-yellow");
-        Torch = atlas.CreateAnimatedSprite("torch-blue-animation");
+        StartMarker = Atlas.CreateSprite("lever-blue");
+        EndMarker = Atlas.CreateSprite("lever-red");
+        ControlPointMarker = Atlas.CreateSprite("lever-yellow");
+        Torch = Atlas.CreateAnimatedSprite("torch-blue-animation");
 
         // Create a white pixel texture for debug drawing
         WhitePixel = new Texture2D(Core.GraphicsDevice, 1, 1);
@@ -114,6 +116,13 @@ public class BasicMapScene : Scene
     public override void Draw(GameTime gameTime)
     {
         Core.GraphicsDevice.Clear(Color.DarkSlateBlue);
+
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        foreach (var _path in Path.Paths)
+        {
+            _path.Draw(Core.SpriteBatch, WhitePixel);
+        }
+        Core.SpriteBatch.End();
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 

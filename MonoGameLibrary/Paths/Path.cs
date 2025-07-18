@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using MonoGameLibrary.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameLibrary.Paths
@@ -28,6 +29,8 @@ namespace MonoGameLibrary.Paths
         /// Returns the full length of the path.
         /// </summary>
         public abstract float Length { get; }
+
+        public abstract void LoadSprites(TextureAtlas atlas);
 
         /// <summary>
         /// Computes the position along the path given a distance from the starting point.

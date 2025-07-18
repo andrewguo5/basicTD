@@ -14,6 +14,7 @@ namespace BasicTD.Scenes;
 public class LineScene : Scene
 {
     // Sprites
+    private TextureAtlas Atlas;
     private Sprite StartMarker;
     private Sprite EndMarker;
     private AnimatedSprite Torch;
@@ -67,9 +68,11 @@ public class LineScene : Scene
         // Define the starting and ending positions
         StartingPosition = Coordinates.NormalizedToScreen(new Vector2(0.2f, 0.5f));
         EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.8f, 0.5f));
+        // EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.7f, 0.6f));
 
         // Create the path
         Path = new LinePath(StartingPosition, EndingPosition);
+        Path.LoadSprites(Atlas);
 
         // Create the creep
         TorchCreep = new Creep(Path, CreepSpeed, Torch);
@@ -81,16 +84,17 @@ public class LineScene : Scene
     public override void LoadContent()
     {
         // Create the texture atlas from the XML configuration file
-        TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+        Atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
 
         // Sprites for a starting point, an ending point, and a blue torch
-        StartMarker = atlas.CreateSprite("lever-blue");
-        EndMarker = atlas.CreateSprite("lever-red");
-        Torch = atlas.CreateAnimatedSprite("torch-blue-animation");
+        StartMarker = Atlas.CreateSprite("lever-blue");
+        EndMarker = Atlas.CreateSprite("lever-red");
+        Torch = Atlas.CreateAnimatedSprite("torch-blue-animation");
 
         // Create a white pixel texture for debug drawing
         WhitePixel = new Texture2D(Core.GraphicsDevice, 1, 1);
         WhitePixel.SetData(new[] { Color.White });
+
     }
     public override void UnloadContent()
     {
@@ -121,10 +125,14 @@ public class LineScene : Scene
         Core.GraphicsDevice.Clear(Color.DarkSlateBlue);
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Path.Draw(Core.SpriteBatch, WhitePixel);
+        Core.SpriteBatch.End();
 
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         StartMarker.Draw(Core.SpriteBatch, StartingPosition);
         EndMarker.Draw(Core.SpriteBatch, EndingPosition);
         TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
+
 
         Core.SpriteBatch.End();
     }

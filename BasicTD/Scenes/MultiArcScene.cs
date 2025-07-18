@@ -14,6 +14,7 @@ namespace BasicTD.Scenes;
 public class MultiArcScene : Scene
 {
     // Sprites
+    private TextureAtlas Atlas;
     private Sprite StartMarker;
     private Sprite EndMarker;
     private Sprite ControlPointMarker;
@@ -70,6 +71,7 @@ public class MultiArcScene : Scene
         foreach (var path in PathCollection.Paths)
         {
             TorchCreepList.Add(new Creep(path, CreepSpeed, Torch));
+            path.LoadSprites(Atlas);
         }
 
         // Scene management
@@ -79,13 +81,13 @@ public class MultiArcScene : Scene
     public override void LoadContent()
     {
         // Create the texture atlas from the XML configuration file
-        TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+        Atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
 
         // Sprites for a starting point, an ending point, and a blue torch
-        StartMarker = atlas.CreateSprite("lever-blue");
-        EndMarker = atlas.CreateSprite("lever-red");
-        ControlPointMarker = atlas.CreateSprite("lever-yellow");
-        Torch = atlas.CreateAnimatedSprite("torch-blue-animation");
+        StartMarker = Atlas.CreateSprite("lever-blue");
+        EndMarker = Atlas.CreateSprite("lever-red");
+        ControlPointMarker = Atlas.CreateSprite("lever-yellow");
+        Torch = Atlas.CreateAnimatedSprite("torch-blue-animation");
 
         // Create a white pixel texture for debug drawing
         WhitePixel = new Texture2D(Core.GraphicsDevice, 1, 1);
@@ -126,6 +128,8 @@ public class MultiArcScene : Scene
 
         foreach (var path in PathCollection.Paths)
         {
+            path.Draw(Core.SpriteBatch, WhitePixel);
+            
             Vector2 StartingPosition = path.StartingPoint;
             Vector2 EndingPosition = path.EndingPoint;
             List<Vector2> ControlPoints = path.ControlPoints;

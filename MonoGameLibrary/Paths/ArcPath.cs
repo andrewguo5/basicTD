@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Graphics;
 
 namespace MonoGameLibrary.Paths
 {
     public class ArcPath : Path
     {
+        private Sprite RoadSegment = null;
         public override Vector2 StartingPoint { get; set; }
 
         public override Vector2 EndingPoint
         {
             get
             {
-                // The ending point is calculated based on the center, radius, and arc angle.
                 float endAngle = InitialAngle + ArcAngle;
                 return AngleToPoint(endAngle);
             }
@@ -24,7 +25,6 @@ namespace MonoGameLibrary.Paths
         {
             get
             {
-                // For an arc, the control points are the starting point and center point.
                 return new List<Vector2> { CenterPoint };
             }
         }
@@ -32,24 +32,16 @@ namespace MonoGameLibrary.Paths
         {
             get
             {
-                // The length of the arc is given by the formula: radius * angle
                 return Radius * Math.Abs(ArcAngle);
             }
         }
 
-        /// <summary>
-        /// The center of the Circle which defines the arc.
-        /// </summary>
         private Vector2 CenterPoint { get; set; }
 
-        /// <summary>
-        /// Represents the Radius of the arc.
-        /// </summary>
         private float Radius
         {
             get
             {
-                // The radius is the distance from the center point to the starting point.
                 return Vector2.Distance(CenterPoint, StartingPoint);
             }
         }
@@ -58,15 +50,10 @@ namespace MonoGameLibrary.Paths
         {
             get
             {
-                // The initial angle is the angle from the center to the starting point.
                 return ComputeAngleFromVector(StartingPoint);
             }
         }
 
-        /// <summary>
-        /// Represents the angle of the arc in radians.
-        /// A full circle is 2 * Math.PI radians.
-        /// </summary>
         public float ArcAngle { get; set; }
 
         private float Direction
@@ -84,6 +71,14 @@ namespace MonoGameLibrary.Paths
             StartingPoint = startingPoint;
             CenterPoint = centerPoint;
             ArcAngle = arcAngle;
+        }
+
+        public override void LoadSprites(TextureAtlas atlas)
+        {
+            // Optional: Implement sprite loading if needed
+            RoadSegment = atlas.CreateSprite("road-segment");
+            RoadSegment.Origin = new Vector2(0f, RoadSegment.Height / 2f);
+            RoadSegment.Scale = new Vector2(MathHelper.TwoPi * Radius / 100f, 2f);
         }
 
         public override Vector2 ComputePositionFromDistance(float distance)
@@ -159,6 +154,11 @@ namespace MonoGameLibrary.Paths
 
         public override void Draw(SpriteBatch spriteBatch, Texture2D pixel)
         {
+            if (RoadSegment == null)
+            {
+                return;
+            }
+
             const int segments = 100;
             float step = Length / segments;
             Vector2 prevPoint = StartingPoint;
@@ -169,21 +169,9 @@ namespace MonoGameLibrary.Paths
                 Vector2 nextPoint = ComputePositionFromDistance(distance);
                 Vector2 direction = nextPoint - prevPoint;
                 float angle = (float)Math.Atan2(direction.Y, direction.X);
-                float length = direction.Length() + 2f;
-                float width = 20f;
-                Vector2 offsetStart = prevPoint;// + new Vector2(width * 0.5f, 0);
 
-                spriteBatch.Draw(
-                    pixel,
-                    offsetStart,
-                    null,
-                    Color.Wheat,
-                    angle,
-                    Vector2.Zero,
-                    new Vector2(length, width),
-                    SpriteEffects.None,
-                    0f
-                );
+                RoadSegment.Draw(
+                    spriteBatch, prevPoint, angle);
 
                 prevPoint = nextPoint;
             }
