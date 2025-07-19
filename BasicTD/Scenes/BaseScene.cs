@@ -12,21 +12,38 @@ namespace BasicTD.Scenes;
 
 public class BaseScene : Scene
 {
-    // Debug Mode
+    // Toggleable Modes
     protected bool DebugDraw = false;
-
-    // Pause Mode
     protected bool Paused = false;
-
-    // Grayscale Mode
     protected bool Grayed = false;
 
     // Scene Manager
     public Scene NextScene { get; set; }
 
+    // Effects
+    protected Effect Grayscale;
+    protected Effect CircleIndicator;
+
+    // Sprite Atlas
+    protected TextureAtlas Atlas;
+
     public BaseScene() : base()
     {
 
+    }
+
+    public override void LoadContent()
+    {
+        base.LoadContent();
+
+        // Create the texture atlas from the XML configuration file
+        Atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+
+        // Load the grayscale effect
+        Grayscale = Core.Content.Load<Effect>("effects/grayscaleEffect");
+
+        // Load the circle indicator effect
+        CircleIndicator = Core.Content.Load<Effect>("effects/circleIndicator");
     }
 
     public override void Update(GameTime gameTime)

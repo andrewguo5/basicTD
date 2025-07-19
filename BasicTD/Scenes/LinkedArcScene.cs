@@ -14,7 +14,6 @@ namespace BasicTD.Scenes;
 public class LinkedArcScene : BaseScene
 {
     // Sprites
-    private TextureAtlas Atlas;
     private Sprite StartMarker;
     private Sprite EndMarker;
     private Sprite ControlPointMarker;
@@ -71,8 +70,7 @@ public class LinkedArcScene : BaseScene
 
     public override void LoadContent()
     {
-        // Create the texture atlas from the XML configuration file
-        Atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+        base.LoadContent();
 
         // Sprites for a starting point, an ending point, and a blue torch
         StartMarker = Atlas.CreateSprite("lever-blue");
