@@ -116,7 +116,7 @@ public class LineScene : BaseScene
         Path.Draw(Core.SpriteBatch, WhitePixel);
         Core.SpriteBatch.End();
 
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
         StartMarker.Draw(Core.SpriteBatch, StartingPosition);
         EndMarker.Draw(Core.SpriteBatch, EndingPosition);
         TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);

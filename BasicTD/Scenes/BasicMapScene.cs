@@ -113,7 +113,7 @@ public class BasicMapScene : BaseScene
         }
         Core.SpriteBatch.End();
 
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
 
         Vector2 StartingPosition = Path.StartingPoint;
         Vector2 EndingPosition = Path.EndingPoint;

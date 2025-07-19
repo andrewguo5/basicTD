@@ -17,6 +17,9 @@ public class BaseScene : Scene
     protected bool Paused = false;
     protected bool Grayed = false;
 
+    // Grayscale Mode
+    protected float Saturation = 1f;
+
     // Scene Manager
     public Scene NextScene { get; set; }
 
@@ -64,6 +67,17 @@ public class BaseScene : Scene
         {
             Core.ChangeScene(NextScene);
         }
+
+        // Grayscale logic
+        if (Grayed)
+        {
+            Saturation = MathHelper.Clamp(Saturation - 0.03f, 0f, 1f);
+        }
+        else
+        {
+            Saturation = MathHelper.Clamp(Saturation + 0.03f, 0f, 1f);
+        }
+        Grayscale.Parameters["Saturation"].SetValue(Saturation);
     }
 
 }

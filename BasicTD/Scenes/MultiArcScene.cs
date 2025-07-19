@@ -113,7 +113,7 @@ public class MultiArcScene : BaseScene
     {
         Core.GraphicsDevice.Clear(Color.DarkSlateBlue);
 
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
 
         foreach (var path in PathCollection.Paths)
         {
