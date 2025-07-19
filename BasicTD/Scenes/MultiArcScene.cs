@@ -20,7 +20,6 @@ public class MultiArcScene : BaseScene
     private AnimatedSprite Torch;
     private List<Sprite> SpriteManager;
     private Vector2 SpriteScale = new Vector2(3f, 3f);
-    private Texture2D WhitePixel;
 
     // Path
     private LinkedPath PathCollection;
@@ -80,18 +79,7 @@ public class MultiArcScene : BaseScene
         EndMarker = Atlas.CreateSprite("lever-red");
         ControlPointMarker = Atlas.CreateSprite("lever-yellow");
         Torch = Atlas.CreateAnimatedSprite("torch-blue-animation");
-
-        // Create a white pixel texture for debug drawing
-        WhitePixel = new Texture2D(Core.GraphicsDevice, 1, 1);
-        WhitePixel.SetData(new[] { Color.White });
     }
-    public override void UnloadContent()
-    {
-        base.UnloadContent();
-        
-        WhitePixel.Dispose();
-    }
-
 
     public override void Update(GameTime gameTime)
     {
