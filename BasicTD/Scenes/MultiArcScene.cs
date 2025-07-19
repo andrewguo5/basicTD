@@ -11,7 +11,7 @@ using MonoGameLibrary.Paths;
 
 namespace BasicTD.Scenes;
 
-public class MultiArcScene : Scene
+public class MultiArcScene : BaseScene
 {
     // Sprites
     private TextureAtlas Atlas;
@@ -29,12 +29,6 @@ public class MultiArcScene : Scene
     // Creeps
     private List<Creep> TorchCreepList;
     private float CreepSpeed = 400f; // pixels per second
-
-    // Debug Mode
-    private bool DebugDraw = false;
-
-    // Scene Manager
-    public Scene NextScene { get; set; }
     
     public MultiArcScene() : base()
     {
@@ -103,21 +97,18 @@ public class MultiArcScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        // Common keyboard toggles (figure out a way to share this code)
-        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.D))
-        {
-            DebugDraw = !DebugDraw;
-        }
-        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
-        {
-            Core.ChangeScene(NextScene);
-        }
+       // A lot of common update logic in BaseScene class
+        base.Update(gameTime);
 
-        // Update the creeps
-        foreach (var TorchCreep in TorchCreepList)
+        if (!Paused)
         {
-            TorchCreep.Update(gameTime);
+            // Update the creeps
+            foreach (var TorchCreep in TorchCreepList)
+            {
+                TorchCreep.Update(gameTime);
+            }
         }
+        
     }
 
     public override void Draw(GameTime gameTime)
@@ -129,7 +120,7 @@ public class MultiArcScene : Scene
         foreach (var path in PathCollection.Paths)
         {
             path.Draw(Core.SpriteBatch, WhitePixel);
-            
+
             Vector2 StartingPosition = path.StartingPoint;
             Vector2 EndingPosition = path.EndingPoint;
             List<Vector2> ControlPoints = path.ControlPoints;

@@ -8,10 +8,11 @@ using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
 using System.Collections.Generic;
 using MonoGameLibrary.Paths;
+using System;
 
 namespace BasicTD.Scenes;
 
-public class BasicMapScene : Scene
+public class BasicMapScene : BaseScene
 {
     // Sprites
     private TextureAtlas Atlas;
@@ -29,12 +30,6 @@ public class BasicMapScene : Scene
     // Creeps
     private Creep TorchCreep;
     private float CreepSpeed = 400f; // pixels per second
-
-    // Debug Mode
-    private bool DebugDraw = false;
-
-    // Scene Manager
-    public Scene NextScene { get; set; }
     
     public BasicMapScene() : base()
     {
@@ -99,18 +94,14 @@ public class BasicMapScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        // Common keyboard toggles (figure out a way to share this code)
-        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.D))
-        {
-            DebugDraw = !DebugDraw;
-        }
-        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
-        {
-            Core.ChangeScene(NextScene);
-        }
+        // A lot of common update logic in BaseScene class
+        base.Update(gameTime);
 
-        // Update the creep
-        TorchCreep.Update(gameTime);
+        if (!Paused)
+        {
+            // Update the creep
+            TorchCreep.Update(gameTime);
+        }
     }
 
     public override void Draw(GameTime gameTime)
