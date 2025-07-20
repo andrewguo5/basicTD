@@ -177,8 +177,8 @@ public class MouseInfo
     public Vector2 GetNormalizedPosition(Point bounds, Point offset)
     {
         return new Vector2(
-            (float)(CurrentState.X - offset.X) / (bounds.X),
-            (float)(CurrentState.Y - offset.Y) / (bounds.Y)
+            (float)(CurrentState.X - offset.X) / bounds.X,
+            (float)(CurrentState.Y - offset.Y) / bounds.Y
         );
     }
 }   

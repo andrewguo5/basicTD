@@ -114,19 +114,23 @@ public class BaseScene : Scene
         Grayscale.Parameters["Saturation"].SetValue(Saturation);
     }
 
-    protected void DrawCircleIndicator()
+    protected void DrawCircleIndicator(float circleRadius = 0.2f)
     {
-        CircleIndicator.Parameters["circleRadius"].SetValue(0.2f);
-        CircleIndicator.Parameters["transparency"].SetValue(1f);
-        CircleIndicator.Parameters["mousePos"].SetValue(Core.Input.Mouse.GetNormalizedPosition(
+        CircleIndicator.Parameters["circleRadius"].SetValue(circleRadius);
+        Vector2 normalizedMousePos = Core.Input.Mouse.GetNormalizedPosition(
             new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
-        ));
-        CircleIndicator.Parameters["aspectRatio"].SetValue((float)MapBounds.Width / (float)MapBounds.Height);
+        );
+        CircleIndicator.Parameters["mousePos"].SetValue(normalizedMousePos);
+        // Casts are necessary here to avoid integer division
+        CircleIndicator.Parameters["aspectRatio"]?.SetValue((float)MapBounds.Width / (float)MapBounds.Height);
+
+        // Create a matrix to convert from screen coordinates to normalized device coordinates
+        Matrix view = Matrix.Identity;
+        Matrix projection = Matrix.CreateOrthographicOffCenter(0, MapBounds.Width, MapBounds.Height, 0, 0, 1);
+        CircleIndicator.Parameters["view_projection"].SetValue(view * projection);
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: CircleIndicator);
-        // Core.SpriteBatch.Draw(circleEffect.GetTechniqueByIndex(0).GetPassByIndex(0).GetVertexShader().GetShaderResource(0) as Texture2D, position - new Vector2(radius), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-        Core.SpriteBatch.Draw(WhitePixel, MapBounds, Color.Transparent);
-
+        Core.SpriteBatch.Draw(WhitePixel, MapBounds, new Color (0, 0, 0, 128));
         Core.SpriteBatch.End();
     }
 }

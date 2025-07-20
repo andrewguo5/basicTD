@@ -18,6 +18,7 @@ public class LinkedArcScene : BaseScene
     private Sprite EndMarker;
     private Sprite ControlPointMarker;
     private AnimatedSprite Torch;
+    private Sprite Tower;
     private List<Sprite> SpriteManager;
     private Vector2 SpriteScale = new Vector2(3f, 3f);
 
@@ -46,7 +47,8 @@ public class LinkedArcScene : BaseScene
             StartMarker,
             EndMarker,
             ControlPointMarker,
-            Torch
+            Torch,
+            Tower
         };
 
         // Scale and center the sprites
@@ -76,6 +78,7 @@ public class LinkedArcScene : BaseScene
         EndMarker = Atlas.CreateSprite("lever-red");
         ControlPointMarker = Atlas.CreateSprite("lever-yellow");
         Torch = Atlas.CreateAnimatedSprite("torch-blue-animation");
+        Tower = Atlas.CreateSprite("lever-green");
     }
 
     public override void Update(GameTime gameTime)
@@ -114,5 +117,16 @@ public class LinkedArcScene : BaseScene
         TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
         
         Core.SpriteBatch.End();
+
+        if (PlacingTower)
+        {
+            Tower.Color = new Color(0, 255, 0, 128); // Semi-transparent green
+            Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
+
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            Tower.Draw(Core.SpriteBatch, mousePos);
+            Core.SpriteBatch.End();
+            DrawCircleIndicator();
+        }
     }
 }

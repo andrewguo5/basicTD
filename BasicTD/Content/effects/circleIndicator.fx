@@ -11,8 +11,6 @@ Texture2D Texture;
 
 float2 mousePos;      // Mouse position in screen space (normalized: [0,1])
 float  circleRadius;  // Radius of the darkened circle (normalized: [0,1])
-float  transparency;      // Amount to darken inside the circle (0 = no darkening, 1 = full black)
-float4 shadeColor; // Color to shade the screen with (RGBA)
 float4x4 view_projection; // Matrix to transform vertex positions
 float aspectRatio; // Aspect ratio of the screen (width / height)
 
@@ -59,9 +57,9 @@ float4 PS_Main(PS_INPUT input) : SV_TARGET
 
     float4 color = tex2D(TextureSampler, uv) * input.Color;
 
-    if (dist >= circleRadius)
+    if (dist < circleRadius)
     {
-        color = float4(color.rgb, (1-transparency) * 255);
+        color = float4(color.rgb, 0);
     }
 
     return color;
