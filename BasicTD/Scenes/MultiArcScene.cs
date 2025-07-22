@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Creeps;
 using MonoGameLibrary.Coordinates;
+using MonoGameLibrary.Input;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
@@ -28,6 +29,9 @@ public class MultiArcScene : BaseScene
     // Creeps
     private List<Creep> TorchCreepList;
     private float CreepSpeed = 400f; // pixels per second
+
+    // Towers
+    private List<Vector2> Towers;
     
     public MultiArcScene() : base()
     {
@@ -68,8 +72,18 @@ public class MultiArcScene : BaseScene
             path.LoadSprites(Atlas);
         }
 
+        // Towers
+        Towers = new List<Vector2>();
+
         // Scene management
         NextScene = new LinkedArcScene();
+    }
+
+    public override void Reset()
+    {
+        // Initialize();
+        Towers = new List<Vector2>();
+        PlacingTower = false;
     }
 
     public override void LoadContent()
@@ -98,6 +112,12 @@ public class MultiArcScene : BaseScene
             }
         }
         
+        if (PlacingTower && Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left))
+        {
+            Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
+            Towers.Add(mousePos);
+            PlacingTower = false;
+        }
     }
 
     public override void Draw(GameTime gameTime)
@@ -128,16 +148,22 @@ public class MultiArcScene : BaseScene
         }
 
         Core.SpriteBatch.End();
-
+ 
         if (PlacingTower)
         {
-            Tower.Color = new Color(0, 255, 0, 128); // Semi-transparent green
             Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
 
             Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            Tower.Draw(Core.SpriteBatch, mousePos);
+            Tower.Draw(Core.SpriteBatch, mousePos, new Color(0, 255, 0, 128), 0f);
             Core.SpriteBatch.End();
             DrawCircleIndicator();
+        }
+        
+        foreach (var towerPosition in Towers)
+        {
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            Tower.Draw(Core.SpriteBatch, towerPosition);
+            Core.SpriteBatch.End();
         }
     }
 }
