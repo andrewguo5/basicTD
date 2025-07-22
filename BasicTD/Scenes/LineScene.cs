@@ -9,6 +9,7 @@ using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
 using System.Collections.Generic;
 using MonoGameLibrary.Paths;
+using MonoGameLibrary.Collision;
 
 namespace BasicTD.Scenes;
 
@@ -35,6 +36,7 @@ public class LineScene : BaseScene
 
     // Towers
     private List<Vector2> Towers;
+    private bool TowerPlacementValid;
 
     public LineScene() : base()
     {
@@ -111,11 +113,19 @@ public class LineScene : BaseScene
             TorchCreep.Update(gameTime);
         }
 
-        if (PlacingTower && Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left))
+        if (PlacingTower) 
         {
             Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
-            Towers.Add(mousePos);
-            PlacingTower = false;
+            Hitbox TowerBox = new Hitbox(
+                mousePos, (int)(Tower.Width * 0.5f)
+            );
+            TowerPlacementValid = !Path.HasCollided(TowerBox);
+            
+            if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
+            {
+                Towers.Add(mousePos);
+                PlacingTower = false;
+            }
         }
     }
 
@@ -139,7 +149,15 @@ public class LineScene : BaseScene
             Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
 
             Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            Tower.Draw(Core.SpriteBatch, mousePos, new Color(0, 255, 0, 128), 0f);
+
+            Color SemiTransparentGreen = new Color(0, 255, 0, 128);
+            Color SemiTransparentRed = new Color(255, 0, 0, 128);
+
+            if (TowerPlacementValid)
+                Tower.Draw(Core.SpriteBatch, mousePos, SemiTransparentGreen, 0f);
+            else
+                Tower.Draw(Core.SpriteBatch, mousePos, SemiTransparentRed, 0f);
+            
             Core.SpriteBatch.End();
             DrawCircleIndicator();
         }

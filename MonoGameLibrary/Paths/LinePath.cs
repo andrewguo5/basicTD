@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Collision;
 using MonoGameLibrary.Graphics;
 
 namespace MonoGameLibrary.Paths
@@ -35,6 +36,14 @@ namespace MonoGameLibrary.Paths
         private float _length { get; set; }
 
         public override float Length { get { return _length; } }
+        private bool IsAxisAligned
+        {
+            get
+            {
+                // Check if the path is axis-aligned (horizontal or vertical)
+                return Direction.X == 0 || Direction.Y == 0;
+            }
+        }
 
         public LinePath(Vector2 startingPoint, Vector2 endingPoint)
         {
@@ -105,6 +114,29 @@ namespace MonoGameLibrary.Paths
             }
 
             RoadSegment.Draw(spriteBatch, StartingPoint);
+        }
+
+
+        public override bool HasCollided(Hitbox hitbox)
+        {
+            if (!this.IsAxisAligned)
+            {
+                // TODO: Have to implement non-axis-aligned collision detection, which
+                // I don't know how to do.
+                return false;
+            }
+
+            // For axis-aligned paths, we can use bounding box collision, but this doesn't
+            // really work too well by the edges of the rectangle. 
+            // RoadSegment.Height x2
+            Rectangle pathRect = new Rectangle(
+                (int)StartingPoint.X,
+                (int)StartingPoint.Y - (int)(RoadSegment.Height / 2),
+                (int)Length,
+                (int)RoadSegment.Height
+            );
+
+            return hitbox.rectangleBox.Intersects(pathRect);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGameLibrary.Graphics;
+using MonoGameLibrary.Collision;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameLibrary.Paths
@@ -46,5 +47,7 @@ namespace MonoGameLibrary.Paths
         /// <param name="spriteBatch">The SpriteBatch used for drawing.</param>
         /// <param name="pixel">A 1x1 white pixel texture used for drawing lines.</param>
         public abstract void Draw(SpriteBatch spriteBatch, Texture2D pixel);
+
+        public virtual bool HasCollided(Hitbox hitbox) { return false; }
     }
 }
