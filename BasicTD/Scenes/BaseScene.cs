@@ -55,6 +55,8 @@ public class BaseScene : Scene
         );
     }
 
+    public virtual void Reset() { }
+
     public override void LoadContent()
     {
         base.LoadContent();
@@ -100,6 +102,12 @@ public class BaseScene : Scene
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
             Core.ChangeScene(NextScene);
+        }
+
+        // Reset scene
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.R))
+        {
+            Reset();
         }
 
         // Grayscale logic
