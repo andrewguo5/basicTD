@@ -1,12 +1,13 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using MonoGameLibrary.Graphics;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Collision;
+using MonoGameLibrary.Graphics;
 
 namespace MonoGameLibrary.Paths
 {
@@ -191,6 +192,18 @@ namespace MonoGameLibrary.Paths
             {
                 _path.Draw(spriteBatch, pixel);
             }
+        }
+
+        public override bool HasCollided(Hitbox hitbox)
+        {
+            foreach (Path _path in Paths)
+            {
+                if (_path.HasCollided(hitbox))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }   

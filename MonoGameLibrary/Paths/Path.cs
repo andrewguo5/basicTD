@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using MonoGameLibrary.Graphics;
-using MonoGameLibrary.Collision;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Collision;
+using MonoGameLibrary.Graphics;
 
 namespace MonoGameLibrary.Paths
 {

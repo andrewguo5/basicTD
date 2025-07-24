@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
+using MonoGameLibrary;
+using MonoGameLibrary.Collision;
 
 namespace MonoGameLibrary.Paths
 {
@@ -175,6 +177,43 @@ namespace MonoGameLibrary.Paths
 
                 prevPoint = nextPoint;
             }
+        }
+
+        public override bool HasCollided(Hitbox hitbox)
+        {
+            Circle innerCircle = new Circle(CenterPoint.ToPoint(), (int)(Radius - Constants.PathWidth * 1.5f));
+            Circle outerCircle = new Circle(CenterPoint.ToPoint(), (int)(Radius + Constants.PathWidth / 2));
+
+            bool circleCheck = outerCircle.Intersects(hitbox.circleBox) && !innerCircle.Intersects(hitbox.circleBox);
+
+            // Compute the angle from the center to the hitbox center
+            float hitboxAngle = ComputeAngleFromVector(hitbox.circleBox.Location.ToVector2());
+
+            // Normalize angles to [0, 2π)
+            float startAngle = InitialAngle;
+            float endAngle = InitialAngle + ArcAngle;
+
+            // Ensure startAngle < endAngle for comparison
+            if (ArcAngle < 0)
+            {
+                float temp = startAngle;
+                startAngle = endAngle;
+                endAngle = temp;
+            }
+
+            // Normalize hitboxAngle to [0, 2π)
+            hitboxAngle = MathHelper.WrapAngle(hitboxAngle);
+            startAngle = MathHelper.WrapAngle(startAngle);
+            endAngle = MathHelper.WrapAngle(endAngle);
+
+            // Check if hitboxAngle is within the arc
+            bool angleCheck;
+            if (startAngle <= endAngle)
+                angleCheck = hitboxAngle >= startAngle && hitboxAngle <= endAngle;
+            else
+                angleCheck = hitboxAngle >= startAngle || hitboxAngle <= endAngle;
+
+            return circleCheck && angleCheck;
         }
     }
 }

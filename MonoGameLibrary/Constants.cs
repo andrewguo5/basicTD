@@ -2,5 +2,5 @@ namespace MonoGameLibrary;
 
 class Constants
 {
-    public const int PathWidth = 20;
+    public const int PathWidth = 40;
 }
