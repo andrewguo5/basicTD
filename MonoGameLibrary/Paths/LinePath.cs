@@ -129,12 +129,25 @@ namespace MonoGameLibrary.Paths
             // For axis-aligned paths, we can use bounding box collision, but this doesn't
             // really work too well by the edges of the rectangle. 
             // RoadSegment.Height x2
-            Rectangle pathRect = new Rectangle(
-                (int)StartingPoint.X,
-                (int)StartingPoint.Y - (int)(RoadSegment.Height / 2),
-                (int)Length,
-                (int)RoadSegment.Height
-            );
+            Rectangle pathRect;
+            if (Direction.X != 0)
+            {
+                pathRect = new Rectangle(
+                    (int)StartingPoint.X,
+                    (int)StartingPoint.Y - (int)(RoadSegment.Height / 2),
+                    (int)Length,
+                    (int)RoadSegment.Height
+                );
+            }
+            else
+            {
+                pathRect = new Rectangle(
+                    (int)StartingPoint.X - (int)(RoadSegment.Height / 2),
+                    (int)StartingPoint.Y,
+                    (int)RoadSegment.Height,
+                    (int)Length
+                );
+            }
 
             return hitbox.rectangleBox.Intersects(pathRect);
         }
