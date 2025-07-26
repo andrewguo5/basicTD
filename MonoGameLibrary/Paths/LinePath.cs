@@ -120,10 +120,6 @@ namespace MonoGameLibrary.Paths
 
         public override bool HasCollided(Hitbox hitbox)
         {
-            // For axis-aligned paths, we can use bounding box collision, but this doesn't
-            // really work too well by the edges of the rectangle. 
-            // RoadSegment.Height x2
-            // Create a quadrilateral representing the path's area
             float halfHeight = Constants.PathWidth / 2f; // Half the width of the path
             Vector2 perp = new Vector2(-Direction.Y, Direction.X); // Perpendicular vector
             Vector2 offset = perp * halfHeight;
