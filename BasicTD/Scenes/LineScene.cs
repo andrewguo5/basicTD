@@ -68,8 +68,8 @@ public class LineScene : BaseScene
         // Define the starting and ending positions
         StartingPosition = Coordinates.NormalizedToScreen(new Vector2(0.2f, 0.5f));
         // EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.8f, 0.5f));
-        // EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.7f, 0.6f));
-        EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.2f, 0.8f));
+        EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.7f, 0.6f));
+        // EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.2f, 0.8f));
 
         // Create the path
         Path = new LinePath(StartingPosition, EndingPosition);

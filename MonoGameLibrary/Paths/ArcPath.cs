@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Geometry;
 using MonoGameLibrary.Graphics;
-using MonoGameLibrary;
 using MonoGameLibrary.Collision;
 
 namespace MonoGameLibrary.Paths

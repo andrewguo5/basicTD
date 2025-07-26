@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Collision;
 using MonoGameLibrary.Graphics;
+using MonoGameLibrary.Geometry;
 
 namespace MonoGameLibrary.Paths
 {
@@ -119,37 +120,22 @@ namespace MonoGameLibrary.Paths
 
         public override bool HasCollided(Hitbox hitbox)
         {
-            if (!this.IsAxisAligned)
-            {
-                // TODO: Have to implement non-axis-aligned collision detection, which
-                // I don't know how to do.
-                return false;
-            }
-
             // For axis-aligned paths, we can use bounding box collision, but this doesn't
             // really work too well by the edges of the rectangle. 
             // RoadSegment.Height x2
-            Rectangle pathRect;
-            if (Direction.X != 0)
-            {
-                pathRect = new Rectangle(
-                    (int)StartingPoint.X,
-                    (int)StartingPoint.Y - (int)(RoadSegment.Height / 2),
-                    (int)Length,
-                    (int)RoadSegment.Height
-                );
-            }
-            else
-            {
-                pathRect = new Rectangle(
-                    (int)StartingPoint.X - (int)(RoadSegment.Height / 2),
-                    (int)StartingPoint.Y,
-                    (int)RoadSegment.Height,
-                    (int)Length
-                );
-            }
+            // Create a quadrilateral representing the path's area
+            float halfHeight = Constants.PathWidth / 2f; // Half the width of the path
+            Vector2 perp = new Vector2(-Direction.Y, Direction.X); // Perpendicular vector
+            Vector2 offset = perp * halfHeight;
 
-            return hitbox.rectangleBox.Intersects(pathRect);
+            Vector2 p1 = StartingPoint + offset;
+            Vector2 p2 = StartingPoint - offset;
+            Vector2 p3 = EndingPoint - offset;
+            Vector2 p4 = EndingPoint + offset;
+
+            Quadrilateral pathQuad = new Quadrilateral(p1, p2, p3, p4);
+
+            return pathQuad.IntersectsCircle(hitbox.circleBox);
         }
     }
 }

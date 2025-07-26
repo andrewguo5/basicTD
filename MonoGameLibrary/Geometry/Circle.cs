@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace MonoGameLibrary;
+namespace MonoGameLibrary.Geometry;
 
 public readonly struct Circle : IEquatable<Circle>
 {
@@ -79,4 +79,37 @@ public readonly struct Circle : IEquatable<Circle>
     public static bool operator ==(Circle lhs, Circle rhs) => lhs.Equals(rhs);
 
     public static bool operator !=(Circle lhs, Circle rhs) => !lhs.Equals(rhs);
+
+
+    /// <summary>
+    /// Determines if this circle intersects with a given line segment.
+    /// </summary>
+    /// <param name="start">The start point of the line segment.</param>
+    /// <param name="end">The end point of the line segment.</param>
+    /// <returns>true if the circle intersects the line segment, otherwise false.</returns>
+    public bool IntersectsLineSegment(Vector2 p1, Vector2 p2)
+    {
+        Vector2 center = Location.ToVector2();
+        Vector2 d = p2 - p1;
+        Vector2 f = p1 - center;
+
+        float a = Vector2.Dot(d, d);
+        float b = 2 * Vector2.Dot(f, d);
+        float c = Vector2.Dot(f, f) - Radius * Radius;
+
+        float discriminant = b * b - 4 * a * c;
+        if (discriminant < 0)
+        {
+            // No intersection
+            return false;
+        }
+
+        discriminant = (float)Math.Sqrt(discriminant);
+
+        float t1 = (-b - discriminant) / (2 * a);
+        float t2 = (-b + discriminant) / (2 * a);
+
+        // Check if either intersection point is within the segment
+        return (t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1);
+    }
 }
