@@ -26,7 +26,7 @@ public class BasicMapScene : BaseScene
     private Vector2 SpriteScale = new Vector2(3f, 3f);
 
     // Path
-    private LinkedPath Path;
+    // private LinkedPath Path;
 
     // Creeps
     private Creep TorchCreep;
@@ -128,12 +128,7 @@ public class BasicMapScene : BaseScene
     {
         Core.GraphicsDevice.Clear(Color.DarkSlateBlue);
 
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        foreach (var _path in Path.Paths)
-        {
-            _path.Draw(Core.SpriteBatch, WhitePixel);
-        }
-        Core.SpriteBatch.End();
+        DrawPath(gameTime);
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
 
@@ -151,6 +146,13 @@ public class BasicMapScene : BaseScene
         TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
 
         Core.SpriteBatch.End();
+        
+        foreach (var towerPosition in Towers)
+        {
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            Tower.Draw(Core.SpriteBatch, towerPosition);
+            Core.SpriteBatch.End();
+        }
 
         if (PlacingTower)
         {
@@ -170,11 +172,5 @@ public class BasicMapScene : BaseScene
             DrawCircleIndicator();
         }
         
-        foreach (var towerPosition in Towers)
-        {
-            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            Tower.Draw(Core.SpriteBatch, towerPosition);
-            Core.SpriteBatch.End();
-        }
     }
 }

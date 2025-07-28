@@ -3,16 +3,21 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 
 namespace BasicTD.Towers;
-public abstract class BaseTower
+public abstract class Tower
 {
     public Vector2 Position { get; set; }
     public Sprite Sprite { get; set; }
     protected abstract string SpriteName { get; }
+    public abstract int TowerId { get; }
+    public abstract float Range { get; } // in units? m
+    public abstract int Damage { get; } // Let's just have int damage
+    public abstract float AttackSpeed { get; } // in hertz
 
-    public BaseTower(Vector2 position, TextureAtlas atlas)
+
+    public Tower(Vector2 position, Sprite sprite)
     {
         Position = position;
-        Sprite = atlas.CreateSprite(SpriteName);
+        Sprite = sprite;
     }
 
     public void Update(GameTime gameTime)

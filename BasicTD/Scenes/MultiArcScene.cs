@@ -168,6 +168,13 @@ public class MultiArcScene : BaseScene
         }
 
         Core.SpriteBatch.End();
+        
+        foreach (var towerPosition in Towers)
+        {
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            Tower.Draw(Core.SpriteBatch, towerPosition);
+            Core.SpriteBatch.End();
+        }
  
         if (PlacingTower)
         {
@@ -185,13 +192,6 @@ public class MultiArcScene : BaseScene
             
             Core.SpriteBatch.End();
             DrawCircleIndicator();
-        }
-        
-        foreach (var towerPosition in Towers)
-        {
-            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            Tower.Draw(Core.SpriteBatch, towerPosition);
-            Core.SpriteBatch.End();
         }
     }
 }

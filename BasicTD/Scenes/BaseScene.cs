@@ -1,19 +1,19 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGameLibrary.Creeps;
-using MonoGameLibrary.Coordinates;
 using MonoGameLibrary.Graphics;
+using MonoGameLibrary.Paths;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
-using System.Collections.Generic;
-using MonoGameLibrary.Paths;
 namespace BasicTD.Scenes;
 
 public class BaseScene : Scene
 {
     // Map Bounds
     public Rectangle MapBounds { get; set; }
+
+    // Path
+    public Path Path { get; set; }
 
     // Toggleable Modes
     protected bool DebugDraw = false;
@@ -138,7 +138,15 @@ public class BaseScene : Scene
         CircleIndicator.Parameters["view_projection"].SetValue(view * projection);
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: CircleIndicator);
-        Core.SpriteBatch.Draw(WhitePixel, MapBounds, new Color (0, 0, 0, 128));
+        Core.SpriteBatch.Draw(WhitePixel, MapBounds, new Color(0, 0, 0, 128));
         Core.SpriteBatch.End();
     }
+    
+    protected void DrawPath(GameTime gameTime)
+    {
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Path.Draw(Core.SpriteBatch, WhitePixel);
+        Core.SpriteBatch.End();
+    }
+
 }

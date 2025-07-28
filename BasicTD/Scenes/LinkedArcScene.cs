@@ -24,7 +24,7 @@ public class LinkedArcScene : BaseScene
     private Vector2 SpriteScale = new Vector2(3f, 3f);
 
     // Path
-    private LinkedPath Path;
+    // private LinkedPath Path;
 
     // Creeps
     private Creep TorchCreep;
@@ -126,9 +126,7 @@ public class LinkedArcScene : BaseScene
     {
         Core.GraphicsDevice.Clear(Color.DarkSlateBlue);
 
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        Path.Draw(Core.SpriteBatch, WhitePixel);
-        Core.SpriteBatch.End();
+        DrawPath(gameTime);
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
 
@@ -147,6 +145,13 @@ public class LinkedArcScene : BaseScene
         
         Core.SpriteBatch.End();
 
+        foreach (var towerPosition in Towers)
+        {
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            Tower.Draw(Core.SpriteBatch, towerPosition);
+            Core.SpriteBatch.End();
+        }
+        
         if (PlacingTower)
         {
             Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
@@ -160,16 +165,9 @@ public class LinkedArcScene : BaseScene
                 Tower.Draw(Core.SpriteBatch, mousePos, SemiTransparentGreen, 0f);
             else
                 Tower.Draw(Core.SpriteBatch, mousePos, SemiTransparentRed, 0f);
-            
+
             Core.SpriteBatch.End();
             DrawCircleIndicator();
-        }
-
-        foreach (var towerPosition in Towers)
-        {
-            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            Tower.Draw(Core.SpriteBatch, towerPosition);
-            Core.SpriteBatch.End();
         }
     }
 }
