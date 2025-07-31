@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary.Graphics;
+using System;
 
 namespace MonoGameLibrary.Creeps
 {
@@ -13,13 +14,17 @@ namespace MonoGameLibrary.Creeps
 
         private float CurrentDistance;
 
-        private Vector2 CurrentPosition;
+        public Vector2 CurrentPosition;
 
         private float RemainingDistance => Path.Length - CurrentDistance;
 
         private float Speed;
 
         private AnimatedSprite AnimatedSprite;
+
+        // State to indicate that this creep is within a tower's range
+        private bool TakingDamage = false;
+        private float DamageRecency = 0.0f;
 
         public Creep(Path path, float speed, AnimatedSprite animatedSprite)
         {
@@ -28,6 +33,14 @@ namespace MonoGameLibrary.Creeps
             CurrentDistance = 0.0f;
             Speed = speed;
             AnimatedSprite = animatedSprite;
+        }
+
+        public void TakeDamage(float damage)
+        {
+            // Implement damage logic here
+            // For example, reduce health or trigger death if health reaches zero
+            TakingDamage = true;
+            DamageRecency = 1.0f; // Reset the damage recency timer
         }
 
         public void Update(GameTime gameTime)
@@ -55,12 +68,19 @@ namespace MonoGameLibrary.Creeps
                 CurrentPosition = Path.ComputePositionFromDistance(newDistance);
                 CurrentDistance = newDistance;
             }
+
+            // Reduce damage recency timer
+            DamageRecency = Math.Max(0.0f, DamageRecency - 4f * seconds);
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D whitePixel, bool debug)
         {
             // Draw the pulse at the current position
-            AnimatedSprite.Draw(spriteBatch, CurrentPosition);
+            // Lerp between red and white based on DamageRecency (1 = recent damage, 0 = no recent damage)
+            Color color = Color.Lerp(Color.White, Color.Red, DamageRecency);
+            AnimatedSprite.Draw(spriteBatch, CurrentPosition, color);
+            // color = TakingDamage ? Color.Red : Color.White;
+            // AnimatedSprite.Draw(spriteBatch, CurrentPosition, color);
 
             if (debug)
             {

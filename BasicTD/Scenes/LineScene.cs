@@ -13,30 +13,11 @@ using MonoGameLibrary.Collision;
 
 namespace BasicTD.Scenes;
 
-public class LineScene : BaseScene
+public class LineScene : BattleScene
 {
-    // Sprites
-    private Sprite StartMarker;
-    private Sprite EndMarker;
-    private AnimatedSprite Torch;
-    private Sprite TowerSprite;
-    private List<Sprite> SpriteManager;
-    private Vector2 SpriteScale = new Vector2(3f, 3f);
-
     // Parameters
     private Vector2 StartingPosition { get; set; }
     private Vector2 EndingPosition { get; set; }
-
-    // Path
-    // private LinePath Path;
-
-    // Creeps
-    private Creep TorchCreep;
-    private float CreepSpeed = 400f; // pixels per second
-
-    // Towers
-    private List<Tower> Towers;
-    private bool TowerPlacementValid;
 
     public LineScene() : base()
     {
@@ -49,58 +30,26 @@ public class LineScene : BaseScene
         base.Initialize();
         // NOTE: Content has been loaded after this line
 
-        // Collect all of the sprites into a list for easy management
-        SpriteManager = new List<Sprite>()
-        {
-            StartMarker,
-            EndMarker,
-            Torch,
-            TowerSprite,
-        };
+        // Scene management
+        NextScene = new MultiArcScene();
+    }
 
-        // Scale and center the sprites
-        foreach (var sprite in SpriteManager)
-        {
-            sprite.CenterOrigin();
-            sprite.Scale = SpriteScale;
-        }
-
+    public override void InitializePath()
+    {
         // Define the starting and ending positions
         StartingPosition = Coordinates.NormalizedToScreen(new Vector2(0.2f, 0.5f));
-        // EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.8f, 0.5f));
-        EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.7f, 0.6f));
+        EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.8f, 0.5f));
+        // EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.7f, 0.6f));
         // EndingPosition = Coordinates.NormalizedToScreen(new Vector2(0.2f, 0.8f));
 
         // Create the path
         Path = new LinePath(StartingPosition, EndingPosition);
         Path.LoadSprites(Atlas);
-
-        // Create the creep
-        TorchCreep = new Creep(Path, CreepSpeed, Torch);
-
-        // Initialize the towers list
-        Towers = new List<Tower>();
-
-        // Scene management
-        NextScene = new MultiArcScene();
-    }
-
-    public override void Reset()
-    {
-        // Initialize();
-        Towers = new List<Tower>();
-        PlacingTower = false;
     }
 
     public override void LoadContent()
     {
         base.LoadContent();
-
-        // Sprites for a starting point, an ending point, and a blue torch
-        StartMarker = Atlas.CreateSprite("lever-blue");
-        EndMarker = Atlas.CreateSprite("lever-red");
-        Torch = Atlas.CreateAnimatedSprite("torch-blue-animation");
-        TowerSprite = Atlas.CreateSprite("lever-green");
     }
 
     public override void Update(GameTime gameTime)
@@ -108,26 +57,9 @@ public class LineScene : BaseScene
         // A lot of common update logic in BaseScene class
         base.Update(gameTime);
 
-        if (!Paused)
-        {
-            // Update the creep
-            TorchCreep.Update(gameTime);
-        }
-
-        if (PlacingTower)
-        {
-            Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
-            Hitbox TowerBox = new Hitbox(
-                mousePos, (int)(TowerSprite.Width * 0.5f)
-            );
-            TowerPlacementValid = !Path.HasCollided(TowerBox);
-
-            if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
-            {
-                Towers.Add(new TestTower(mousePos, TowerSprite));
-                PlacingTower = false;
-            }
-        }
+        UpdateCreep(gameTime);
+        UpdatePlacingTower(gameTime);
+        UpdateTowers(gameTime);
     }
 
     public override void Draw(GameTime gameTime)
@@ -140,13 +72,6 @@ public class LineScene : BaseScene
         DrawPlacingTower(gameTime);
     }
 
-    // public void DrawPath(GameTime gameTime)
-    // {
-    //     Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-    //     Path.Draw(Core.SpriteBatch, WhitePixel);
-    //     Core.SpriteBatch.End();
-    // }
-
     public void DrawMarkers(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
@@ -154,37 +79,5 @@ public class LineScene : BaseScene
         EndMarker.Draw(Core.SpriteBatch, EndingPosition);
         TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
         Core.SpriteBatch.End();
-    }
-
-    public void DrawPlacedTowers(GameTime gameTime)
-    {
-        foreach (var tower in Towers)
-        {
-            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            tower.Draw(Core.SpriteBatch);
-            Core.SpriteBatch.End();
-        }
-
-    }
-
-    public void DrawPlacingTower(GameTime gameTime)
-    {
-        if (PlacingTower)
-        {
-            Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
-
-            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-            Color SemiTransparentGreen = new Color(0, 255, 0, 128);
-            Color SemiTransparentRed = new Color(255, 0, 0, 128);
-
-            if (TowerPlacementValid)
-                TowerSprite.Draw(Core.SpriteBatch, mousePos, SemiTransparentGreen, 0f);
-            else
-                TowerSprite.Draw(Core.SpriteBatch, mousePos, SemiTransparentRed, 0f);
-
-            Core.SpriteBatch.End();
-            DrawCircleIndicator();
-        }
     }
 }

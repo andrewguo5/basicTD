@@ -112,6 +112,11 @@ public class Sprite
         Region.Draw(spriteBatch, position, Color, rotation, Origin, Scale, Effects, LayerDepth);
     }
 
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+    {
+        Region.Draw(spriteBatch, position, color, Rotation, Origin, Scale, Effects, LayerDepth);
+    }
+
     public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation)
     {
         Region.Draw(spriteBatch, position, color, rotation, Origin, Scale, Effects, LayerDepth);

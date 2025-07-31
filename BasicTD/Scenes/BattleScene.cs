@@ -5,15 +5,43 @@ using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Paths;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
+using BasicTD.Towers;
+using MonoGameLibrary.Creeps;
+using MonoGameLibrary.Coordinates;
+using MonoGameLibrary.Input;
+using System.Collections.Generic;
+
+using MonoGameLibrary.Collision;
+using System.Xml.Serialization;
+
 namespace BasicTD.Scenes;
 
-public class BaseScene : Scene
+public abstract class BattleScene : Scene
 {
     // Map Bounds
     public Rectangle MapBounds { get; set; }
 
+    // Common Sprites
+    protected Sprite StartMarker;
+    protected Sprite EndMarker;
+    protected Sprite ControlPointMarker;
+
+    protected AnimatedSprite TorchSprite;
+    protected Sprite TowerSprite;
+    protected List<Sprite> SpriteManager;
+    protected Vector2 SpriteScale = new Vector2(3f, 3f);
+
     // Path
     public Path Path { get; set; }
+
+    // Creeps
+    protected Creep TorchCreep;
+    protected float CreepSpeed = 250f; // pixels per second
+    protected List<Creep> CreepList;
+
+    // Towers
+    protected List<Tower> Towers;
+    protected bool TowerPlacementValid;
 
     // Toggleable Modes
     protected bool DebugDraw = false;
@@ -35,7 +63,7 @@ public class BaseScene : Scene
     protected TextureAtlas Atlas;
     protected Texture2D WhitePixel;
 
-    public BaseScene() : base()
+    public BattleScene() : base()
     {
 
     }
@@ -53,9 +81,43 @@ public class BaseScene : Scene
             Core.GraphicsDevice.PresentationParameters.BackBufferWidth,
             Core.GraphicsDevice.PresentationParameters.BackBufferHeight
         );
+
+        // Collect all of the sprites into a list for easy management
+        SpriteManager = new List<Sprite>()
+        {
+            StartMarker,
+            EndMarker,
+            ControlPointMarker,
+            TorchSprite,
+            TowerSprite,
+        };
+
+        // Scale and center the sprites
+        foreach (var sprite in SpriteManager)
+        {
+            sprite.CenterOrigin();
+            sprite.Scale = SpriteScale;
+        }
+
+        // Delegate to child class to initialize the path
+        InitializePath();
+
+        // Create the creeps
+        TorchCreep = new Creep(Path, CreepSpeed, TorchSprite);
+        CreepList = new List<Creep> { TorchCreep };
+
+        // Initialize the towers list
+        Towers = new List<Tower>();
     }
 
-    public virtual void Reset() { }
+    public abstract void InitializePath();
+
+    public virtual void Reset()
+    {
+        // Clear the placed towers list
+        Towers = new List<Tower>();
+        PlacingTower = false;
+    }
 
     public override void LoadContent()
     {
@@ -73,6 +135,13 @@ public class BaseScene : Scene
         // Create a white pixel texture for debug drawing
         WhitePixel = new Texture2D(Core.GraphicsDevice, 1, 1);
         WhitePixel.SetData(new[] { Color.White });
+
+        // Load common sprites
+        StartMarker = Atlas.CreateSprite("lever-blue");
+        EndMarker = Atlas.CreateSprite("lever-red");
+        ControlPointMarker = Atlas.CreateSprite("lever-yellow");
+        TorchSprite = Atlas.CreateAnimatedSprite("torch-blue-animation");
+        TowerSprite = Atlas.CreateSprite("lever-green");
     }
     public override void UnloadContent()
     {
@@ -122,7 +191,49 @@ public class BaseScene : Scene
         Grayscale.Parameters["Saturation"].SetValue(Saturation);
     }
 
-    protected void DrawCircleIndicator(float circleRadius = 0.2f)
+    public void UpdateCreep(GameTime gameTime)
+    {
+        if (!Paused)
+        {
+            // Update the creep
+            TorchCreep.Update(gameTime);
+        }
+    }
+
+    public void UpdatePlacingTower(GameTime gameTime)
+    {
+        if (PlacingTower)
+        {
+            Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
+            Hitbox TowerBox = new Hitbox(
+                mousePos, (int)(TowerSprite.Width * 0.5f)
+            );
+            TowerPlacementValid = !Path.HasCollided(TowerBox);
+
+            if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
+            {
+                Towers.Add(new TestTower(mousePos, TowerSprite));
+                PlacingTower = false;
+            }
+        }
+    }
+
+    public void UpdateTowers(GameTime gameTime)
+    {
+        foreach (var tower in Towers)
+        {
+            tower.Update(gameTime);
+            List<Creep> creepsInRange = tower.CreepsInRange(CreepList);
+            foreach (var creep in creepsInRange)
+            {
+                {
+                    tower.Attack(creep);
+                }
+            }
+        }
+    }
+
+    public void DrawCircleIndicator(float circleRadius = 0.2f)
     {
         CircleIndicator.Parameters["circleRadius"].SetValue(circleRadius);
         Vector2 normalizedMousePos = Core.Input.Mouse.GetNormalizedPosition(
@@ -142,11 +253,41 @@ public class BaseScene : Scene
         Core.SpriteBatch.End();
     }
     
-    protected void DrawPath(GameTime gameTime)
+    public void DrawPath(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         Path.Draw(Core.SpriteBatch, WhitePixel);
         Core.SpriteBatch.End();
     }
 
+    public void DrawPlacedTowers(GameTime gameTime)
+    {
+        foreach (var tower in Towers)
+        {
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            tower.Draw(Core.SpriteBatch);
+            Core.SpriteBatch.End();
+        }
+    }
+
+    public void DrawPlacingTower(GameTime gameTime)
+    {
+        if (PlacingTower)
+        {
+            Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
+
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+            Color SemiTransparentGreen = new Color(0, 255, 0, 128);
+            Color SemiTransparentRed = new Color(255, 0, 0, 128);
+
+            if (TowerPlacementValid)
+                TowerSprite.Draw(Core.SpriteBatch, mousePos, SemiTransparentGreen, 0f);
+            else
+                TowerSprite.Draw(Core.SpriteBatch, mousePos, SemiTransparentRed, 0f);
+
+            Core.SpriteBatch.End();
+            DrawCircleIndicator();
+        }
+    }
 }
