@@ -70,6 +70,7 @@ public class LineScene : BattleScene
         DrawMarkers(gameTime);
         DrawPlacedTowers(gameTime);
         DrawPlacingTower(gameTime);
+        DrawSelectedTower(gameTime);
     }
 
     public void DrawMarkers(GameTime gameTime)

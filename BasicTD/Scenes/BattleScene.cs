@@ -42,12 +42,14 @@ public abstract class BattleScene : Scene
     // Towers
     protected List<Tower> Towers;
     protected bool TowerPlacementValid;
+    protected Tower SelectedTower;
 
     // Toggleable Modes
     protected bool DebugDraw = false;
     protected bool Paused = false;
     protected bool Grayed = false;
     protected bool PlacingTower = false;
+    protected bool SelectingTower = false;
 
     // Grayscale Mode
     protected float Saturation = 1f;
@@ -167,6 +169,22 @@ public abstract class BattleScene : Scene
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Q))
             PlacingTower = !PlacingTower;
 
+        if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left))
+        {
+            Tower selectedTower = SelectTower(gameTime);
+            if (selectedTower != null)
+                SelectingTower = true;
+            else
+                SelectingTower = false;
+        }
+
+        // Escape from tower placement and tower selection
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Escape))
+        {
+            PlacingTower = false;
+            SelectingTower = false;
+        }
+
         // Scene transition
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
@@ -191,6 +209,21 @@ public abstract class BattleScene : Scene
         Grayscale.Parameters["Saturation"].SetValue(Saturation);
     }
 
+    public Tower SelectTower(GameTime gameTime)
+    {
+        // Check collision between current mouse position and each placed tower
+        Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
+        foreach (Tower tower in Towers)
+        {
+            if (tower.MouseCollision(mousePos))
+            {
+                SelectedTower = tower;
+                return tower;
+            }
+        }
+        return null;
+    }
+
     public void UpdateCreep(GameTime gameTime)
     {
         if (!Paused)
@@ -209,6 +242,17 @@ public abstract class BattleScene : Scene
                 mousePos, (int)(TowerSprite.Width * 0.5f)
             );
             TowerPlacementValid = !Path.HasCollided(TowerBox);
+            if (TowerPlacementValid)
+            {
+                foreach (Tower tower in Towers)
+                {
+                    if (tower.HasCollided(TowerBox))
+                    {
+                        TowerPlacementValid = false;
+                        break;
+                    }
+                }
+            }
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
@@ -233,11 +277,23 @@ public abstract class BattleScene : Scene
         }
     }
 
-    public void DrawCircleIndicator(float circleRadius = 0.2f)
+    public Vector2 NormalizePosition(Vector2 location, Point bounds, Point offset)
     {
+        return new Vector2(
+            (float)(location.X - offset.X) / bounds.X,
+            (float)(location.Y - offset.Y) / bounds.Y
+        );
+    }
+
+    public void DrawCircleIndicator(Vector2 location, float circleRadiusPx = 200f)
+    {
+        float circleRadius = circleRadiusPx / MapBounds.Height;
         CircleIndicator.Parameters["circleRadius"].SetValue(circleRadius);
-        Vector2 normalizedMousePos = Core.Input.Mouse.GetNormalizedPosition(
-            new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
+        // Vector2 normalizedMousePos = Core.Input.Mouse.GetNormalizedPosition(
+        //     new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
+        // );
+        Vector2 normalizedMousePos = NormalizePosition(
+            location, new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
         );
         CircleIndicator.Parameters["mousePos"].SetValue(normalizedMousePos);
         // Casts are necessary here to avoid integer division
@@ -246,13 +302,18 @@ public abstract class BattleScene : Scene
         // Create a matrix to convert from screen coordinates to normalized device coordinates
         Matrix view = Matrix.Identity;
         Matrix projection = Matrix.CreateOrthographicOffCenter(0, MapBounds.Width, MapBounds.Height, 0, 0, 1);
-        CircleIndicator.Parameters["view_projection"].SetValue(view * projection);
+        CircleIndicator.Parameters["view_projection"]?.SetValue(view * projection);
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: CircleIndicator);
         Core.SpriteBatch.Draw(WhitePixel, MapBounds, new Color(0, 0, 0, 128));
         Core.SpriteBatch.End();
     }
-    
+
+    public void DrawCircleIndicator(float circleRadiusPx = 200f)
+    {
+        DrawCircleIndicator(Core.Input.Mouse.Position.ToVector2());
+    }
+
     public void DrawPath(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -264,8 +325,13 @@ public abstract class BattleScene : Scene
     {
         foreach (var tower in Towers)
         {
+            Color drawColor;
+            if (SelectingTower && tower == SelectedTower)
+                drawColor = Color.Cyan;
+            else
+                drawColor = Color.White;
             Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            tower.Draw(Core.SpriteBatch);
+            tower.Draw(Core.SpriteBatch, drawColor);
             Core.SpriteBatch.End();
         }
     }
@@ -288,6 +354,33 @@ public abstract class BattleScene : Scene
 
             Core.SpriteBatch.End();
             DrawCircleIndicator();
+        }
+    }
+
+    public void DrawSelectedTower(GameTime gameTime)
+    {
+        if (SelectingTower)
+        {
+            float circleRadius = SelectedTower.Range / MapBounds.Height;
+            CircleIndicator.Parameters["circleRadius"].SetValue(circleRadius);
+            // Vector2 normalizedMousePos = Core.Input.Mouse.GetNormalizedPosition(
+            //     new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
+            // );
+            Vector2 normalizedMousePos = NormalizePosition(
+                SelectedTower.Position, new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
+            );
+            CircleIndicator.Parameters["mousePos"].SetValue(normalizedMousePos);
+            // Casts are necessary here to avoid integer division
+            CircleIndicator.Parameters["aspectRatio"]?.SetValue((float)MapBounds.Width / (float)MapBounds.Height);
+
+            // Create a matrix to convert from screen coordinates to normalized device coordinates
+            Matrix view = Matrix.Identity;
+            Matrix projection = Matrix.CreateOrthographicOffCenter(0, MapBounds.Width, MapBounds.Height, 0, 0, 1);
+            CircleIndicator.Parameters["view_projection"]?.SetValue(view * projection);
+
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: CircleIndicator);
+            Core.SpriteBatch.Draw(WhitePixel, MapBounds, new Color(0, 0, 0, 128));
+            Core.SpriteBatch.End();
         }
     }
 }

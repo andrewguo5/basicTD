@@ -18,4 +18,9 @@ public class Hitbox
         circleBox = new Circle(location.ToPoint(), radius);
     }
 
+    public bool HasCollided(Hitbox other)
+    {
+        return circleBox.Intersects(other.circleBox);
+    }
+
 }

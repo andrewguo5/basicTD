@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Collision;
 using MonoGameLibrary.Creeps;
 using MonoGameLibrary.Graphics;
 
@@ -15,25 +17,28 @@ public abstract class Tower
     public abstract float Range { get; } // in units? m
     public abstract int Damage { get; } // Let's just have int damage
     public abstract float AttackSpeed { get; } // in hertz
-    private float attackCooldown = 0f; // in seconds
+    private float AttackCooldown = 0f; // in seconds
+    private int TowerBoxRadius = 16;
+    private Hitbox TowerBox;
 
 
     public Tower(Vector2 position, Sprite sprite)
     {
         Position = position;
         Sprite = sprite;
+        TowerBox = new Hitbox(Position, TowerBoxRadius);
     }
 
     public void Update(GameTime gameTime)
     {
         // Reduce attack cooldown
-        attackCooldown = Math.Max(0f, attackCooldown - (float)gameTime.ElapsedGameTime.TotalSeconds);
+        AttackCooldown = Math.Max(0f, AttackCooldown - (float)gameTime.ElapsedGameTime.TotalSeconds);
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, Color color)
     {
         if (Sprite != null)
-            Sprite.Draw(spriteBatch, Position, Color.White, 0f);
+            Sprite.Draw(spriteBatch, Position, color, 0f);
     }
 
     public bool IsCreepInRange(Vector2 creepPosition)
@@ -59,12 +64,27 @@ public abstract class Tower
     {
         // Logic to attack the creep, e.g., reduce its health
         // This method can be overridden in derived classes for specific attack behavior
-        if (attackCooldown > 0f)
+        if (AttackCooldown > 0f)
             return; // Cannot attack yet
-            
+
         creep.TakeDamage(Damage);
-        
+
         // Reset attack cooldown
-        attackCooldown = 1f / AttackSpeed;
+        AttackCooldown = 1f / AttackSpeed;
+    }
+
+    public bool MouseCollision(Vector2 mousePos)
+    {
+        return Vector2.Distance(mousePos, Position) <= TowerBoxRadius;
+    }
+
+    public bool HasCollided(Hitbox hitbox)
+    {
+        return hitbox.HasCollided(TowerBox);
+    }
+
+    public bool HasCollided(Tower other)
+    {
+        return other.TowerBox.HasCollided(TowerBox);
     }
 }
