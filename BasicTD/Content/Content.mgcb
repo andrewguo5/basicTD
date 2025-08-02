@@ -25,6 +25,21 @@
 /processorParam:DebugMode=Auto
 /build:effects/grayscaleEffect.fx
 
+#begin images/splash1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/splash1.png
+
+#begin images/splash1.xml
+/copy:images/splash1.xml
+
 #begin images/things-atlas-definition.xml
 /copy:images/things-atlas-definition.xml
 
