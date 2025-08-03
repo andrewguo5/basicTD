@@ -11,9 +11,11 @@ namespace BasicTD.Towers
         public override float Range { get; } = 200.0f; // Example range
         public override int TowerId { get; } = -1; // Unique identifier for the
 
-        public TestTower(Vector2 position, Sprite sprite) : base(position, sprite)
+        public TestTower(
+            Vector2 position, Sprite sprite, AnimatedSprite splashAnimation) : base(position, sprite, splashAnimation)
         {
             // Additional initialization if needed
         }
+
     }
 }

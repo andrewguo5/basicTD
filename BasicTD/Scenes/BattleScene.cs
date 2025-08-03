@@ -31,6 +31,10 @@ public abstract class BattleScene : Scene
     protected List<Sprite> SpriteManager;
     protected Vector2 SpriteScale = new Vector2(3f, 3f);
 
+    // Splash atlas
+    protected TextureAtlas SplashAtlas;
+    protected AnimatedSprite SplashAnimation1;
+
     // Path
     public Path Path { get; set; }
 
@@ -110,6 +114,17 @@ public abstract class BattleScene : Scene
 
         // Initialize the towers list
         Towers = new List<Tower>();
+
+        // Splash effect
+    }
+
+    public AnimatedSprite LoadSplashAnimation()
+    {
+        AnimatedSprite splashAnimation = SplashAtlas.CreateAnimatedSprite("splash1-animation");
+        splashAnimation.Origin = new Vector2(0, splashAnimation.Height * 0.5f);
+        splashAnimation.Scale = new Vector2(0.25f, 0.25f);
+        splashAnimation.Repeat = false;
+        return splashAnimation;
     }
 
     public abstract void InitializePath();
@@ -142,8 +157,11 @@ public abstract class BattleScene : Scene
         StartMarker = Atlas.CreateSprite("lever-blue");
         EndMarker = Atlas.CreateSprite("lever-red");
         ControlPointMarker = Atlas.CreateSprite("lever-yellow");
-        TorchSprite = Atlas.CreateAnimatedSprite("torch-blue-animation");
+        TorchSprite = Atlas.CreateAnimatedSprite("torch-red-animation");
         TowerSprite = Atlas.CreateSprite("lever-green");
+
+        // Create the texture atlas from the XML configuration file
+        SplashAtlas = TextureAtlas.FromFile(Core.Content, "images/splash1.xml");
     }
     public override void UnloadContent()
     {
@@ -256,7 +274,8 @@ public abstract class BattleScene : Scene
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                Towers.Add(new TestTower(mousePos, TowerSprite));
+                // Towers.Add(new TestTower(mousePos, TowerSprite, SplashAnimation1));
+                Towers.Add(new TestTower(mousePos, TowerSprite, LoadSplashAnimation()));
                 PlacingTower = false;
             }
         }

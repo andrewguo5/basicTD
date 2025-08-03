@@ -7,9 +7,25 @@ public class AnimatedSprite : Sprite
 {
     private int _currentFrame;
     private TimeSpan _elapsed;
-
     private Animation _animation;
-
+    private bool _repeat;
+    public bool Repeat
+    {
+        get => _repeat;
+        set
+        {
+            if (value == false)
+            {
+                _currentFrame = _animation.Frames.Count - 1;
+            }
+            _repeat = value;
+        }
+    }
+    
+    public float AnimationTime
+    {
+        get => (_animation.Frames.Count - 1) * (float)_animation.Delay.TotalSeconds;
+    }
     public Animation Animation
     {
         get => _animation;
@@ -23,7 +39,10 @@ public class AnimatedSprite : Sprite
     /// <summary>
     /// Creates a new animated sprite.
     /// </summary>
-    public AnimatedSprite() { }
+    public AnimatedSprite()
+    {
+        Repeat = true;    
+    }
 
     /// <summary>
     /// Creates a new animated sprite with the specified frames and delay
@@ -32,6 +51,13 @@ public class AnimatedSprite : Sprite
     public AnimatedSprite(Animation animation)
     {
         Animation = animation;
+        Repeat = true;
+    }
+
+    public AnimatedSprite(Animation animation, bool repeat)
+    {
+        Animation = animation;
+        Repeat = repeat;
     }
 
     public void Update(GameTime gameTime)
@@ -46,9 +72,17 @@ public class AnimatedSprite : Sprite
 
         if (_currentFrame >= _animation.Frames.Count)
         {
-            _currentFrame = 0;
+            if (Repeat)
+                _currentFrame = 0;
+            else
+                _currentFrame = _animation.Frames.Count -1;
         }
 
         Region = _animation.Frames[_currentFrame];
+    }
+
+    public void Play()
+    {
+        _currentFrame = 0;
     }
 }

@@ -15,9 +15,6 @@ namespace BasicTD.Scenes;
 
 public class LineScene : BattleScene
 {
-    // Splash atlas
-    private TextureAtlas SplashAtlas;
-    private AnimatedSprite SplashAnimation1;
     // Parameters
     private Vector2 StartingPosition { get; set; }
     private Vector2 EndingPosition { get; set; }
@@ -48,19 +45,11 @@ public class LineScene : BattleScene
         // Create the path
         Path = new LinePath(StartingPosition, EndingPosition);
         Path.LoadSprites(Atlas);
-
-        SplashAnimation1.Origin = new Vector2(0, SplashAnimation1.Height * 0.5f);
-        SplashAnimation1.Scale = new Vector2(0.25f, 0.25f);
-        SplashAnimation1.Rotation = 3.14f;
     }
 
     public override void LoadContent()
     {
         base.LoadContent();
-
-        // Create the texture atlas from the XML configuration file
-        SplashAtlas = TextureAtlas.FromFile(Core.Content, "images/splash1.xml");
-        SplashAnimation1 = SplashAtlas.CreateAnimatedSprite("splash1-animation");
     }
 
     public override void Update(GameTime gameTime)
@@ -71,7 +60,6 @@ public class LineScene : BattleScene
         UpdateCreep(gameTime);
         UpdatePlacingTower(gameTime);
         UpdateTowers(gameTime);
-        SplashAnimation1.Update(gameTime);
     }
 
     public override void Draw(GameTime gameTime)
@@ -83,11 +71,6 @@ public class LineScene : BattleScene
         DrawPlacedTowers(gameTime);
         DrawPlacingTower(gameTime);
         DrawSelectedTower(gameTime);
-
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        SplashAnimation1.Draw(Core.SpriteBatch, new Vector2(100, 100));
-        Core.SpriteBatch.End();
-
     }
 
     public void DrawMarkers(GameTime gameTime)

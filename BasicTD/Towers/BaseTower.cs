@@ -20,25 +20,31 @@ public abstract class Tower
     private float AttackCooldown = 0f; // in seconds
     private int TowerBoxRadius = 16;
     private Hitbox TowerBox;
+    public AnimatedSprite SplashAnimation;
 
 
-    public Tower(Vector2 position, Sprite sprite)
+    public Tower(Vector2 position, Sprite sprite, AnimatedSprite splashAnimation)
     {
         Position = position;
         Sprite = sprite;
         TowerBox = new Hitbox(Position, TowerBoxRadius);
+        SplashAnimation = splashAnimation;
     }
 
     public void Update(GameTime gameTime)
     {
         // Reduce attack cooldown
         AttackCooldown = Math.Max(0f, AttackCooldown - (float)gameTime.ElapsedGameTime.TotalSeconds);
+        SplashAnimation.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch, Color color)
     {
         if (Sprite != null)
             Sprite.Draw(spriteBatch, Position, color, 0f);
+
+        if (SplashAnimation != null)
+            SplashAnimation.Draw(spriteBatch, Position);
     }
 
     public bool IsCreepInRange(Vector2 creepPosition)
@@ -67,7 +73,11 @@ public abstract class Tower
         if (AttackCooldown > 0f)
             return; // Cannot attack yet
 
-        creep.TakeDamage(Damage);
+        float delaySeconds = SplashAnimation.AnimationTime;
+        creep.TakeDamage(Damage, delaySeconds);
+        float angle = (float)Math.Atan2(creep.CurrentPosition.Y - Position.Y, creep.CurrentPosition.X - Position.X);
+        SplashAnimation.Rotation = angle;
+        SplashAnimation.Play();
 
         // Reset attack cooldown
         AttackCooldown = 1f / AttackSpeed;
