@@ -127,7 +127,7 @@ public class TextureAtlas
                 }
 
                 // Parse animations
-                var animationElements = root.Element("Animations").Elements("Animation");
+                var animationElements = root.Element("Animations")?.Elements("Animation");
 
                 if (animationElements != null)
                 {

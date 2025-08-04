@@ -25,6 +25,18 @@
 /processorParam:DebugMode=Auto
 /build:effects/grayscaleEffect.fx
 
+#begin images/decorative_cracks_floor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/decorative_cracks_floor.png
+
 #begin images/splash1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -54,6 +66,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/things.png
+
+#begin images/tilemap-definition.xml
+/copy:images/tilemap-definition.xml
+
+#begin images/walls_floor_atlas.xml
+/copy:images/walls_floor_atlas.xml
+
+#begin images/walls_floor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/walls_floor.png
 
 #begin paths/beginner-map.xml
 /copy:paths/beginner-map.xml

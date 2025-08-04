@@ -16,11 +16,19 @@ namespace BasicTD.Scenes;
 
 public class BasicMapScene : BattleScene
 {
+    Tilemap Tilemap;
+
+    // Wall sprites
+    TextureAtlas WallFloorAtlas;
+    Sprite VerticalWallTop;
+    Sprite VerticalWallMid;
+    Sprite VerticalWallBot;
+
     public BasicMapScene() : base()
     {
         MapBounds = new Rectangle(
-            200, 72,
-            800, 360
+            200, 36,
+            800, 384
         );
     }
 
@@ -44,6 +52,18 @@ public class BasicMapScene : BattleScene
     public override void LoadContent()
     {
         base.LoadContent();
+
+        Tilemap = Tilemap.FromFile(Core.Content, "images/tilemap-definition.xml");
+        Tilemap.Scale = new Vector2(4f, 4f);
+
+        WallFloorAtlas = TextureAtlas.FromFile(Core.Content, "images/walls_floor_atlas.xml");
+        VerticalWallTop = WallFloorAtlas.CreateSprite("vertical-wall-top");
+        VerticalWallMid = WallFloorAtlas.CreateSprite("vertical-wall-mid");
+        VerticalWallBot = WallFloorAtlas.CreateSprite("vertical-wall-bot");
+
+        VerticalWallTop.Scale = new Vector2(4f, 4f);
+        VerticalWallMid.Scale = new Vector2(4f, 4f);
+        VerticalWallBot.Scale = new Vector2(4f, 4f);
     }
 
     public override void Update(GameTime gameTime)
@@ -58,12 +78,36 @@ public class BasicMapScene : BattleScene
 
     public override void Draw(GameTime gameTime)
     {
-        Core.GraphicsDevice.Clear(Color.DarkSlateBlue);
+        Core.GraphicsDevice.Clear(new Color(92, 105, 127));
+
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
+        Vector2 tilemapOffset = MapBounds.Location.ToVector2() - new Vector2(Tilemap.TileWidth / 4f, 0);
+        Tilemap.Draw(Core.SpriteBatch, tilemapOffset);
+        Core.SpriteBatch.End();
 
         DrawPath(gameTime);
         DrawMarkers(gameTime);
         DrawPlacedTowers(gameTime);
         DrawPlacingTower(gameTime);
+        DrawSelectedTower(gameTime);
+
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
+        // First batch
+        int _y = MapBounds.Top * 2;
+        VerticalWallTop.Draw(Core.SpriteBatch, new Vector2(20, _y));
+        VerticalWallTop.Draw(Core.SpriteBatch, new Vector2(1180 - VerticalWallTop.Width, _y));
+        _y += (int)VerticalWallTop.Height;
+
+        // Second batch
+        VerticalWallMid.Draw(Core.SpriteBatch, new Vector2(20, _y));
+        VerticalWallMid.Draw(Core.SpriteBatch, new Vector2(1180 - VerticalWallMid.Width, _y));
+        _y += (int)VerticalWallMid.Height;
+
+        // Third batch
+        VerticalWallBot.Draw(Core.SpriteBatch, new Vector2(20, _y));
+        VerticalWallBot.Draw(Core.SpriteBatch, new Vector2(1180 - VerticalWallBot.Width, _y));
+
+        Core.SpriteBatch.End();
     }
 
     public void DrawMarkers(GameTime gameTime)

@@ -55,7 +55,7 @@ public class Tilemap
         return GetTile(index);
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, Vector2 offset)
     {
         for (int i = 0; i < Count; i++)
         {
@@ -65,7 +65,7 @@ public class Tilemap
             int x = i % Columns;
             int y = i / Columns;
 
-            Vector2 position = new Vector2(x * TileWidth, y * TileHeight);
+            Vector2 position = new Vector2(x * TileWidth, y * TileHeight) + offset;
             tile.Draw(spriteBatch, position, Color.White, 0.0f, Vector2.Zero, Scale, SpriteEffects.None, 1.0f);
         }
     }
