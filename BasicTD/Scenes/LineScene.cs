@@ -60,6 +60,7 @@ public class LineScene : BattleScene
         UpdateCreep(gameTime);
         UpdatePlacingTower(gameTime);
         UpdateTowers(gameTime);
+        UpdateCreepList(gameTime);
     }
 
     public override void Draw(GameTime gameTime)
@@ -68,6 +69,7 @@ public class LineScene : BattleScene
 
         DrawPath(gameTime);
         DrawMarkers(gameTime);
+        DrawCreeps(gameTime);
         DrawPlacedTowers(gameTime);
         DrawPlacingTower(gameTime);
         DrawSelectedTower(gameTime);
@@ -78,7 +80,6 @@ public class LineScene : BattleScene
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
         StartMarker.Draw(Core.SpriteBatch, StartingPosition);
         EndMarker.Draw(Core.SpriteBatch, EndingPosition);
-        TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
         Core.SpriteBatch.End();
     }
 }

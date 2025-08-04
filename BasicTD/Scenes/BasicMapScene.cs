@@ -74,6 +74,7 @@ public class BasicMapScene : BattleScene
         UpdateCreep(gameTime);
         UpdatePlacingTower(gameTime);
         UpdateTowers(gameTime);
+        UpdateCreepList(gameTime);
     }
 
     public override void Draw(GameTime gameTime)
@@ -87,6 +88,7 @@ public class BasicMapScene : BattleScene
 
         DrawPath(gameTime);
         DrawMarkers(gameTime);
+        DrawCreeps(gameTime);
         DrawPlacedTowers(gameTime);
         DrawPlacingTower(gameTime);
         DrawSelectedTower(gameTime);
@@ -124,8 +126,6 @@ public class BasicMapScene : BattleScene
         {
             ControlPointMarker.Draw(Core.SpriteBatch, controlPoint);
         }
-
-        TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
 
         Core.SpriteBatch.End();
     }

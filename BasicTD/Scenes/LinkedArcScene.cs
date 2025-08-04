@@ -48,6 +48,7 @@ public class LinkedArcScene : BattleScene
         UpdateCreep(gameTime);
         UpdatePlacingTower(gameTime);
         UpdateTowers(gameTime);
+        UpdateCreepList(gameTime);
     }
 
     public override void Draw(GameTime gameTime)
@@ -56,6 +57,7 @@ public class LinkedArcScene : BattleScene
 
         DrawPath(gameTime);
         DrawMarkers(gameTime);
+        DrawCreeps(gameTime);
         DrawPlacedTowers(gameTime);
         DrawPlacingTower(gameTime);
     }
@@ -74,7 +76,6 @@ public class LinkedArcScene : BattleScene
         {
             ControlPointMarker.Draw(Core.SpriteBatch, controlPoint);
         }
-        TorchCreep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
         Core.SpriteBatch.End();
     }
 }

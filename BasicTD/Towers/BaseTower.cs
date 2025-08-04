@@ -58,7 +58,7 @@ public abstract class Tower
         List<Creep> creepsInRange = new List<Creep>();
         foreach (var creep in creeps)
         {
-            if (IsCreepInRange(creep.CurrentPosition))
+            if (IsCreepInRange(creep.CurrentPosition) && creep.Alive)
             {
                 creepsInRange.Add(creep);
             }

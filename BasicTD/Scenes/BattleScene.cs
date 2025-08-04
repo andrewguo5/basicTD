@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 using MonoGameLibrary.Collision;
 using System.Xml.Serialization;
+using System.Xml;
 
 namespace BasicTD.Scenes;
 
@@ -45,7 +46,7 @@ public abstract class BattleScene : Scene
     public Path Path { get; set; }
 
     // Creeps
-    protected Creep TorchCreep;
+    // protected Creep TorchCreep;
     protected float CreepSpeed = 250f; // pixels per second
     protected List<Creep> CreepList;
 
@@ -113,8 +114,7 @@ public abstract class BattleScene : Scene
         InitializePath();
 
         // Create the creeps
-        TorchCreep = new Creep(Path, CreepSpeed, TorchSprite);
-        CreepList = new List<Creep> { TorchCreep };
+        CreepList = new List<Creep> { new Creep(Path, CreepSpeed, TorchSprite) };
 
         // Initialize the towers list
         Towers = new List<Tower>();
@@ -264,7 +264,8 @@ public abstract class BattleScene : Scene
         if (!Paused)
         {
             // Update the creep
-            TorchCreep.Update(gameTime);
+            foreach (var creep in CreepList)
+                creep.Update(gameTime);
         }
     }
 
@@ -313,6 +314,27 @@ public abstract class BattleScene : Scene
         }
     }
 
+    public void UpdateCreepList(GameTime gameTime)
+    {
+        List<Creep> deadCreeps = new();
+        foreach (var creep in CreepList)
+        {
+            if (creep.Dead)
+                deadCreeps.Add(creep);
+        }
+
+        foreach (var creep in deadCreeps)
+        {
+            CreepList.Remove(creep);
+        }
+
+        if (CreepList.Count == 0)
+        {
+            // Add a new Creep
+            CreepList.Add(new Creep(Path, CreepSpeed, TorchSprite));
+        }
+    }
+
     public Vector2 NormalizePosition(Vector2 location, Point bounds, Point offset)
     {
         return new Vector2(
@@ -351,6 +373,14 @@ public abstract class BattleScene : Scene
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         Path.Draw(Core.SpriteBatch, WhitePixel);
+        Core.SpriteBatch.End();
+    }
+
+    public void DrawCreeps(GameTime gameTime)
+    {   
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
+        foreach (var creep in CreepList)
+            creep.Draw(Core.SpriteBatch, WhitePixel, DebugDraw);
         Core.SpriteBatch.End();
     }
 

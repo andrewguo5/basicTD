@@ -13,18 +13,16 @@ namespace MonoGameLibrary.Creeps
     public class Creep
     {
         public Path Path;
-
         private float CurrentDistance;
-
         public Vector2 CurrentPosition;
-
         private float RemainingDistance => Path.Length - CurrentDistance;
-
+        private int Health = 3;
         private float Speed;
-
         private AnimatedSprite AnimatedSprite;
         private Queue<DamageTimer> DamageTimers = new();
         private float DamageRecency = 0.0f;
+        public bool Alive { get; private set; }
+        public bool Dead => !Alive && (DamageRecency <= 0.0f);
 
         public Creep(Path path, float speed, AnimatedSprite animatedSprite)
         {
@@ -33,14 +31,21 @@ namespace MonoGameLibrary.Creeps
             CurrentDistance = 0.0f;
             Speed = speed;
             AnimatedSprite = animatedSprite;
+            Alive = true;
         }
 
-        public void TakeDamage(float damage, float delaySeconds)
+        public void TakeDamage(int damage, float delaySeconds)
         {
             // Implement damage logic here
             // For example, reduce health or trigger death if health reaches zero
-            DamageTimers.Enqueue(new DamageTimer(delaySeconds));
+            DamageTimers.Enqueue(new DamageTimer(damage, delaySeconds));
             // DamageRecency = 1.0f; // Reset the damage recency timer
+        }
+
+        public void Die()
+        {
+            Speed = 0;
+            Alive = false;
         }
 
         public void Update(GameTime gameTime)
@@ -78,6 +83,7 @@ namespace MonoGameLibrary.Creeps
                 if (timer.Expired)
                 {
                     DamageRecency = 1.0f;
+                    Health -= timer.Damage;
                 }
                 else
                 {
@@ -87,16 +93,27 @@ namespace MonoGameLibrary.Creeps
             DamageTimers = newQueue;
 
             DamageRecency = Math.Max(0.0f, DamageRecency - 4f * seconds);
+
+            if (Health <= 0)
+            {
+                Die();
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D whitePixel, bool debug)
         {
             // Draw the pulse at the current position
             // Lerp between red and white based on DamageRecency (1 = recent damage, 0 = no recent damage)
-            Color color = Color.Lerp(Color.White, Color.Blue, DamageRecency);
-            AnimatedSprite.Draw(spriteBatch, CurrentPosition, color);
-            // color = TakingDamage ? Color.Red : Color.White;
-            // AnimatedSprite.Draw(spriteBatch, CurrentPosition, color);
+            if (Alive)
+            {
+                Color color = Color.Lerp(Color.White, Color.Blue, DamageRecency);
+                AnimatedSprite.Draw(spriteBatch, CurrentPosition, color);
+            }
+            else
+            {
+                Color color = Color.Lerp(Color.Transparent, Color.Blue, DamageRecency);
+                AnimatedSprite.Draw(spriteBatch, CurrentPosition, color);
+            }
 
             if (debug)
             {
@@ -120,10 +137,12 @@ namespace MonoGameLibrary.Creeps
     {
         private float RemainingTime;
         public bool Expired => RemainingTime < 0;
+        public int Damage;
 
-        public DamageTimer(float DelaySeconds)
+        public DamageTimer(int damage, float DelaySeconds)
         {
             RemainingTime = DelaySeconds;
+            Damage = damage;
         }
 
         public void Tick(float seconds)
