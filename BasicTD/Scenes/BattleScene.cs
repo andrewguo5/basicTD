@@ -19,7 +19,13 @@ namespace BasicTD.Scenes;
 public abstract class BattleScene : Scene
 {
     // Map Bounds
-    public Rectangle MapBounds { get; set; }
+    protected virtual Rectangle MapBounds { get; set; }
+    public Rectangle ScreenBounds = new Rectangle(
+        0,
+        0, 
+        Core.GraphicsDevice.PresentationParameters.BackBufferWidth,
+        Core.GraphicsDevice.PresentationParameters.BackBufferHeight
+    );
 
     // Common Sprites
     protected Sprite StartMarker;
@@ -71,15 +77,6 @@ public abstract class BattleScene : Scene
 
     public BattleScene() : base()
     {
-
-    }
-
-    public override void Initialize()
-    {
-        // NOTE: Above this line, content has not been loaded yet.
-        base.Initialize();
-        // NOTE: Content has been loaded after this line
-
         // Set the map bounds to the entire screen by default
         MapBounds = new Rectangle(
             0,
@@ -87,6 +84,13 @@ public abstract class BattleScene : Scene
             Core.GraphicsDevice.PresentationParameters.BackBufferWidth,
             Core.GraphicsDevice.PresentationParameters.BackBufferHeight
         );
+    }
+
+    public override void Initialize()
+    {
+        // NOTE: Above this line, content has not been loaded yet.
+        base.Initialize();
+        // NOTE: Content has been loaded after this line
 
         // Collect all of the sprites into a list for easy management
         SpriteManager = new List<Sprite>()
@@ -306,25 +310,22 @@ public abstract class BattleScene : Scene
 
     public void DrawCircleIndicator(Vector2 location, float circleRadiusPx = 200f)
     {
-        float circleRadius = circleRadiusPx / MapBounds.Height;
+        float circleRadius = circleRadiusPx / ScreenBounds.Height;
         CircleIndicator.Parameters["circleRadius"].SetValue(circleRadius);
-        // Vector2 normalizedMousePos = Core.Input.Mouse.GetNormalizedPosition(
-        //     new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
-        // );
         Vector2 normalizedMousePos = NormalizePosition(
-            location, new Point(MapBounds.Width, MapBounds.Height), MapBounds.Location
+            location, new Point(ScreenBounds.Width, ScreenBounds.Height), ScreenBounds.Location
         );
         CircleIndicator.Parameters["mousePos"].SetValue(normalizedMousePos);
         // Casts are necessary here to avoid integer division
-        CircleIndicator.Parameters["aspectRatio"]?.SetValue((float)MapBounds.Width / (float)MapBounds.Height);
+        CircleIndicator.Parameters["aspectRatio"]?.SetValue((float)ScreenBounds.Width / (float)ScreenBounds.Height);
 
         // Create a matrix to convert from screen coordinates to normalized device coordinates
         Matrix view = Matrix.Identity;
-        Matrix projection = Matrix.CreateOrthographicOffCenter(0, MapBounds.Width, MapBounds.Height, 0, 0, 1);
+        Matrix projection = Matrix.CreateOrthographicOffCenter(ScreenBounds.Left, ScreenBounds.Right, ScreenBounds.Bottom, ScreenBounds.Top, 0, 1);
         CircleIndicator.Parameters["view_projection"]?.SetValue(view * projection);
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: CircleIndicator);
-        Core.SpriteBatch.Draw(WhitePixel, MapBounds, new Color(0, 0, 0, 128));
+        Core.SpriteBatch.Draw(WhitePixel, ScreenBounds, new Color(0, 0, 0, 128));
         Core.SpriteBatch.End();
     }
 

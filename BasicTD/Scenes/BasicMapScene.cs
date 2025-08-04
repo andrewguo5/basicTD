@@ -18,7 +18,10 @@ public class BasicMapScene : BattleScene
 {
     public BasicMapScene() : base()
     {
-
+        MapBounds = new Rectangle(
+            200, 72,
+            800, 360
+        );
     }
 
     public override void Initialize()
@@ -34,7 +37,7 @@ public class BasicMapScene : BattleScene
     public override void InitializePath()
     {
         // Load the path from the XML file
-        Path = LinkedPath.FromFile(Core.Content, "paths/beginner-map.xml");
+        Path = LinkedPath.FromFile(Core.Content, "paths/beginner-map.xml", MapBounds.Location.ToVector2());
         Path.LoadSprites(Atlas);
     }
 

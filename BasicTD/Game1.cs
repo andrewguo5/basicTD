@@ -10,7 +10,7 @@ namespace BasicTD;
 public class Game1 : Core
 {
     
-    public Game1() : base("BasicTD", 1280, 720, false)
+    public Game1() : base("BasicTD", 1200, 720, false)
     {
 
     }
