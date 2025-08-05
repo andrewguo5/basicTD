@@ -86,7 +86,7 @@ public class MultiArcScene : BattleScene
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                Towers.Add(new TestTower(mousePos, TowerSprite, SplashAnimation1));
+                Towers.Add(new TestTower(mousePos, TowerSprite, LoadSplashAnimation()));
                 PlacingTower = false;
             }
         }

@@ -87,7 +87,7 @@ public class BasicMapScene : BattleScene
         Core.SpriteBatch.End();
 
         DrawPath(gameTime);
-        DrawMarkers(gameTime);
+        // DrawMarkers(gameTime);
         DrawCreeps(gameTime);
         DrawPlacedTowers(gameTime);
         DrawPlacingTower(gameTime);

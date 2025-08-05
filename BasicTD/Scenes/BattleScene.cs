@@ -32,7 +32,6 @@ public abstract class BattleScene : Scene
     protected Sprite StartMarker;
     protected Sprite EndMarker;
     protected Sprite ControlPointMarker;
-
     protected AnimatedSprite TorchSprite;
     protected Sprite TowerSprite;
     protected List<Sprite> SpriteManager;
@@ -40,7 +39,6 @@ public abstract class BattleScene : Scene
 
     // Splash atlas
     protected TextureAtlas SplashAtlas;
-    protected AnimatedSprite SplashAnimation1;
 
     // Path
     public Path Path { get; set; }
@@ -137,7 +135,7 @@ public abstract class BattleScene : Scene
     {
         // Clear the placed towers list
         Towers = new List<Tower>();
-        PlacingTower = false;
+        ClearStates();
     }
 
     public override void LoadContent()
@@ -292,7 +290,6 @@ public abstract class BattleScene : Scene
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                // Towers.Add(new TestTower(mousePos, TowerSprite, SplashAnimation1));
                 Towers.Add(new TestTower(mousePos, TowerSprite, LoadSplashAnimation()));
                 PlacingTower = false;
             }
@@ -301,14 +298,17 @@ public abstract class BattleScene : Scene
 
     public void UpdateTowers(GameTime gameTime)
     {
-        foreach (var tower in Towers)
+        if (!Paused)
         {
-            tower.Update(gameTime);
-            List<Creep> creepsInRange = tower.CreepsInRange(CreepList);
-            foreach (var creep in creepsInRange)
+            foreach (var tower in Towers)
             {
+                tower.Update(gameTime);
+                List<Creep> creepsInRange = tower.CreepsInRange(CreepList);
+                foreach (var creep in creepsInRange)
                 {
-                    tower.Attack(creep);
+                    {
+                        tower.Attack(creep);
+                    }
                 }
             }
         }

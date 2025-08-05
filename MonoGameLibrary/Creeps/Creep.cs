@@ -36,10 +36,7 @@ namespace MonoGameLibrary.Creeps
 
         public void TakeDamage(int damage, float delaySeconds)
         {
-            // Implement damage logic here
-            // For example, reduce health or trigger death if health reaches zero
             DamageTimers.Enqueue(new DamageTimer(damage, delaySeconds));
-            // DamageRecency = 1.0f; // Reset the damage recency timer
         }
 
         public void Die()
@@ -51,7 +48,6 @@ namespace MonoGameLibrary.Creeps
         public void Update(GameTime gameTime)
         {
             Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            // Update the animated sprite
             AnimatedSprite.Update(gameTime);
         }
 
@@ -74,7 +70,6 @@ namespace MonoGameLibrary.Creeps
                 CurrentDistance = newDistance;
             }
 
-            // Reduce damage recency timer
             Queue<DamageTimer> newQueue = new();
             while (DamageTimers.Count > 0)
             {
@@ -102,7 +97,6 @@ namespace MonoGameLibrary.Creeps
 
         public void Draw(SpriteBatch spriteBatch, Texture2D whitePixel, bool debug)
         {
-            // Draw the pulse at the current position
             // Lerp between red and white based on DamageRecency (1 = recent damage, 0 = no recent damage)
             if (Alive)
             {
