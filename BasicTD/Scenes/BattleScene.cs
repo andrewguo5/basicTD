@@ -179,6 +179,12 @@ public abstract class BattleScene : Scene
         SelectingTower = false;
     }
 
+    public void SpawnCreep()
+    {
+        // Todo: Make a CreepManager class that handles all creep logic
+        CreepList.Add(new Creep(Path, CreepSpeed, TorchSprite));
+    }
+
     public override void Update(GameTime gameTime)
     {
         // Toggle debug mode
@@ -198,6 +204,12 @@ public abstract class BattleScene : Scene
         {
             ClearStates();
             PlacingTower = !PlacingTower;
+        }
+
+        // Spawn a creep
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.A))
+        {
+            SpawnCreep();
         }
 
         if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left))
@@ -290,7 +302,7 @@ public abstract class BattleScene : Scene
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                Towers.Add(new TestTower(mousePos, TowerSprite, LoadSplashAnimation()));
+                Towers.Add(new SingleTargetTower(mousePos, TowerSprite, LoadSplashAnimation()));
                 PlacingTower = false;
             }
         }
