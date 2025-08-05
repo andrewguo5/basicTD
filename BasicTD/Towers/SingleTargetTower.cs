@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Creeps;
+using System.Collections.Generic;
 
 namespace BasicTD.Towers
 {
@@ -19,7 +20,18 @@ namespace BasicTD.Towers
             // Additional initialization if needed
         }
 
-        public override void Attack(Creep creep)
+        public override void Attack(List<Creep> creepList)
+        {
+            List<Creep> creepsInRange = CreepsInRange(creepList);
+            foreach (var creep in creepsInRange)
+            {
+                {
+                    AttackOne(creep);
+                }
+            }
+        }
+        
+        public void AttackOne(Creep creep)
         {
             // Logic to attack the creep, e.g., reduce its health
             // This method can be overridden in derived classes for specific attack behavior

@@ -315,13 +315,14 @@ public abstract class BattleScene : Scene
             foreach (var tower in Towers)
             {
                 tower.Update(gameTime);
-                List<Creep> creepsInRange = tower.CreepsInRange(CreepList);
-                foreach (var creep in creepsInRange)
-                {
-                    {
-                        tower.Attack(creep);
-                    }
-                }
+                tower.Attack(CreepList);
+                // List<Creep> creepsInRange = tower.CreepsInRange(CreepList);
+                // foreach (var creep in creepsInRange)
+                // {
+                //     {
+                //         tower.Attack(creep);
+                //     }
+                // }
             }
         }
     }

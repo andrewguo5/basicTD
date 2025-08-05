@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Creeps;
+using System.Collections.Generic;
 
 namespace BasicTD.Towers
 {
@@ -18,21 +19,21 @@ namespace BasicTD.Towers
             // Additional initialization if needed
         }
 
-        public override void Attack(Creep creep)
+        public override void Attack(List<Creep> creepList)
         {
-            // Logic to attack the creep, e.g., reduce its health
-            // This method can be overridden in derived classes for specific attack behavior
-            if (AttackCooldown > 0f)
-                return; // Cannot attack yet
+            // // Logic to attack the creep, e.g., reduce its health
+            // // This method can be overridden in derived classes for specific attack behavior
+            // if (AttackCooldown > 0f)
+            //     return; // Cannot attack yet
 
-            float delaySeconds = AttackAnimation.AnimationTime;
-            creep.TakeDamage(Damage, delaySeconds);
-            float angle = (float)Math.Atan2(creep.CurrentPosition.Y - Position.Y, creep.CurrentPosition.X - Position.X);
-            AttackAnimation.Rotation = angle;
-            AttackAnimation.Play();
+            // float delaySeconds = AttackAnimation.AnimationTime;
+            // creep.TakeDamage(Damage, delaySeconds);
+            // float angle = (float)Math.Atan2(creep.CurrentPosition.Y - Position.Y, creep.CurrentPosition.X - Position.X);
+            // AttackAnimation.Rotation = angle;
+            // AttackAnimation.Play();
 
-            // Reset attack cooldown
-            AttackCooldown = 1f / AttackSpeed;
+            // // Reset attack cooldown
+            // AttackCooldown = 1f / AttackSpeed;
         }
 
     }

@@ -31,7 +31,7 @@ public class LineScene : BattleScene
         // NOTE: Content has been loaded after this line
 
         // Scene management
-        NextScene = new MultiArcScene();
+        NextScene = new LinkedArcScene();
     }
 
     public override void InitializePath()

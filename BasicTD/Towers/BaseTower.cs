@@ -37,9 +37,8 @@ public abstract class Tower
         AttackAnimation.Update(gameTime);
     }
 
-    public virtual void Attack(Creep creep)
+    public virtual void Attack(List<Creep> creepList)
     {
-        
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, Color color)
