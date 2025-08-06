@@ -93,6 +93,7 @@ public class BasicMapScene : BattleScene
         DrawPlacingTower(gameTime);
         DrawSelectedTower(gameTime);
 
+
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
         // First batch
         int _y = MapBounds.Top * 2;

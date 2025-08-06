@@ -75,6 +75,8 @@ public class Sprite
     /// </remarks>
     public float Height => Region.Height * Scale.Y;
 
+    public Vector2 EffectiveOrigin => Origin + Region.Offset;
+
     /// <summary>
     /// Creates a new sprite
     /// </summary>
@@ -104,21 +106,21 @@ public class Sprite
     /// <param name="position">The xy-coordinate position to render this sprite at.</param>
     public void Draw(SpriteBatch spriteBatch, Vector2 position)
     {
-        Region.Draw(spriteBatch, position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+        Region.Draw(spriteBatch, position, Color, Rotation + Region.Rotation, EffectiveOrigin, Scale, Effects, LayerDepth);
     }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 position, float rotation)
     {
-        Region.Draw(spriteBatch, position, Color, rotation, Origin, Scale, Effects, LayerDepth);
+        Region.Draw(spriteBatch, position, Color, rotation + Region.Rotation, EffectiveOrigin, Scale, Effects, LayerDepth);
     }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
     {
-        Region.Draw(spriteBatch, position, color, Rotation, Origin, Scale, Effects, LayerDepth);
+        Region.Draw(spriteBatch, position, color, Rotation + Region.Rotation, EffectiveOrigin, Scale, Effects, LayerDepth);
     }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation)
     {
-        Region.Draw(spriteBatch, position, color, rotation, Origin, Scale, Effects, LayerDepth);
+        Region.Draw(spriteBatch, position, color, rotation + Region.Rotation, EffectiveOrigin, Scale, Effects, LayerDepth);
     }
 }

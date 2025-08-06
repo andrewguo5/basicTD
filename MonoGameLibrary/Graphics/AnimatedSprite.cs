@@ -21,7 +21,8 @@ public class AnimatedSprite : Sprite
             _repeat = value;
         }
     }
-    
+    private Vector2 _normalizedOrigin;
+
     public float AnimationTime
     {
         get => (_animation.Frames.Count - 1) * (float)_animation.Delay.TotalSeconds;
@@ -41,7 +42,7 @@ public class AnimatedSprite : Sprite
     /// </summary>
     public AnimatedSprite()
     {
-        Repeat = true;    
+        Repeat = true;
     }
 
     /// <summary>
@@ -75,14 +76,37 @@ public class AnimatedSprite : Sprite
             if (Repeat)
                 _currentFrame = 0;
             else
-                _currentFrame = _animation.Frames.Count -1;
+                _currentFrame = _animation.Frames.Count - 1;
         }
 
         Region = _animation.Frames[_currentFrame];
+        // ApplyAnimationOriginToSprite();
     }
 
     public void Play()
     {
         _currentFrame = 0;
     }
+
+    public void SetAnimationOrigin(float u, float v)
+    {
+        // Sets the origin of each frame via normalized coordinates to line up frames that are
+        // of different sizes.
+        _normalizedOrigin = new Vector2(u, v);
+    }
+
+    // public void ApplyAnimationOriginToSprite()
+    // {
+    //     int x_origin = (int)(Width * _normalizedOrigin.X);
+    //     int y_origin = (int)(Height * _normalizedOrigin.X);
+
+    //     if (Region.Rotate)
+    //     {
+    //         Origin = new Vector2(y_origin, x_origin);
+    //     }
+    //     else
+    //     {
+    //         Origin = new Vector2(x_origin, y_origin);
+    //     }
+    // }
 }

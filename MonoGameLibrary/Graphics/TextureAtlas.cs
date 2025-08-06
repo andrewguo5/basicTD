@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Markup;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -40,6 +42,11 @@ public class TextureAtlas
     public void AddRegion(string name, int x, int y, int width, int height)
     {
         TextureRegion region = new TextureRegion(Texture, x, y, width, height);
+        _regions.Add(name, region);
+    }
+    public void AddRegion(string name, int x, int y, int width, int height, bool rotate, int x_off, int y_off)
+    {
+        TextureRegion region = new TextureRegion(Texture, x, y, width, height, rotate, x_off, y_off);
         _regions.Add(name, region);
     }
 
@@ -160,6 +167,99 @@ public class TextureAtlas
                 return atlas;
             }
         }
+    }
+    public static TextureAtlas FromSpineAtlas(ContentManager content, string fileName)
+    {
+        TextureAtlas atlas = new TextureAtlas();
+
+        string filepath = Path.Combine(content.RootDirectory, fileName);
+        List<TextureRegion> frames = new();
+
+        string texturePath = null;
+        using (StreamReader reader = new StreamReader(filepath))
+        {
+            string currentName = null;
+            bool rotate = false;
+            int x = 0;
+            int y = 0;
+            int width = 0;
+            int height = 0;
+            int x_off = 0;
+            int y_off = 0;
+
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                // Process each line
+                if (texturePath == null & line.Length > 0)
+                {
+                    texturePath = Path.GetFileNameWithoutExtension(line);
+                    atlas.Texture = content.Load<Texture2D>("images/" + texturePath);
+                    continue;
+                }
+
+                if (line.Length > 1 && char.IsWhiteSpace(line, 0))
+                {
+                    var values = line.Split(':', ' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    var tag = values[0].Trim();
+                    var value = values[1].Trim();
+                    switch (tag)
+                    {
+                        case "rotate":
+                            rotate = value == "true";
+                            Console.WriteLine("Rotate: " + value);
+                            break;
+                        case "xy":
+                            var xy = value.Split(',', ' ', StringSplitOptions.RemoveEmptyEntries);
+                            x = int.Parse(xy[0]);
+                            y = int.Parse(xy[1]);
+                            Console.WriteLine("xy: " + value);
+                            break;
+                        case "size":
+                            var size = value.Split(',', ' ', StringSplitOptions.RemoveEmptyEntries);
+                            width = int.Parse(size[0]);
+                            height = int.Parse(size[1]);
+                            Console.WriteLine("Size: " + value);
+                            break;
+                        case "offset":
+                            var offset = value.Split(',', ' ', StringSplitOptions.RemoveEmptyEntries);
+                            x_off = int.Parse(offset[0]);
+                            y_off = int.Parse(offset[1]);
+                            break;
+                        default:
+                            Console.WriteLine("Skip: " + tag);
+                            break;
+                    }
+                }
+                else
+                {
+                    if (currentName != null)
+                    {
+                        // flush to atlas
+                        Console.WriteLine("Adding region: " + currentName);
+                        if (rotate)
+                            atlas.AddRegion(currentName, x, y, height, width, rotate, x_off - x, y_off - y);
+                        else
+                            atlas.AddRegion(currentName, x, y, width, height, rotate, x_off - x, y_off - y);
+                        frames.Add(atlas.GetRegion(currentName));
+                    }
+                    currentName = line;
+                    x = 0;
+                    y = 0;
+                    width = 0;
+                    height = 0;
+                    x_off = 0;
+                    y_off = 0;
+                    rotate = false;
+                }
+            }
+        }
+
+        TimeSpan delay = TimeSpan.FromMilliseconds(55);
+        Animation animation = new Animation(frames, delay);
+        atlas.AddAnimation(texturePath, animation);
+        return atlas;
     }
 
     public Sprite CreateSprite(string regionName)

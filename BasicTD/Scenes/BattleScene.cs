@@ -39,6 +39,10 @@ public abstract class BattleScene : Scene
 
     // Splash atlas
     protected TextureAtlas SplashAtlas;
+    protected TextureAtlas Water10Atlas;
+    protected TextureAtlas Water4Atlas;
+    public AnimatedSprite Water10Animation;
+    public AnimatedSprite Water4Animation;
 
     // Path
     public Path Path { get; set; }
@@ -52,6 +56,8 @@ public abstract class BattleScene : Scene
     protected List<Tower> Towers;
     protected bool TowerPlacementValid;
     protected Tower SelectedTower;
+    protected TowerType PlacingTowerType;
+    protected TowerFactory TowerFactory;
 
     // Toggleable Modes
     protected bool DebugDraw = false;
@@ -118,6 +124,9 @@ public abstract class BattleScene : Scene
         Towers = new List<Tower>();
 
         // Splash effect
+        Water10Animation = LoadWater10();
+        Water4Animation = LoadWater4();
+
     }
 
     public AnimatedSprite LoadSplashAnimation()
@@ -127,6 +136,20 @@ public abstract class BattleScene : Scene
         splashAnimation.Scale = new Vector2(0.25f, 0.25f);
         splashAnimation.Repeat = false;
         return splashAnimation;
+    }
+
+    public AnimatedSprite LoadWater10()
+    {
+        AnimatedSprite Water10Animation = Water10Atlas.CreateAnimatedSprite("Water10");
+        // Water10Animation.CenterOrigin();
+        return Water10Animation;
+    }
+
+    public AnimatedSprite LoadWater4()
+    {
+        AnimatedSprite Water10Animation = Water4Atlas.CreateAnimatedSprite("Water4");
+        Water10Animation.Scale = new Vector2(0.3f, 0.3f);
+        return Water10Animation;
     }
 
     public abstract void InitializePath();
@@ -164,6 +187,13 @@ public abstract class BattleScene : Scene
 
         // Create the texture atlas from the XML configuration file
         SplashAtlas = TextureAtlas.FromFile(Core.Content, "images/splash1.xml");
+
+        // Water 10
+        Water10Atlas = TextureAtlas.FromSpineAtlas(Core.Content, "images/Water10.atlas.txt");
+        Water4Atlas = TextureAtlas.FromSpineAtlas(Core.Content, "images/Water4.atlas.txt");
+
+        // TowerFactory
+        TowerFactory = new(Atlas, SplashAtlas, Water4Atlas);
     }
     public override void UnloadContent()
     {
@@ -203,7 +233,15 @@ public abstract class BattleScene : Scene
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Q))
         {
             ClearStates();
-            PlacingTower = !PlacingTower;
+            PlacingTower = true;
+            PlacingTowerType = TowerType.SingleTarget;
+        }
+        // Toggle tower placement mode
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.W))
+        {
+            ClearStates();
+            PlacingTower = true;
+            PlacingTowerType = TowerType.Aoe;
         }
 
         // Spawn a creep
@@ -302,7 +340,9 @@ public abstract class BattleScene : Scene
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                Towers.Add(new SingleTargetTower(mousePos, TowerSprite, LoadSplashAnimation()));
+                // Towers.Add(new SingleTargetTower(mousePos, TowerSprite, LoadSplashAnimation()));
+                // Towers.Add(new SingleTargetTower(mousePos, TowerSprite, LoadWater10()));
+                Towers.Add(TowerFactory.CreateTower(mousePos, PlacingTowerType));
                 PlacingTower = false;
             }
         }
@@ -316,13 +356,6 @@ public abstract class BattleScene : Scene
             {
                 tower.Update(gameTime);
                 tower.Attack(CreepList);
-                // List<Creep> creepsInRange = tower.CreepsInRange(CreepList);
-                // foreach (var creep in creepsInRange)
-                // {
-                //     {
-                //         tower.Attack(creep);
-                //     }
-                // }
             }
         }
     }
@@ -429,7 +462,7 @@ public abstract class BattleScene : Scene
                 TowerSprite.Draw(Core.SpriteBatch, mousePos, SemiTransparentRed, 0f);
 
             Core.SpriteBatch.End();
-            DrawCircleIndicator();
+            DrawCircleIndicator(circleRadiusPx: (TowerFactory.CreateTower(mousePos, PlacingTowerType).Range));
         }
     }
 

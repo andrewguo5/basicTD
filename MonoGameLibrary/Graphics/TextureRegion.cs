@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -49,6 +50,12 @@ public class TextureRegion
     /// </summary>
     public float RightTextureCoordinate => SourceRectangle.Right / (float)Texture.Width;
 
+    public bool Rotate { get; set; }
+
+    public Vector2 Offset { get; set; } = Vector2.Zero;
+
+    public float Rotation => Rotate ? (float)Math.PI / 2f : 0;
+
     /// <summary>
     /// Basic constructor.
     /// </summary>
@@ -61,12 +68,20 @@ public class TextureRegion
     {
         Texture = texture;
         SourceRectangle = new Rectangle(x, y, width, height);
+        Rotate = false;
+    }
+    public TextureRegion(Texture2D texture, int x, int y, int width, int height, bool rotate, int x_off, int y_off)
+    {
+        Texture = texture;
+        SourceRectangle = new Rectangle(x, y, width, height);
+        Rotate = rotate;
+        Offset = new Vector2(x_off, y_off);
     }
 
     // 3 Flavors of Draw. Why? Because overriding is fun I guess?
     public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
     {
-        Draw(spriteBatch, position, color, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0f);
+        Draw(spriteBatch, position, color, Rotation, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0f);
     }
 
     public void Draw(
