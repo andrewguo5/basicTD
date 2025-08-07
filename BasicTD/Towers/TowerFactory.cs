@@ -6,8 +6,9 @@ namespace BasicTD.Towers;
 
 public enum TowerType
 {
-    SingleTarget,
-    Aoe,
+    Basic,
+    Splash,
+    Sniper,
 }
 
 public class TowerFactory
@@ -28,16 +29,16 @@ public class TowerFactory
         Sprite towerSprite;
         switch (towerType)
         {
-            case TowerType.SingleTarget:
+            case TowerType.Basic:
                 towerSprite = TowerAtlas.CreateSprite("lever-blue");
                 towerSprite.CenterOrigin();
                 towerSprite.Scale = new Vector2(3f, 3f);
-                return new SingleTargetTower(position, towerSprite, LoadSplashAnimation());
-            case TowerType.Aoe:
+                return new BasicTower(position, towerSprite, LoadSplashAnimation());
+            case TowerType.Splash:
                 towerSprite = TowerAtlas.CreateSprite("lever-green");
                 towerSprite.CenterOrigin();
                 towerSprite.Scale = new Vector2(3f, 3f);
-                return new AoeTower(position, towerSprite, LoadWater4());
+                return new SplashTower(position, towerSprite, LoadWater4());
             default:
                 throw new ArgumentException($"Unknown tower type: {towerType}");
         }

@@ -234,14 +234,14 @@ public abstract class BattleScene : Scene
         {
             ClearStates();
             PlacingTower = true;
-            PlacingTowerType = TowerType.SingleTarget;
+            PlacingTowerType = TowerType.Basic;
         }
         // Toggle tower placement mode
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.W))
         {
             ClearStates();
             PlacingTower = true;
-            PlacingTowerType = TowerType.Aoe;
+            PlacingTowerType = TowerType.Splash;
         }
 
         // Spawn a creep
@@ -412,7 +412,7 @@ public abstract class BattleScene : Scene
 
     public void DrawCircleIndicator(float circleRadiusPx = 200f)
     {
-        DrawCircleIndicator(Core.Input.Mouse.Position.ToVector2());
+        DrawCircleIndicator(Core.Input.Mouse.Position.ToVector2(), circleRadiusPx);
     }
 
     public void DrawPath(GameTime gameTime)
@@ -462,7 +462,7 @@ public abstract class BattleScene : Scene
                 TowerSprite.Draw(Core.SpriteBatch, mousePos, SemiTransparentRed, 0f);
 
             Core.SpriteBatch.End();
-            DrawCircleIndicator(circleRadiusPx: (TowerFactory.CreateTower(mousePos, PlacingTowerType).Range));
+            DrawCircleIndicator(circleRadiusPx: TowerStats.AllTowerStats[PlacingTowerType]["Range"] * TDConstants.PixelsPerMeter);
         }
     }
 

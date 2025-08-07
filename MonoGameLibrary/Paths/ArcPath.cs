@@ -181,8 +181,8 @@ namespace MonoGameLibrary.Paths
 
         public override bool HasCollided(Hitbox hitbox)
         {
-            Circle innerCircle = new Circle(CenterPoint.ToPoint(), (int)(Radius - Constants.PathWidth * 1.5f));
-            Circle outerCircle = new Circle(CenterPoint.ToPoint(), (int)(Radius + Constants.PathWidth / 2));
+            Circle innerCircle = new Circle(CenterPoint.ToPoint(), (int)(Radius - TDConstants.PathWidth * 1.5f));
+            Circle outerCircle = new Circle(CenterPoint.ToPoint(), (int)(Radius + TDConstants.PathWidth / 2));
 
             bool circleCheck = outerCircle.Intersects(hitbox.circleBox) && !innerCircle.Intersects(hitbox.circleBox);
 

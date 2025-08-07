@@ -120,7 +120,7 @@ namespace MonoGameLibrary.Paths
 
         public override bool HasCollided(Hitbox hitbox)
         {
-            float halfHeight = Constants.PathWidth / 2f; // Half the width of the path
+            float halfHeight = TDConstants.PathWidth / 2f; // Half the width of the path
             Vector2 perp = new Vector2(-Direction.Y, Direction.X); // Perpendicular vector
             Vector2 offset = perp * halfHeight;
 

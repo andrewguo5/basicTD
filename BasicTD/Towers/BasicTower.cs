@@ -4,17 +4,20 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Creeps;
 using System.Collections.Generic;
+using MonoGameLibrary;
+using Microsoft.VisualBasic;
 
 namespace BasicTD.Towers
 {
-    public class SingleTargetTower : Tower
+    public class BasicTower : Tower
     {
-        public override float AttackSpeed { get; } = 1.2f; // 1 attack per second
-        public override int Damage { get; } = 1; // Example damage value
-        public override float Range { get; } = 200.0f; // Example range
+        public static Dictionary<string, float> Stats => TowerStats.AllTowerStats[TowerType.Basic];
+        public override float AttackSpeed => Stats["AttackSpeed"];
+        public override int Damage => (int)Stats["Damage"];
+        public override float Range => Stats["Range"] * TDConstants.PixelsPerMeter;
         public override int TowerId { get; } = -1; // Unique identifier for the
 
-        public SingleTargetTower(
+        public BasicTower(
             Vector2 position, Sprite sprite, AnimatedSprite attackAnimation) : base(position, sprite, attackAnimation)
         {
             // Additional initialization if needed
