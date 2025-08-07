@@ -17,7 +17,9 @@ public abstract class Tower
     public abstract int Damage { get; } // Let's just have int damage
     public abstract float AttackSpeed { get; } // in hertz
     public float AttackCooldown = 0f; // in seconds
+    public float WindupTime = 0f; // seconds
     private int TowerBoxRadius = 16;
+    public string State = "neutral";
     private Hitbox TowerBox;
     public AnimatedSprite AttackAnimation;
 
@@ -34,6 +36,7 @@ public abstract class Tower
     {
         // Reduce attack cooldown
         AttackCooldown = Math.Max(0f, AttackCooldown - (float)gameTime.ElapsedGameTime.TotalSeconds);
+        WindupTime = Math.Max(0f, WindupTime - (float)gameTime.ElapsedGameTime.TotalSeconds);
         AttackAnimation.Update(gameTime);
     }
 

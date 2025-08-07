@@ -147,9 +147,10 @@ public abstract class BattleScene : Scene
 
     public AnimatedSprite LoadWater4()
     {
-        AnimatedSprite Water10Animation = Water4Atlas.CreateAnimatedSprite("Water4");
-        Water10Animation.Scale = new Vector2(0.3f, 0.3f);
-        return Water10Animation;
+        AnimatedSprite LoadWater4 = Water4Atlas.CreateAnimatedSprite("Water4");
+        LoadWater4.Scale = new Vector2(0.3f, 0.3f);
+        LoadWater4.Repeat = false;
+        return LoadWater4;
     }
 
     public abstract void InitializePath();

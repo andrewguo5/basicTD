@@ -9,7 +9,7 @@ namespace BasicTD.Towers
     public class SplashTower : Tower
     {
         public TowerType towerType => TowerType.Splash;
-        public override float AttackSpeed { get; } = 1.2f; // 1 attack per second
+        public override float AttackSpeed { get; } = 2f; // 1 attack per second
         public override int Damage { get; } = 1; // Example damage value
         public override float Range { get; } = 100.0f; // Example range
         public override int TowerId { get; } = -1; // Unique identifier for the
@@ -24,20 +24,32 @@ namespace BasicTD.Towers
         {
             // Logic to attack the creep, e.g., reduce its health
             // This method can be overridden in derived classes for specific attack behavior
-            if (AttackCooldown > 0f)
+            if (AttackCooldown > 0f || WindupTime > 0f)
                 return; // Cannot attack yet
 
-            List<Creep> creepsInRange = CreepsInRange(creepList);
+            float delaySeconds = AttackAnimation.AnimationTime * 0.9f;
 
-            float delaySeconds = AttackAnimation.AnimationTime * 0.5f;
-            foreach (var creep in creepsInRange)
+            if (State == "neutral")
             {
-                creep.TakeDamage(Damage, delaySeconds);
+                if (CreepsInRange(creepList).Count > 0)
+                {
+                    State = "attacking";
+                    AttackAnimation.Play();
+                    WindupTime = delaySeconds;
+                }
             }
-            AttackAnimation.Play();
 
-            // Reset attack cooldown
-            AttackCooldown = 1f / AttackSpeed;
+            if (State == "attacking")
+            {
+                List<Creep> creepsInRange = CreepsInRange(creepList);
+                foreach (var creep in creepsInRange)
+                {
+                    creep.TakeDamage(Damage, 0f);
+                }
+                State = "neutral";
+            }
+
+            AttackCooldown = 1f / AttackSpeed + AttackAnimation.AnimationTime;
         }
 
         public override void Draw(SpriteBatch spriteBatch, Color color)

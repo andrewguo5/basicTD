@@ -57,6 +57,7 @@ public class TowerFactory
     {
         AnimatedSprite Water4Animation = Water4Atlas.CreateAnimatedSprite("Water4");
         Water4Animation.Scale = new Vector2(0.3f, 0.3f);
+        Water4Animation.Repeat = false;
         return Water4Animation;
     }
 }

@@ -256,7 +256,7 @@ public class TextureAtlas
             }
         }
 
-        TimeSpan delay = TimeSpan.FromMilliseconds(55);
+        TimeSpan delay = TimeSpan.FromMilliseconds(20);
         Animation animation = new Animation(frames, delay);
         atlas.AddAnimation(texturePath, animation);
         return atlas;
