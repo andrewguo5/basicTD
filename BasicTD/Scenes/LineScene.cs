@@ -78,8 +78,8 @@ public class LineScene : BattleScene
     public void DrawMarkers(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: Grayscale);
-        StartMarker.Draw(Core.SpriteBatch, StartingPosition);
-        EndMarker.Draw(Core.SpriteBatch, EndingPosition);
+        StartMarker.Draw(Core.SpriteBatch, Path.StartingPoint);
+        EndMarker.Draw(Core.SpriteBatch, Path.EndingPoint);
         Core.SpriteBatch.End();
     }
 }

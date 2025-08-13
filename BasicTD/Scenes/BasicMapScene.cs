@@ -27,8 +27,8 @@ public class BasicMapScene : BattleScene
     public BasicMapScene() : base()
     {
         MapBounds = new Rectangle(
-            200, 36,
-            800, 384
+            240, 80,
+            720, 400
         );
     }
 
@@ -45,7 +45,12 @@ public class BasicMapScene : BattleScene
     public override void InitializePath()
     {
         // Load the path from the XML file
-        Path = LinkedPath.FromFile(Core.Content, "paths/beginner-map.xml", MapBounds.Location.ToVector2());
+        Path = LinkedPath.FromFile(
+            Core.Content,
+            "paths/beginner-map.xml",
+            MapBounds.Location.ToVector2(),
+            0.8f
+        );
         Path.LoadSprites(Atlas);
     }
 
@@ -54,16 +59,16 @@ public class BasicMapScene : BattleScene
         base.LoadContent();
 
         Tilemap = Tilemap.FromFile(Core.Content, "images/tilemap-definition.xml");
-        Tilemap.Scale = new Vector2(4f, 4f);
+        Tilemap.Scale = new Vector2(3f, 3f);
 
         WallFloorAtlas = TextureAtlas.FromFile(Core.Content, "images/walls_floor_atlas.xml");
         VerticalWallTop = WallFloorAtlas.CreateSprite("vertical-wall-top");
         VerticalWallMid = WallFloorAtlas.CreateSprite("vertical-wall-mid");
         VerticalWallBot = WallFloorAtlas.CreateSprite("vertical-wall-bot");
 
-        VerticalWallTop.Scale = new Vector2(4f, 4f);
-        VerticalWallMid.Scale = new Vector2(4f, 4f);
-        VerticalWallBot.Scale = new Vector2(4f, 4f);
+        VerticalWallTop.Scale = new Vector2(3f, 3f);
+        VerticalWallMid.Scale = new Vector2(3f, 3f);
+        VerticalWallBot.Scale = new Vector2(3f, 3f);
     }
 
     public override void Update(GameTime gameTime)
@@ -96,7 +101,7 @@ public class BasicMapScene : BattleScene
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
         // First batch
-        int _y = MapBounds.Top * 2;
+        int _y = MapBounds.Top;
         VerticalWallTop.Draw(Core.SpriteBatch, new Vector2(20, _y));
         VerticalWallTop.Draw(Core.SpriteBatch, new Vector2(1180 - VerticalWallTop.Width, _y));
         _y += (int)VerticalWallTop.Height;
@@ -110,6 +115,20 @@ public class BasicMapScene : BattleScene
         VerticalWallBot.Draw(Core.SpriteBatch, new Vector2(20, _y));
         VerticalWallBot.Draw(Core.SpriteBatch, new Vector2(1180 - VerticalWallBot.Width, _y));
 
+        Core.SpriteBatch.End();
+
+        // Draw the scaffold for debugging
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        // Top UI boundary: Separates the info UI from the map
+        Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, MapBounds.Top);
+
+        // Bottom player UI boundary: Separates the map from the player UI
+        Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, MapBounds.Bottom);
+
+        // Left and right map boundaries
+        Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Left);
+        Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Right);
         Core.SpriteBatch.End();
     }
 

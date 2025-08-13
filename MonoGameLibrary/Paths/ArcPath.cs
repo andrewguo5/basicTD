@@ -12,8 +12,10 @@ namespace MonoGameLibrary.Paths
     public class ArcPath : Path
     {
         private Sprite RoadSegment = null;
-        public override Vector2 StartingPoint { get; set; }
-
+        public override Vector2 Offset { get; set; }
+        public override float Scale { get; set; } = 1.0f;
+        private Vector2 _startingPoint;
+        public override Vector2 StartingPoint => _startingPoint * Scale + Offset;
         public override Vector2 EndingPoint
         {
             get
@@ -38,7 +40,8 @@ namespace MonoGameLibrary.Paths
             }
         }
 
-        private Vector2 CenterPoint { get; set; }
+        private Vector2 _centerPoint;
+        private Vector2 CenterPoint => _centerPoint * Scale + Offset;
 
         private float Radius
         {
@@ -67,11 +70,24 @@ namespace MonoGameLibrary.Paths
             }
         }
 
+        public ArcPath(Vector2 startingPoint, Vector2 centerPoint, float arcAngle) : this(startingPoint, centerPoint, arcAngle, Vector2.Zero, 1.0f) { }
 
-        public ArcPath(Vector2 startingPoint, Vector2 centerPoint, float arcAngle)
+        public ArcPath(Vector2 startingPoint, Vector2 centerPoint, float arcAngle, Vector2 offset)
+            : this(startingPoint, centerPoint, arcAngle, offset, 1.0f)
         {
-            StartingPoint = startingPoint;
-            CenterPoint = centerPoint;
+        }
+
+        public ArcPath(Vector2 startingPoint, Vector2 centerPoint, float arcAngle, float scale)
+            : this(startingPoint, centerPoint, arcAngle, Vector2.Zero, scale)
+        {
+        }
+
+        public ArcPath(Vector2 startingPoint, Vector2 centerPoint, float arcAngle, Vector2 offset, float scale)
+        {
+            Offset = offset;
+            Scale = scale;
+            _startingPoint = startingPoint;
+            _centerPoint = centerPoint;
             ArcAngle = arcAngle;
         }
 
@@ -127,7 +143,7 @@ namespace MonoGameLibrary.Paths
             return (float)Math.Atan2(deltaY, deltaX);
         }
 
-        public static ArcPath LoadFromXML(XElement _path, Vector2 origin)
+        public static ArcPath LoadFromXML(XElement _path, Vector2 offset, float scale)
         {
             string startingPointStr = _path.Attribute("startingPoint").Value;
             string centerPointStr = _path.Attribute("centerPoint").Value;
@@ -140,18 +156,18 @@ namespace MonoGameLibrary.Paths
             var startingPoint = new Vector2(
                 float.Parse(startingPointParts[0]),
                 float.Parse(startingPointParts[1])
-            ) + origin;
+            );
 
             var centerPoint = new Vector2(
                 float.Parse(centerPointParts[0]),
                 float.Parse(centerPointParts[1])
-            ) + origin;
+            );
 
-            return new ArcPath(startingPoint, centerPoint, arcAngle);
+            return new ArcPath(startingPoint, centerPoint, arcAngle, offset, scale);
         }
         public static ArcPath LoadFromXML(XElement _path)
         {
-            return LoadFromXML(_path, Vector2.Zero);
+            return LoadFromXML(_path, Vector2.Zero, 1.0f);
         }
 
         public override void Draw(SpriteBatch spriteBatch, Texture2D pixel)

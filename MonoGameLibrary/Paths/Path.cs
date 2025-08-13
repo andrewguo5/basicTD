@@ -8,10 +8,13 @@ namespace MonoGameLibrary.Paths
 {
     public abstract class Path
     {
+        public abstract Vector2 Offset { get; set; }
+        public abstract float Scale { get; set; }
+
         /// <summary>
         /// Represents the starting point of the path.
         /// </summary>
-        public abstract Vector2 StartingPoint { get; set; }
+        public abstract Vector2 StartingPoint { get; }
 
         /// <summary>
         /// The end point of the path is always computed based on 

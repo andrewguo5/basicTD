@@ -31,7 +31,7 @@ public class LinkedArcScene : BattleScene
     public override void InitializePath()
     {
         // Load the path from the XML file
-        Path = LinkedPath.FromFile(Core.Content, "paths/multi-path.xml");
+        Path = LinkedPath.FromFile(Core.Content, "paths/multi-path.xml", new Vector2(-20, 0), 0.95f);
         Path.LoadSprites(Atlas);
     }
 

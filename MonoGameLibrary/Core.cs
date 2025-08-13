@@ -1,4 +1,5 @@
 using System;
+using BasicTD.Frontend;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -59,6 +60,8 @@ public class Core : Game
     /// </summary>
     public static AudioController Audio { get; private set; }
 
+    public static Scaffold Scaffold { get; private set; }
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>
@@ -108,6 +111,8 @@ public class Core : Game
         Input = new InputManager();
 
         Audio = new AudioController();
+
+        Scaffold = new Scaffold(graphicsDevice: GraphicsDevice);
     }
     protected override void LoadContent()
     {

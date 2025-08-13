@@ -12,7 +12,10 @@ namespace MonoGameLibrary.Paths
     public class LinePath : Path
     {
         private Sprite RoadSegment = null;
-        public override Vector2 StartingPoint { get; set; }
+        private Vector2 _startingPoint;
+        public override Vector2 Offset { get; set; }
+        public override float Scale { get; set; } = 1.0f;
+        public override Vector2 StartingPoint => _startingPoint * Scale + Offset;
         public override Vector2 EndingPoint
         {
             get
@@ -36,30 +39,30 @@ namespace MonoGameLibrary.Paths
         // Private backing field for Length
         private float _length { get; set; }
 
-        public override float Length { get { return _length; } }
-        private bool IsAxisAligned
+        public override float Length { get { return _length * Scale; } }
+
+        public LinePath(Vector2 startingPoint, Vector2 endingPoint) : this(startingPoint, endingPoint, Vector2.Zero, 1.0f) { }
+
+        public LinePath(Vector2 startingPoint, Vector2 endingPoint, Vector2 offset)
+            : this(startingPoint, endingPoint, offset, 1.0f)
         {
-            get
-            {
-                // Check if the path is axis-aligned (horizontal or vertical)
-                return Direction.X == 0 || Direction.Y == 0;
-            }
         }
 
-        public LinePath(Vector2 startingPoint, Vector2 endingPoint)
+        public LinePath(Vector2 startingPoint, Vector2 endingPoint, float scale)
+            : this(startingPoint, endingPoint, Vector2.Zero, scale)
         {
-            StartingPoint = startingPoint;
+        }
+
+        public LinePath(Vector2 startingPoint, Vector2 endingPoint, Vector2 offset, float scale)
+        {
+            Offset = offset;
+            Scale = scale;
+            _startingPoint = startingPoint;
+            Vector2 _endingPoint = endingPoint * scale + Offset;
 
             // Calculate the direction vector and length of the path
-            Direction = Vector2.Normalize(endingPoint - StartingPoint);
-            _length = Vector2.Distance(StartingPoint, endingPoint);
-        }
-
-        public LinePath(Vector2 startingPoint, Vector2 direction, float length, TextureAtlas atlas)
-        {
-            StartingPoint = startingPoint;
-            Direction = Vector2.Normalize(direction);
-            _length = length;
+            Direction = Vector2.Normalize(_endingPoint - StartingPoint);
+            _length = Vector2.Distance(startingPoint, endingPoint);
         }
 
         public override void LoadSprites(TextureAtlas atlas)
@@ -78,10 +81,10 @@ namespace MonoGameLibrary.Paths
                 throw new ArgumentOutOfRangeException(nameof(distance), "Distance cannot be negative.");
             }
 
-            return StartingPoint + Direction * Math.Clamp(distance, 0.0f, _length);
+            return StartingPoint + Direction * Math.Clamp(distance, 0.0f, Length);
         }
 
-        public static LinePath LoadFromXML(XElement _path, Vector2 origin)
+        public static LinePath LoadFromXML(XElement _path, Vector2 offset, float scale)
         {
             string startingPointStr = _path.Attribute("startingPoint").Value;
             string endingPointStr = _path.Attribute("endingPoint").Value;
@@ -92,19 +95,19 @@ namespace MonoGameLibrary.Paths
             var startingPoint = new Vector2(
                 float.Parse(startingPointParts[0]),
                 float.Parse(startingPointParts[1])
-            ) + origin;
+            );
 
             var endingPoint = new Vector2(
                 float.Parse(endingPointParts[0]),
                 float.Parse(endingPointParts[1])
-            ) + origin;
+            );
 
-            return new LinePath(startingPoint, endingPoint);
+            return new LinePath(startingPoint, endingPoint, offset, scale);
         }
 
         public static LinePath LoadFromXML(XElement _path)
         {
-            return LoadFromXML(_path, Vector2.Zero);
+            return LoadFromXML(_path, Vector2.Zero, 1.0f);
         }
 
         public override void Draw(SpriteBatch spriteBatch, Texture2D pixel)

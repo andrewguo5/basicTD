@@ -13,26 +13,44 @@ namespace MonoGameLibrary.Paths
 {
     public class LinkedPath : Path
     {
+        private Vector2 _offset;
+        public override Vector2 Offset
+        {
+            get { return _offset; }
+            set
+            {
+                foreach (var path in Paths)
+                {
+                    path.Offset = value;
+                }
+                _offset = value;
+            }
+        }
+        private float _scale = 1.0f;
+        public override float Scale
+        {
+            get { return _scale; }
+            set
+            {
+                foreach (var path in Paths)
+                {
+                    path.Scale = value;
+                }
+                _scale = value;
+            }
+        }
         public List<Path> Paths;
-
         public override Vector2 StartingPoint
         {
             get
             {
                 if (Paths.Count == 0)
                 {
-                    return Vector2.Zero; // Default starting point if no paths are linked.
+                    return Vector2.Zero;
                 }
                 else
                 {
                     return Paths[0].StartingPoint;
-                }
-            }
-            set
-            {
-                if (Paths.Count > 0)
-                {
-                    Paths[0].StartingPoint = value;
                 }
             }
         }
@@ -85,10 +103,12 @@ namespace MonoGameLibrary.Paths
                 return totalLength;
             }
         }
-
-        public LinkedPath()
+        public LinkedPath() : this(Vector2.Zero, 1.0f) { }
+        public LinkedPath(Vector2 offset, float scale)
         {
             Paths = new List<Path>();
+            Offset = offset;
+            Scale = scale;
         }
 
         public LinkedPath(IEnumerable<Path> paths)
@@ -100,6 +120,8 @@ namespace MonoGameLibrary.Paths
         {
             if (path != null)
             {
+                path.Offset = this.Offset;
+                path.Scale = this.Scale;
                 Paths.Add(path);
             }
         }
@@ -141,9 +163,9 @@ namespace MonoGameLibrary.Paths
             return EndingPoint;
         }
 
-        public static LinkedPath FromFile(ContentManager content, string fileName, Vector2 origin)
+        public static LinkedPath FromFile(ContentManager content, string fileName, Vector2 offset, float scale)
         {
-            LinkedPath linkedPath = new LinkedPath();
+            LinkedPath linkedPath = new LinkedPath(offset, scale);
 
             string filepath = System.IO.Path.Combine(content.RootDirectory, fileName);
 
@@ -163,11 +185,11 @@ namespace MonoGameLibrary.Paths
                             string type = _path.Attribute("type")?.Value;
                             if (type == "LinePath")
                             {
-                                linkedPath.AddPath(LinePath.LoadFromXML(_path, origin));
+                                linkedPath.AddPath(LinePath.LoadFromXML(_path));
                             }
                             else if (type == "ArcPath")
                             {
-                                linkedPath.AddPath(ArcPath.LoadFromXML(_path, origin));
+                                linkedPath.AddPath(ArcPath.LoadFromXML(_path));
                             }
                             else
                             {
@@ -183,7 +205,7 @@ namespace MonoGameLibrary.Paths
 
         public static LinkedPath FromFile(ContentManager content, string fileName)
         {
-            return FromFile(content, fileName, Vector2.Zero);
+            return FromFile(content, fileName, Vector2.Zero, 1.0f);
         }
 
         public override void Draw(SpriteBatch spriteBatch, Texture2D pixel)
