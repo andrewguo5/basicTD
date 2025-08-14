@@ -27,8 +27,8 @@ public class BasicMapScene : BattleScene
     public BasicMapScene() : base()
     {
         MapBounds = new Rectangle(
-            240, 80,
-            720, 400
+            240, 100,
+            720, 420
         );
     }
 
@@ -59,7 +59,7 @@ public class BasicMapScene : BattleScene
         base.LoadContent();
 
         Tilemap = Tilemap.FromFile(Core.Content, "images/tilemap-definition.xml");
-        Tilemap.Scale = new Vector2(3f, 3f);
+        Tilemap.Scale = new Vector2(60f/16f, 60f/16f);
 
         WallFloorAtlas = TextureAtlas.FromFile(Core.Content, "images/walls_floor_atlas.xml");
         VerticalWallTop = WallFloorAtlas.CreateSprite("vertical-wall-top");
@@ -87,7 +87,7 @@ public class BasicMapScene : BattleScene
         Core.GraphicsDevice.Clear(new Color(92, 105, 127));
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
-        Vector2 tilemapOffset = MapBounds.Location.ToVector2() - new Vector2(Tilemap.TileWidth / 4f, 0);
+        Vector2 tilemapOffset = MapBounds.Location.ToVector2();
         Tilemap.Draw(Core.SpriteBatch, tilemapOffset);
         Core.SpriteBatch.End();
 
@@ -122,6 +122,9 @@ public class BasicMapScene : BattleScene
 
         // Top UI boundary: Separates the info UI from the map
         Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, MapBounds.Top);
+
+        // Top UI subsection: Separates the top bar from the relic bar
+        Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, 60);
 
         // Bottom player UI boundary: Separates the map from the player UI
         Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, MapBounds.Bottom);
