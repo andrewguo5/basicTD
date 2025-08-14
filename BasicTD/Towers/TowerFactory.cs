@@ -16,12 +16,14 @@ public class TowerFactory
     private TextureAtlas TowerAtlas;
     private TextureAtlas AttackAnimationAtlas;
     private TextureAtlas Water4Atlas;
+    private Vector2 SpriteScale;
 
-    public TowerFactory(TextureAtlas towerAtlas, TextureAtlas attackAnimationAtlas, TextureAtlas water4Atlas)
+    public TowerFactory(TextureAtlas towerAtlas, TextureAtlas attackAnimationAtlas, TextureAtlas water4Atlas, Vector2 spriteScale)
     {
         TowerAtlas = towerAtlas;
         AttackAnimationAtlas = attackAnimationAtlas;
         Water4Atlas = water4Atlas;
+        SpriteScale = spriteScale;
     }
 
     public Tower CreateTower(Vector2 position, TowerType towerType)
@@ -32,12 +34,12 @@ public class TowerFactory
             case TowerType.Basic:
                 towerSprite = TowerAtlas.CreateSprite("lever-blue");
                 towerSprite.CenterOrigin();
-                towerSprite.Scale = new Vector2(3f, 3f);
+                towerSprite.Scale = SpriteScale;
                 return new BasicTower(position, towerSprite, LoadSplashAnimation());
             case TowerType.Splash:
                 towerSprite = TowerAtlas.CreateSprite("lever-green");
                 towerSprite.CenterOrigin();
-                towerSprite.Scale = new Vector2(3f, 3f);
+                towerSprite.Scale = SpriteScale;
                 return new SplashTower(position, towerSprite, LoadWater4());
             default:
                 throw new ArgumentException($"Unknown tower type: {towerType}");

@@ -35,7 +35,7 @@ public abstract class BattleScene : Scene
     protected AnimatedSprite TorchSprite;
     protected Sprite TowerSprite;
     protected List<Sprite> SpriteManager;
-    protected Vector2 SpriteScale = new Vector2(3f, 3f);
+    protected Vector2 SpriteScale = new Vector2(2.5f, 2.5f);
 
     // Splash atlas
     protected TextureAtlas SplashAtlas;
@@ -194,7 +194,7 @@ public abstract class BattleScene : Scene
         Water4Atlas = TextureAtlas.FromSpineAtlas(Core.Content, "images/Water4.atlas.txt");
 
         // TowerFactory
-        TowerFactory = new(Atlas, SplashAtlas, Water4Atlas);
+        TowerFactory = new(Atlas, SplashAtlas, Water4Atlas, SpriteScale);
     }
     public override void UnloadContent()
     {
