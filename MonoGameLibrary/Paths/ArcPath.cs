@@ -96,7 +96,9 @@ namespace MonoGameLibrary.Paths
             // Optional: Implement sprite loading if needed
             RoadSegment = atlas.CreateSprite("road-segment");
             RoadSegment.Origin = new Vector2(0f, RoadSegment.Height / 2f);
-            RoadSegment.Scale = new Vector2(MathHelper.TwoPi * Radius / 100f, 2f);
+            // Scale the width of the road segment such that 100 segments will construct the full arc
+            // Why 100? That's the amount we draw in the Draw method below.
+            RoadSegment.Scale = new Vector2(MathHelper.TwoPi * Radius / 100f, RoadSegment.Height / TDConstants.PathWidth);
         }
 
         public override Vector2 ComputePositionFromDistance(float distance)

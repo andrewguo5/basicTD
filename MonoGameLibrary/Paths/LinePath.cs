@@ -69,7 +69,7 @@ namespace MonoGameLibrary.Paths
         {
             RoadSegment = atlas.CreateSprite("road-segment");
             RoadSegment.Origin = new Vector2(0f, RoadSegment.Height / 2f);
-            RoadSegment.Scale = new Vector2(Length / RoadSegment.Width, 2f);
+            RoadSegment.Scale = new Vector2(Length / RoadSegment.Width, RoadSegment.Height / TDConstants.PathWidth);
             RoadSegment.Rotation = (float)Math.Atan2(Direction.Y, Direction.X);
         }
 
