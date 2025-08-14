@@ -326,7 +326,7 @@ public abstract class BattleScene : Scene
             Hitbox TowerBox = new Hitbox(
                 mousePos, (int)(TowerSprite.Width * 0.5f)
             );
-            TowerPlacementValid = !Path.HasCollided(TowerBox);
+            TowerPlacementValid = !Path.HasCollided(TowerBox) && MapBounds.Contains(TowerBox.rectangleBox);
             if (TowerPlacementValid)
             {
                 foreach (Tower tower in Towers)
@@ -341,8 +341,6 @@ public abstract class BattleScene : Scene
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                // Towers.Add(new SingleTargetTower(mousePos, TowerSprite, LoadSplashAnimation()));
-                // Towers.Add(new SingleTargetTower(mousePos, TowerSprite, LoadWater10()));
                 Towers.Add(TowerFactory.CreateTower(mousePos, PlacingTowerType));
                 PlacingTower = false;
             }

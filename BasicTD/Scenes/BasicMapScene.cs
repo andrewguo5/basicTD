@@ -47,9 +47,9 @@ public class BasicMapScene : BattleScene
         // Load the path from the XML file
         Path = LinkedPath.FromFile(
             Core.Content,
-            "paths/beginner-map.xml",
+            "paths/beginner-map-std.xml",
             MapBounds.Location.ToVector2(),
-            0.8f
+            1f
         );
         Path.LoadSprites(Atlas);
     }

@@ -115,6 +115,9 @@
 /processorParam:TextureFormat=Color
 /build:images/Water4.png
 
+#begin paths/beginner-map-std.xml
+/copy:paths/beginner-map-std.xml
+
 #begin paths/beginner-map.xml
 /copy:paths/beginner-map.xml
 

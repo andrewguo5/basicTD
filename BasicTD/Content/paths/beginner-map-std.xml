@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinkedPath>
+    <Paths>
+        <Path type="LinePath" startingPoint="0,110" endingPoint="230,110"/>
+        <Path type="ArcPath" startingPoint="230,110" centerPoint="230,70" arcAngle="-270"/>
+        <Path type="LinePath" startingPoint="190,70" endingPoint="190,320"/>
+        <Path type="ArcPath" startingPoint="190,320" centerPoint="120,320" arcAngle="270"/>
+        <Path type="LinePath" startingPoint="120,250" endingPoint="530,250"/>
+        <Path type="ArcPath" startingPoint="530,250" centerPoint="530,150" arcAngle="-270"/>
+        <Path type="LinePath" startingPoint="430,150" endingPoint="430,340"/>
+        <Path type="ArcPath" startingPoint="430,340" centerPoint="450,340" arcAngle="-90"/>
+        <Path type="LinePath" startingPoint="450,360" endingPoint="720,360"/>
+    </Paths>
+</LinkedPath>
