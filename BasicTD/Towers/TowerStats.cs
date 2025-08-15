@@ -7,7 +7,7 @@ public static class TowerStats
     public static readonly Dictionary<string, float> BasicTowerStats = new Dictionary<string, float>
     {
         { "Damage", 1f },
-        { "Range", 5.0f },
+        { "Range", 3.0f },
         { "AttackSpeed", 1.0f }
     };
 
@@ -21,7 +21,7 @@ public static class TowerStats
     public static readonly Dictionary<string, float> SplashTowerStats = new Dictionary<string, float>
     {
         { "Damage", 1f },
-        { "Range", 3.0f },
+        { "Range", 2.0f },
         { "AttackSpeed", 1.0f }
     };
 

@@ -34,4 +34,9 @@ public class Scaffold
     {
         DrawVerticalLine(spriteBatch, x, 0, _graphicsDevice.Viewport.Height, thickness);
     }
+
+    public void DrawFilledRectangle(SpriteBatch spriteBatch, Rectangle rectangle, Color color)
+    {
+        spriteBatch.Draw(_pixel, rectangle, color);
+    }
 }

@@ -49,7 +49,7 @@ public abstract class BattleScene : Scene
 
     // Creeps
     // protected Creep TorchCreep;
-    protected float CreepSpeed = 250f; // pixels per second
+    protected float CreepSpeed = 150f; // pixels per second
     protected List<Creep> CreepList;
 
     // Towers
@@ -79,6 +79,9 @@ public abstract class BattleScene : Scene
     // Sprite Atlas
     protected TextureAtlas Atlas;
     protected Texture2D WhitePixel;
+
+    // Fonts
+    protected SpriteFont font;
 
     public BattleScene() : base()
     {
@@ -195,6 +198,9 @@ public abstract class BattleScene : Scene
 
         // TowerFactory
         TowerFactory = new(Atlas, SplashAtlas, Water4Atlas, SpriteScale);
+
+        // Load fonts
+        font = Core.Content.Load<SpriteFont>("fonts/04B_30");
     }
     public override void UnloadContent()
     {
