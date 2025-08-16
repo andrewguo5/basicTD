@@ -21,6 +21,10 @@
         <Region name="road-segment" x="0" y="76" width="2" height="20" />
         <Region name="grub-1" x="0" y="64" width="20" height="12" />
         <Region name="grub-2" x="20" y="64" width="20" height="12" />
+        <Region name="gold" x="64" y="0" width="16" height="16" />
+        <Region name="heart" x="80" y="0" width="16" height="16" />
+        <Region name="skull" x="96" y="0" width="16" height="16" />
+        <Region name="gear" x="112" y="0" width="16" height="16" />
     </Regions>
     <Animations>
         <Animation name="torch-yellow-animation" delay="200">

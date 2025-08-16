@@ -27,8 +27,9 @@ public class BasicMapScene : BattleScene
     private Vector2 LivesStringLocation;
     private Vector2 WaveStringLocation;
     private Vector2 ShopStringLocation;
+    private Vector2 GearIconLocation;
     private int sideBannerBuffer = 30;
-    private int topBannerInfoBuffer = 60;
+    private int topBannerInfoBuffer = 120;
     private int textPadding = 10;
 
     // Wall sprites
@@ -56,10 +57,11 @@ public class BasicMapScene : BattleScene
         NameStringLocation = new Vector2(p+sideBannerBuffer, 20);
         CreepStringLocation = new Vector2(p+sideBannerBuffer, MapBounds.Top);
         InventoryStringLocation = new Vector2(p+MapBounds.Right + sideBannerBuffer, MapBounds.Top);
-        GoldStringLocation = new Vector2(p+MapBounds.Right - 3*topBannerInfoBuffer, 20);
-        LivesStringLocation = new Vector2(p+MapBounds.Right - 2*topBannerInfoBuffer, 20);
+        LivesStringLocation = new Vector2(p+MapBounds.Right - 3*topBannerInfoBuffer, 20);
+        GoldStringLocation = new Vector2(p+MapBounds.Right - 2*topBannerInfoBuffer, 20);
         WaveStringLocation = new Vector2(p+MapBounds.Right - 1*topBannerInfoBuffer, 20);
         ShopStringLocation = new Vector2(p+MapBounds.Left, MapBounds.Bottom + 60);
+        GearIconLocation = new Vector2(Core.GraphicsDevice.Viewport.Width - sideBannerBuffer - p - GearSprite.Region.Width, 25);
 
         // Scene management
         NextScene = new LineScene();
@@ -126,6 +128,7 @@ public class BasicMapScene : BattleScene
 
         DrawBanners(Core.SpriteBatch);
         DrawSpriteFonts(Core.SpriteBatch);
+        DrawTopBannerIcons(Core.SpriteBatch);
         DrawScaffoldingLines(Core.SpriteBatch);
 
         Core.SpriteBatch.End();
@@ -179,10 +182,53 @@ public class BasicMapScene : BattleScene
         spriteBatch.DrawString(font, "Bishop", NameStringLocation, Color.White);
         spriteBatch.DrawString(font, $"Creeps", CreepStringLocation, Color.White);
         spriteBatch.DrawString(font, $"Inventory", InventoryStringLocation, Color.White);
-        spriteBatch.DrawString(font, $"{99}", GoldStringLocation, Color.Gold);
         spriteBatch.DrawString(font, $"{20}", LivesStringLocation, Color.Red);
+        spriteBatch.DrawString(font, $"{99}", GoldStringLocation, Color.Gold);
         spriteBatch.DrawString(font, $"{1}/{5}", WaveStringLocation, Color.White);
         spriteBatch.DrawString(font, "Shop: 1-Tower 2-Sell 3-Upgrade", ShopStringLocation, Color.White);
+    }
+
+    private void DrawTopBannerIcons(SpriteBatch spriteBatch)
+    {
+        // Draw the icons for lives, gold, and wave
+        int iconPadding = 5;
+        int iconDrop = 5;
+
+        // Draw lives icon
+        Vector2 livesIconPosition = new Vector2(
+            LivesStringLocation.X - 20 - iconPadding,
+            LivesStringLocation.Y + iconDrop
+        );
+        HeartSprite.Draw(
+            spriteBatch,
+            livesIconPosition
+        );
+
+        // Draw gold icon
+        Vector2 goldIconPosition = new Vector2(
+            GoldStringLocation.X - 20 - iconPadding,
+            GoldStringLocation.Y + iconDrop
+        );
+        GoldSprite.Draw(
+            spriteBatch,
+            goldIconPosition
+        );
+
+        // Draw wave icon
+        Vector2 waveIconPosition = new Vector2(
+            WaveStringLocation.X - 20 - iconPadding,
+            WaveStringLocation.Y + iconDrop
+        );
+        SkullSprite.Draw(
+            spriteBatch,
+            waveIconPosition
+        );
+
+        // Draw settings icon
+        GearSprite.Draw(
+            spriteBatch,
+            GearIconLocation
+        );
     }
     private void DrawScaffoldingLines(SpriteBatch spriteBatch)
     {

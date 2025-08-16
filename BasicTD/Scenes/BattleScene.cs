@@ -36,6 +36,10 @@ public abstract class BattleScene : Scene
     protected Sprite TowerSprite;
     protected List<Sprite> SpriteManager;
     protected Vector2 SpriteScale = new Vector2(2.5f, 2.5f);
+    protected Sprite GoldSprite;
+    protected Sprite HeartSprite;
+    protected Sprite SkullSprite;
+    protected Sprite GearSprite;
 
     // Splash atlas
     protected TextureAtlas SplashAtlas;
@@ -108,6 +112,10 @@ public abstract class BattleScene : Scene
             ControlPointMarker,
             TorchSprite,
             TowerSprite,
+            GoldSprite,
+            HeartSprite,
+            SkullSprite,
+            GearSprite
         };
 
         // Scale and center the sprites
@@ -188,6 +196,10 @@ public abstract class BattleScene : Scene
         ControlPointMarker = Atlas.CreateSprite("lever-yellow");
         TorchSprite = Atlas.CreateAnimatedSprite("torch-red-animation");
         TowerSprite = Atlas.CreateSprite("lever-green");
+        GoldSprite = Atlas.CreateSprite("gold");
+        HeartSprite = Atlas.CreateSprite("heart");
+        SkullSprite = Atlas.CreateSprite("skull");
+        GearSprite = Atlas.CreateSprite("gear");
 
         // Create the texture atlas from the XML configuration file
         SplashAtlas = TextureAtlas.FromFile(Core.Content, "images/splash1.xml");
