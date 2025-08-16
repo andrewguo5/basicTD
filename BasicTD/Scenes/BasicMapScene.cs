@@ -129,7 +129,9 @@ public class BasicMapScene : BattleScene
         DrawBanners(Core.SpriteBatch);
         DrawSpriteFonts(Core.SpriteBatch);
         DrawTopBannerIcons(Core.SpriteBatch);
-        DrawScaffoldingLines(Core.SpriteBatch);
+
+        if (DebugDraw)
+            DrawScaffoldingLines(Core.SpriteBatch);
 
         Core.SpriteBatch.End();
     }
