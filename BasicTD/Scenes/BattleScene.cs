@@ -41,6 +41,15 @@ public abstract class BattleScene : Scene
     protected Sprite SkullSprite;
     protected Sprite GearSprite;
 
+    // Card Sprites
+    public List<Sprite> CardSpriteManager;
+    protected Sprite CardCommonSprite;
+    protected Sprite CardUncommonSprite;
+    protected Sprite CardRateSprite;
+    protected Sprite CardEpicSprite;
+    protected Sprite CardLegendarySprite;
+    protected Sprite CardNullSprite;
+
     // Splash atlas
     protected TextureAtlas SplashAtlas;
     protected TextureAtlas Water10Atlas;
@@ -52,7 +61,6 @@ public abstract class BattleScene : Scene
     public Path Path { get; set; }
 
     // Creeps
-    // protected Creep TorchCreep;
     protected float CreepSpeed = 150f; // pixels per second
     protected List<Creep> CreepList;
 
@@ -64,7 +72,7 @@ public abstract class BattleScene : Scene
     protected TowerFactory TowerFactory;
 
     // Toggleable Modes
-    protected bool DebugDraw = false;
+    public bool DebugDraw = false;
     protected bool Paused = false;
     protected bool Grayed = false;
     protected bool PlacingTower = false;
@@ -82,6 +90,7 @@ public abstract class BattleScene : Scene
 
     // Sprite Atlas
     protected TextureAtlas Atlas;
+    protected TextureAtlas CardAtlas;
     protected Texture2D WhitePixel;
 
     // Fonts
@@ -118,11 +127,26 @@ public abstract class BattleScene : Scene
             GearSprite
         };
 
+        CardSpriteManager = new List<Sprite>()
+        {
+            CardCommonSprite,
+            CardUncommonSprite,
+            CardRateSprite,
+            CardEpicSprite,
+            CardLegendarySprite,
+            CardNullSprite
+        };  
+
         // Scale and center the sprites
         foreach (var sprite in SpriteManager)
         {
             sprite.CenterOrigin();
             sprite.Scale = SpriteScale;
+        }
+
+        foreach (var sprite in CardSpriteManager)
+        {
+            sprite.Scale = new Vector2(2f, 2f);
         }
 
         // Delegate to child class to initialize the path
@@ -152,7 +176,6 @@ public abstract class BattleScene : Scene
     public AnimatedSprite LoadWater10()
     {
         AnimatedSprite Water10Animation = Water10Atlas.CreateAnimatedSprite("Water10");
-        // Water10Animation.CenterOrigin();
         return Water10Animation;
     }
 
@@ -179,6 +202,7 @@ public abstract class BattleScene : Scene
 
         // Create the texture atlas from the XML configuration file
         Atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+        CardAtlas = TextureAtlas.FromFile(Core.Content, "images/card-shop-atlas.xml");
 
         // Load the grayscale effect
         Grayscale = Core.Content.Load<Effect>("effects/grayscaleEffect");
@@ -200,6 +224,12 @@ public abstract class BattleScene : Scene
         HeartSprite = Atlas.CreateSprite("heart");
         SkullSprite = Atlas.CreateSprite("skull");
         GearSprite = Atlas.CreateSprite("gear");
+        CardCommonSprite = CardAtlas.CreateSprite("card-common");
+        CardUncommonSprite = CardAtlas.CreateSprite("card-uncommon");
+        CardRateSprite = CardAtlas.CreateSprite("card-rare");
+        CardEpicSprite = CardAtlas.CreateSprite("card-epic");
+        CardLegendarySprite = CardAtlas.CreateSprite("card-legendary");
+        CardNullSprite = CardAtlas.CreateSprite("card-null");
 
         // Create the texture atlas from the XML configuration file
         SplashAtlas = TextureAtlas.FromFile(Core.Content, "images/splash1.xml");

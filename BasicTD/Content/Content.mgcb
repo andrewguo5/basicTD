@@ -45,6 +45,21 @@
 #begin fonts/04B_30.ttf
 /copy:fonts/04B_30.ttf
 
+#begin images/card_shop_icons.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/card_shop_icons.png
+
+#begin images/card-shop-atlas.xml
+/copy:images/card-shop-atlas.xml
+
 #begin images/decorative_cracks_floor.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -56,6 +71,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/decorative_cracks_floor.png
+
+#begin images/side-banner-tilemap.xml
+/copy:images/side-banner-tilemap.xml
 
 #begin images/splash1.png
 /importer:TextureImporter

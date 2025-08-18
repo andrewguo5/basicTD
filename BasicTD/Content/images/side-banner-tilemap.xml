@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tilemap>
+    <Tileset region="0 80 48 64" tileWidth="16" tileHeight="16">images/walls_floor</Tileset>
+    <Tiles>
+        00 01 02
+        03 04 05
+        03 04 05
+        03 04 05
+        03 04 05
+        03 04 05
+        06 07 08
+    </Tiles>
+</Tilemap>

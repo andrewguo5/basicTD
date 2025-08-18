@@ -15,28 +15,53 @@ public class Scaffold
         _pixel.SetData(new[] { Color.White });
     }
 
-    public void DrawHorizontalLine(SpriteBatch spriteBatch, int x, int y, int length, int thickness = 1)
+    public void DrawHorizontalLine(SpriteBatch spriteBatch, int x, int y, int length, int colorOption = 0)
     {
-        spriteBatch.Draw(_pixel, new Rectangle(x, y, length, thickness), Color.Red);
+        Color color = colorOption switch
+        {
+            1 => Color.LimeGreen,
+            2 => Color.Cyan,
+            _ => Color.Red
+        };
+        spriteBatch.Draw(_pixel, new Rectangle(x, y, length, 1), color);
     }
 
-    public void DrawVerticalLine(SpriteBatch spriteBatch, int x, int y, int length, int thickness = 1)
+    public void DrawVerticalLine(SpriteBatch spriteBatch, int x, int y, int length, int colorOption = 0)
     {
-        spriteBatch.Draw(_pixel, new Rectangle(x, y, thickness, length), Color.Red);
+        Color color = colorOption switch
+        {
+            1 => Color.LimeGreen,
+            2 => Color.Cyan,
+            _ => Color.Red
+        };
+        spriteBatch.Draw(_pixel, new Rectangle(x, y, 1, length), color);
     }
 
-    public void DrawHorizontalLineAtY(SpriteBatch spriteBatch, int y, int thickness = 1)
+    public void DrawHorizontalLineAtY(SpriteBatch spriteBatch, int y, int colorOption = 0)
     {
-        DrawHorizontalLine(spriteBatch, 0, y, _graphicsDevice.Viewport.Width, thickness);
+        DrawHorizontalLine(spriteBatch, 0, y, _graphicsDevice.Viewport.Width, colorOption);
     }
 
-    public void DrawVerticalLineAtX(SpriteBatch spriteBatch, int x, int thickness = 1)
+    public void DrawVerticalLineAtX(SpriteBatch spriteBatch, int x, int colorOption = 0)
     {
-        DrawVerticalLine(spriteBatch, x, 0, _graphicsDevice.Viewport.Height, thickness);
+        DrawVerticalLine(spriteBatch, x, 0, _graphicsDevice.Viewport.Height, colorOption);
     }
 
     public void DrawFilledRectangle(SpriteBatch spriteBatch, Rectangle rectangle, Color color)
     {
         spriteBatch.Draw(_pixel, rectangle, color);
     }
+
+    public void DrawRectanglePerimeter(SpriteBatch spriteBatch, Rectangle rectangle, int colorOption = 0)
+    {
+        // Top
+        DrawHorizontalLine(spriteBatch, rectangle.Left, rectangle.Top, rectangle.Width, colorOption);
+        // Bottom
+        DrawHorizontalLine(spriteBatch, rectangle.Left, rectangle.Bottom - 1, rectangle.Width, colorOption);
+        // Left
+        DrawVerticalLine(spriteBatch, rectangle.Left, rectangle.Top, rectangle.Height, colorOption);
+        // Right
+        DrawVerticalLine(spriteBatch, rectangle.Right - 1, rectangle.Top, rectangle.Height, colorOption);
+    }
 }
+

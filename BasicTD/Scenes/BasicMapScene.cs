@@ -10,8 +10,7 @@ using MonoGameLibrary;
 using MonoGameLibrary.Collision;
 using System.Collections.Generic;
 using MonoGameLibrary.Paths;
-using System;
-using System.Reflection.Metadata;
+using BasicTD.Sections;
 
 namespace BasicTD.Scenes;
 
@@ -32,11 +31,17 @@ public class BasicMapScene : BattleScene
     private int topBannerInfoBuffer = 120;
     private int textPadding = 10;
 
-    // Wall sprites
-    // TextureAtlas WallFloorAtlas;
-    // Sprite VerticalWallTop;
-    // Sprite VerticalWallMid;
-    // Sprite VerticalWallBot;
+    // Info panels
+    private Tilemap InfoPanelMap;
+
+    // Layout Rectangles
+    private Rectangle LeftInfoPanelRect;
+    private Rectangle RightInfoPanelRect;
+    private Rectangle TopBannerRect;
+    private Rectangle ShopRect;
+
+    // Shop Section
+    private Shop CardShop;
 
     public BasicMapScene() : base()
     {
@@ -52,16 +57,51 @@ public class BasicMapScene : BattleScene
         base.Initialize();
         // NOTE: Content has been loaded after this line
 
+        // Setup layout rectangles
+        int VTileOffset = 16;
+        int HTileOffset = 24;
+        LeftInfoPanelRect = new Rectangle(
+            sideBannerBuffer + HTileOffset,
+            MapBounds.Top + VTileOffset,
+            MapBounds.Left - 2 * sideBannerBuffer - 2 * HTileOffset,
+            MapBounds.Height - 2 * VTileOffset
+        );
+
+        RightInfoPanelRect = new Rectangle(
+            MapBounds.Right + sideBannerBuffer + HTileOffset,
+            MapBounds.Top + VTileOffset,
+            MapBounds.Left - 2 * sideBannerBuffer - 2 * HTileOffset,
+            MapBounds.Height - 2 * VTileOffset
+        );
+
+        TopBannerRect = new Rectangle(
+            0,
+            0,
+            Core.GraphicsDevice.Viewport.Width,
+            60
+        );
+
+        ShopRect = new Rectangle(
+            MapBounds.Left,
+            MapBounds.Bottom + 40,
+            MapBounds.Right - MapBounds.Left,
+            Core.GraphicsDevice.Viewport.Height - (MapBounds.Bottom + 40)
+        );
+
         // Set up font locations
         int p = textPadding;
+        int v = 30;
         NameStringLocation = new Vector2(p+sideBannerBuffer, 20);
-        CreepStringLocation = new Vector2(p+sideBannerBuffer, MapBounds.Top);
-        InventoryStringLocation = new Vector2(p+MapBounds.Right + sideBannerBuffer, MapBounds.Top);
+        CreepStringLocation = new Vector2(p+sideBannerBuffer, MapBounds.Top - v);
+        InventoryStringLocation = new Vector2(p+MapBounds.Right + sideBannerBuffer, MapBounds.Top - v);
         LivesStringLocation = new Vector2(p+MapBounds.Right - 3*topBannerInfoBuffer, 20);
         GoldStringLocation = new Vector2(p+MapBounds.Right - 2*topBannerInfoBuffer, 20);
         WaveStringLocation = new Vector2(p+MapBounds.Right - 1*topBannerInfoBuffer, 20);
-        ShopStringLocation = new Vector2(p+MapBounds.Left, MapBounds.Bottom + 60);
+        ShopStringLocation = new Vector2(p+sideBannerBuffer, MapBounds.Bottom + 60);
         GearIconLocation = new Vector2(Core.GraphicsDevice.Viewport.Width - sideBannerBuffer - p - GearSprite.Region.Width, 25);
+
+        // Initialize the card shop
+        CardShop = new Shop(this, ShopRect);
 
         // Scene management
         NextScene = new LineScene();
@@ -84,17 +124,10 @@ public class BasicMapScene : BattleScene
         base.LoadContent();
 
         Tilemap = Tilemap.FromFile(Core.Content, "images/tilemap-definition.xml");
-        Tilemap.Scale = new Vector2(60f/16f, 60f/16f);
+        Tilemap.Scale = new Vector2(60f / 16f, 60f / 16f);
 
-        // TODO: Remove, as these are no longer needed
-        // WallFloorAtlas = TextureAtlas.FromFile(Core.Content, "images/walls_floor_atlas.xml");
-        // VerticalWallTop = WallFloorAtlas.CreateSprite("vertical-wall-top");
-        // VerticalWallMid = WallFloorAtlas.CreateSprite("vertical-wall-mid");
-        // VerticalWallBot = WallFloorAtlas.CreateSprite("vertical-wall-bot");
-
-        // VerticalWallTop.Scale = new Vector2(3f, 3f);
-        // VerticalWallMid.Scale = new Vector2(3f, 3f);
-        // VerticalWallBot.Scale = new Vector2(3f, 3f);
+        InfoPanelMap = Tilemap.FromFile(Core.Content, "images/side-banner-tilemap.xml");
+        InfoPanelMap.Scale = new Vector2(60f / 16f, 60f / 16f);
     }
 
     public override void Update(GameTime gameTime)
@@ -106,6 +139,7 @@ public class BasicMapScene : BattleScene
         UpdatePlacingTower(gameTime);
         UpdateTowers(gameTime);
         UpdateCreepList(gameTime);
+        CardShop.Update(gameTime);
     }
 
     public override void Draw(GameTime gameTime)
@@ -127,6 +161,9 @@ public class BasicMapScene : BattleScene
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
         DrawBanners(Core.SpriteBatch);
+        DrawInfoPanels(Core.SpriteBatch);
+        // DrawCardShop(Core.SpriteBatch);
+        CardShop.Draw(Core.SpriteBatch);
         DrawSpriteFonts(Core.SpriteBatch);
         DrawTopBannerIcons(Core.SpriteBatch);
 
@@ -136,16 +173,20 @@ public class BasicMapScene : BattleScene
         Core.SpriteBatch.End();
     }
 
+    /// <summary>
+    /// Draws the solid color banners on the sides, top, and bottom of the map area.
+    /// </summary>
+    /// <param name="spriteBatch"></param>
     private void DrawBanners(SpriteBatch spriteBatch)
-    {   
+    {
         // Draw the side banners
         // Draw left side banner rectangle
         Core.Scaffold.DrawFilledRectangle(
             Core.SpriteBatch,
             new Rectangle(
-                sideBannerBuffer, 
-                0, 
-                MapBounds.Left - 2*sideBannerBuffer, 
+                sideBannerBuffer,
+                0,
+                MapBounds.Left - 2 * sideBannerBuffer,
                 Core.GraphicsDevice.Viewport.Height
             ),
             TDConstants.LightBG
@@ -155,9 +196,9 @@ public class BasicMapScene : BattleScene
         Core.Scaffold.DrawFilledRectangle(
             Core.SpriteBatch,
             new Rectangle(
-                MapBounds.Right + sideBannerBuffer, 
-                0, 
-                Core.GraphicsDevice.Viewport.Width - (MapBounds.Right + 2*sideBannerBuffer), 
+                MapBounds.Right + sideBannerBuffer,
+                0,
+                Core.GraphicsDevice.Viewport.Width - (MapBounds.Right + 2 * sideBannerBuffer),
                 Core.GraphicsDevice.Viewport.Height
             ),
             TDConstants.LightBG
@@ -173,11 +214,22 @@ public class BasicMapScene : BattleScene
         // Draw the bottom banner
         Core.Scaffold.DrawFilledRectangle(
             Core.SpriteBatch,
-            new Rectangle(0, MapBounds.Bottom + 40, Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height - (MapBounds.Bottom+40)),
+            new Rectangle(0, MapBounds.Bottom + 40, Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height - (MapBounds.Bottom + 40)),
             TDConstants.DarkBG
         );
     }
 
+
+    private void DrawInfoPanels(SpriteBatch spriteBatch)
+    {
+        InfoPanelMap.Draw(spriteBatch, new Vector2(sideBannerBuffer, MapBounds.Top));
+        InfoPanelMap.Draw(spriteBatch, new Vector2(MapBounds.Right + sideBannerBuffer, MapBounds.Top));
+    }
+
+    /// <summary>
+    /// Draws all sprite font texts on the screen (non-UI)
+    /// </summary>
+    /// <param name="spriteBatch"></param>
     private void DrawSpriteFonts(SpriteBatch spriteBatch)
     {
         // Draw the various strings
@@ -187,9 +239,13 @@ public class BasicMapScene : BattleScene
         spriteBatch.DrawString(font, $"{20}", LivesStringLocation, Color.Red);
         spriteBatch.DrawString(font, $"{99}", GoldStringLocation, Color.Gold);
         spriteBatch.DrawString(font, $"{1}/{5}", WaveStringLocation, Color.White);
-        spriteBatch.DrawString(font, "Shop: 1-Tower 2-Sell 3-Upgrade", ShopStringLocation, Color.White);
+        spriteBatch.DrawString(font, "Shop", ShopStringLocation, Color.White);
     }
 
+    /// <summary>
+    /// Draws the icons that live in the top banner.
+    /// </summary>
+    /// <param name="spriteBatch"></param>
     private void DrawTopBannerIcons(SpriteBatch spriteBatch)
     {
         // Draw the icons for lives, gold, and wave
@@ -232,6 +288,23 @@ public class BasicMapScene : BattleScene
             GearIconLocation
         );
     }
+
+    // private void DrawCardShop(SpriteBatch spriteBatch)
+    // {
+    //     // Draw the card shop area
+    //     var pos = new Vector2(ShopRect.Left + 20, ShopRect.Top + 15);
+
+    //     foreach (var card in CardSpriteManager)
+    //     {
+    //         card.Draw(spriteBatch, pos);
+    //         pos.X += 120;
+    //     }
+    // }
+
+    /// <summary>
+    /// Draws red 1px debug lines
+    /// </summary>
+    /// <param name="spriteBatch"></param>
     private void DrawScaffoldingLines(SpriteBatch spriteBatch)
     {
         // Top UI boundary: Separates the info UI from the map
@@ -256,7 +329,14 @@ public class BasicMapScene : BattleScene
 
         Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Right + sideBannerBuffer);
         Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, Core.GraphicsDevice.Viewport.Width - sideBannerBuffer);
+
+        // Draw guidelines for info banners
+        Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, LeftInfoPanelRect, 2);
+        Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, RightInfoPanelRect, 2);
+        Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, TopBannerRect, 2);
+        Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, ShopRect, 2);
     }
+
 
     public void DrawMarkers(GameTime gameTime)
     {
