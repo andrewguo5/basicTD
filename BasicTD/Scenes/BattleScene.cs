@@ -36,7 +36,7 @@ public abstract class BattleScene : Scene
     protected Sprite TowerSprite;
     protected List<Sprite> SpriteManager;
     protected Vector2 SpriteScale = new Vector2(2.5f, 2.5f);
-    protected Sprite GoldSprite;
+    public Sprite GoldSprite;
     protected Sprite HeartSprite;
     protected Sprite SkullSprite;
     protected Sprite GearSprite;
@@ -94,7 +94,7 @@ public abstract class BattleScene : Scene
     protected Texture2D WhitePixel;
 
     // Fonts
-    protected SpriteFont font;
+    public SpriteFont font;
 
     public BattleScene() : base()
     {

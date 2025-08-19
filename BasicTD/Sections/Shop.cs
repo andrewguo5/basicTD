@@ -67,6 +67,21 @@ public class Shop
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        DrawCards(spriteBatch);
+        DrawCardCosts(spriteBatch);
+
+        if (ParentScene.DebugDraw)
+        {
+            foreach (var rect in CardSlotManager)
+            {
+                // Draw the card slots
+                Core.Scaffold.DrawRectanglePerimeter(spriteBatch, rect, 1);
+            }
+        }
+    }
+
+    public void DrawCards(SpriteBatch spriteBatch)
+    {
         // Draw each card at its corresponding card slot location
         for (int i = 0; i < ParentScene.CardSpriteManager.Count && i < CardSlotManager.Count; i++)
         {
@@ -75,13 +90,35 @@ public class Shop
             Color highlightColor = (hoveredCardSlotIndex == i) ? Color.White : Color.LightGray;
             card.Draw(spriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
         }
+    }
 
-        if (ParentScene.DebugDraw)
+    public void DrawCardCosts(SpriteBatch spriteBatch)
+    {
+        // Draw the cost of each card in its corresponding slot
+        for (int i = 0; i < ParentScene.CardSpriteManager.Count && i < CardSlotManager.Count; i++)
         {
-            foreach (var rect in CardSlotManager)
+            var card = ParentScene.CardSpriteManager[i];
+            var slotRect = CardSlotManager[i];
+            Vector2 costPosition = new Vector2(slotRect.X + slotRect.Width / 2, slotRect.Bottom - 18); // Adjust position as needed
+
+            Color highlightColor = (hoveredCardSlotIndex == i) ? Color.White : Color.LightGray;
+            spriteBatch.DrawString(
+                ParentScene.font,
+                $"{i + 1}",
+                costPosition,
+                highlightColor,
+                0f,
+                Vector2.Zero,
+                1f, // 1/3 scale
+                SpriteEffects.None,
+                0f
+            );
+            
+            // Draw the GoldSprite to the left of the cost string
+            if (ParentScene.GoldSprite != null)
             {
-                // Draw the card slots
-                Core.Scaffold.DrawRectanglePerimeter(spriteBatch, rect, 1);
+                Vector2 goldSpritePosition = new Vector2(costPosition.X - 20, costPosition.Y + 6);
+                ParentScene.GoldSprite.Draw(spriteBatch, goldSpritePosition, highlightColor, new Vector2(0.8f, 0.8f));
             }
         }
     }

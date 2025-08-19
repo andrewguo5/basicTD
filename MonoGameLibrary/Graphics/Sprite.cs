@@ -123,4 +123,14 @@ public class Sprite
     {
         Region.Draw(spriteBatch, position, color, rotation + Region.Rotation, EffectiveOrigin, Scale, Effects, LayerDepth);
     }
+
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 scale)
+    {
+        Region.Draw(spriteBatch, position, Color, Rotation + Region.Rotation, EffectiveOrigin, new Vector2(Scale.X * scale.X, Scale.Y * scale.Y), Effects, LayerDepth);
+    }
+
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, Vector2 scale)
+    {
+        Region.Draw(spriteBatch, position, color, Rotation + Region.Rotation, EffectiveOrigin, new Vector2(Scale.X * scale.X, Scale.Y * scale.Y), Effects, LayerDepth);
+    }
 }
