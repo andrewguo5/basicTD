@@ -49,6 +49,8 @@ public abstract class BattleScene : Scene
     protected Sprite CardEpicSprite;
     protected Sprite CardLegendarySprite;
     protected Sprite CardNullSprite;
+    public List<Sprite> CardEmblemSprites;
+    public List<Sprite> CardSymbolSprites;
 
     // Splash atlas
     protected TextureAtlas SplashAtlas;
@@ -127,15 +129,18 @@ public abstract class BattleScene : Scene
             GearSprite
         };
 
-        CardSpriteManager = new List<Sprite>()
-        {
+        CardSpriteManager =
+        [
             CardCommonSprite,
             CardUncommonSprite,
             CardRateSprite,
             CardEpicSprite,
             CardLegendarySprite,
-            CardNullSprite
-        };  
+            CardNullSprite,
+            // Add emblem and symbol sprites to CardSpriteManager
+            .. CardEmblemSprites,
+            .. CardSymbolSprites,
+        ];
 
         // Scale and center the sprites
         foreach (var sprite in SpriteManager)
@@ -230,6 +235,24 @@ public abstract class BattleScene : Scene
         CardEpicSprite = CardAtlas.CreateSprite("card-epic");
         CardLegendarySprite = CardAtlas.CreateSprite("card-legendary");
         CardNullSprite = CardAtlas.CreateSprite("card-null");
+
+        // Load card emblem sprites
+        CardEmblemSprites = new List<Sprite>()
+        {
+            CardAtlas.CreateSprite("emblem-shield"),
+            CardAtlas.CreateSprite("emblem-bullet"),
+            CardAtlas.CreateSprite("emblem-gem"),
+        };
+
+        CardSymbolSprites = new List<Sprite>()
+        {
+            CardAtlas.CreateSprite("symbol-pulse"),
+            CardAtlas.CreateSprite("symbol-shockwave"),
+            CardAtlas.CreateSprite("symbol-loop"),
+            CardAtlas.CreateSprite("symbol-square"),
+            CardAtlas.CreateSprite("symbol-oval"),
+            CardAtlas.CreateSprite("symbol-spare"),
+        };
 
         // Create the texture atlas from the XML configuration file
         SplashAtlas = TextureAtlas.FromFile(Core.Content, "images/splash1.xml");

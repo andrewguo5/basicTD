@@ -5,6 +5,7 @@ using BasicTD.Scenes;
 using System.Collections.Generic;
 using MonoGameLibrary;
 using MonoGameLibrary.Input;
+using System;
 
 namespace BasicTD.Sections;
 
@@ -21,6 +22,9 @@ public class Shop
     private Rectangle CardSlot5;
     private Rectangle CardSlot6;
     private int hoveredCardSlotIndex = -1;
+    Random random;
+    private int RandomEmblemIndex;
+    private int RandomSymbolIndex;
 
     public Shop(BasicMapScene scene, Rectangle ShopRect)
     {
@@ -46,6 +50,10 @@ public class Shop
             CardSlot5,
             CardSlot6
         };
+
+        random = new Random();
+        RandomEmblemIndex = random.Next(ParentScene.CardEmblemSprites.Count);
+        RandomSymbolIndex = random.Next(ParentScene.CardSymbolSprites.Count);
     }
 
     public void Update(GameTime gameTime)
@@ -63,6 +71,8 @@ public class Shop
         }
         // If the mouse is not over any card slot, reset the hovered index
         hoveredCardSlotIndex = -1;
+
+        // random = new Random((int)gameTime.TotalGameTime.TotalMilliseconds);
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -89,6 +99,21 @@ public class Shop
             var slotRect = CardSlotManager[i];
             Color highlightColor = (hoveredCardSlotIndex == i) ? Color.White : Color.LightGray;
             card.Draw(spriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
+
+            // Draw a random emblem and random symbol on each card
+            if (ParentScene.CardEmblemSprites != null && ParentScene.CardEmblemSprites.Count > 0)
+            {
+                var emblemSprite = ParentScene.CardEmblemSprites[RandomEmblemIndex];
+                Vector2 emblemPosition = new Vector2(slotRect.X, slotRect.Y);
+                emblemSprite.Draw(spriteBatch, emblemPosition, highlightColor);
+            }
+
+            if (ParentScene.CardSymbolSprites != null && ParentScene.CardSymbolSprites.Count > 0)
+            {
+                var symbolSprite = ParentScene.CardSymbolSprites[RandomSymbolIndex];
+                Vector2 symbolPosition = new Vector2(slotRect.X, slotRect.Y);
+                symbolSprite.Draw(spriteBatch, symbolPosition, highlightColor);
+            }
         }
     }
 

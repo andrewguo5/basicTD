@@ -8,6 +8,15 @@
         <Region name="card-epic" x="120" y="0" width="40" height="56" />
         <Region name="card-legendary" x="160" y="0" width="40" height="56" />
         <Region name="card-null" x="200" y="0" width="40" height="56" />
+        <Region name="emblem-shield" x="0" y="56" width="40" height="56" />
+        <Region name="emblem-bullet" x="40" y="56" width="40" height="56" />
+        <Region name="emblem-gem" x="80" y="56" width="40" height="56" />
+        <Region name="symbol-pulse" x="0" y="112" width="40" height="56" />
+        <Region name="symbol-shockwave" x="40" y="112" width="40" height="56" />
+        <Region name="symbol-loop" x="80" y="112" width="40" height="56" />
+        <Region name="symbol-square" x="120" y="112" width="40" height="56" />
+        <Region name="symbol-oval" x="160" y="112" width="40" height="56" />
+        <Region name="symbol-spare" x="200" y="112" width="40" height="56" />
     </Regions>
     <Animations>
     </Animations>
