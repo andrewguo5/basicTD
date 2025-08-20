@@ -30,10 +30,10 @@ public abstract class GComponent
         Children = new List<GComponent>();
         Props = props ?? new Dictionary<string, dynamic>();
     }
-    protected abstract void DrawSelf(GameTime gameTime);
-    protected abstract void UpdateSelf(GameTime gameTime);
     protected abstract void InitializeSelf();
     protected abstract void LoadContentSelf();
+    protected abstract void DrawSelf(GameTime gameTime);
+    protected abstract void UpdateSelf(GameTime gameTime);
 
 
     // --- //

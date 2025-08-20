@@ -10,14 +10,12 @@ public class SpriteStack
     public Vector2 Position { get; set; }
     public Color Color { get; set; } = Color.White;
 
-    public SpriteStack(Vector2 position)
+    public SpriteStack()
     {
-        Position = position;
     }
 
-    public SpriteStack(Vector2 position, List<Sprite> sprites)
+    public SpriteStack(List<Sprite> sprites)
     {
-        Position = position;
         if (sprites != null)
             Sprites.AddRange(sprites);
     }
@@ -28,11 +26,18 @@ public class SpriteStack
             Sprites.Add(sprite);
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, Vector2 position)
     {
         foreach (var sprite in Sprites)
         {
-            sprite.Draw(spriteBatch, Position, Color);
+            sprite.Draw(spriteBatch, position, Color);
+        }
+    }
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+    {
+        foreach (var sprite in Sprites)
+        {
+            sprite.Draw(spriteBatch, position, color);
         }
     }
 }

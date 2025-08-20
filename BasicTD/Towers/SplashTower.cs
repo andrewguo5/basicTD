@@ -15,7 +15,7 @@ namespace BasicTD.Towers
         public override int TowerId { get; } = -1; // Unique identifier for the
 
         public SplashTower(
-            Vector2 position, Sprite sprite, AnimatedSprite attackAnimation) : base(position, sprite, attackAnimation)
+            Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation) : base(position, sprite, attackAnimation)
         {
             // Additional initialization if needed
         }
@@ -54,11 +54,11 @@ namespace BasicTD.Towers
 
         public override void Draw(SpriteBatch spriteBatch, Color color)
         {
-            if (Sprite != null)
-                Sprite.Draw(spriteBatch, Position, color, 0f);
+            // if (Sprite != null)
+            //     Sprite.Draw(spriteBatch, Position, color, 0f);
 
-            if (AttackAnimation != null)
-                AttackAnimation.Draw(spriteBatch, Position + new Vector2(5, Sprite.Height * 0.5f));
+            // if (AttackAnimation != null)
+            //     AttackAnimation.Draw(spriteBatch, Position + new Vector2(5, Sprite.Height * 0.5f));
         }
     }
 }

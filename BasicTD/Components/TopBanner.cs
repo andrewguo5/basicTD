@@ -4,8 +4,6 @@ using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Security.Cryptography;
 
 namespace BasicTD.Components;
 
@@ -16,6 +14,7 @@ public class TopBanner : GComponent
     private int SideBuffer;
     private Rectangle MapBounds;
     private TextureAtlas Atlas;
+    private Vector2 NameStringLocation;
     private Vector2 LivesStringLocation;
     private Vector2 GoldStringLocation;
     private Vector2 WaveStringLocation;
@@ -24,6 +23,7 @@ public class TopBanner : GComponent
     private Sprite HeartSprite;
     private Sprite SkullSprite;
     private Sprite GearSprite;
+    private SpriteFont GameFont;
 
     public TopBanner(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
     {
@@ -32,10 +32,49 @@ public class TopBanner : GComponent
         MapBounds = props["MapBounds"];
         SideBuffer = props["SideBuffer"];
         Atlas = props["Atlas"];
+        GameFont = props["GameFont"];
+    }
+
+    protected override void InitializeSelf()
+    {
+        NameStringLocation = new Vector2(
+            Padding + SideBuffer,
+            20
+        );
+        LivesStringLocation = new Vector2(
+            Padding + MapBounds.Right - Buffer * 3,
+            20
+        );
+        GoldStringLocation = new Vector2(
+            Padding + MapBounds.Right - Buffer * 2,
+            20
+        );
+        WaveStringLocation = new Vector2(
+            Padding + MapBounds.Right - Buffer,
+            20
+        );
+        GearIconLocation = new Vector2(
+            Bounds.Width - SideBuffer - Padding - 40, 25
+        );
+    }
+
+    protected override void LoadContentSelf()
+    {
+        // Implement content loading logic for the top banner
+        GoldSprite = Atlas.CreateSprite("gold");
+        HeartSprite = Atlas.CreateSprite("heart");
+        SkullSprite = Atlas.CreateSprite("skull");
+        GearSprite = Atlas.CreateSprite("gear");
+    }
+
+    protected override void UpdateSelf(GameTime gameTime)
+    {
+        // Implement update logic for the top banner
     }
 
     protected override void DrawSelf(GameTime gameTime)
     {
+        Core.SpriteBatch.Begin();
         // Draw the icons for lives, gold, and wave
         int iconPadding = 5;
         int iconDrop = 5;
@@ -75,39 +114,34 @@ public class TopBanner : GComponent
             Core.SpriteBatch,
             GearIconLocation
         );
-    }
 
-    protected override void UpdateSelf(GameTime gameTime)
-    {
-        // Implement update logic for the top banner
-    }
+        // Draw strings
+        Core.SpriteBatch.DrawString(
+            GameFont,
+            "Bishop",
+            NameStringLocation,
+            Color.White
+        );
 
-    protected override void InitializeSelf()
-    {
-        LivesStringLocation = new Vector2(
-            Padding + MapBounds.Right - Buffer * 3,
-            20
+        Core.SpriteBatch.DrawString(
+            GameFont,
+            $"{20}",
+            LivesStringLocation,
+            Color.White
         );
-        GoldStringLocation = new Vector2(
-            Padding + MapBounds.Right - Buffer * 2,
-            20
+        Core.SpriteBatch.DrawString(
+            GameFont,
+            $"{100}",
+            GoldStringLocation,
+            Color.White
         );
-        WaveStringLocation = new Vector2(
-            Padding + MapBounds.Right - Buffer,
-            20
+        Core.SpriteBatch.DrawString(
+            GameFont,
+            $"{1 / 5}",
+            WaveStringLocation,
+            Color.White
         );
-        GearIconLocation = new Vector2(
-            Bounds.Width - SideBuffer - Padding - 40, 25
-        );
-    }
-
-    protected override void LoadContentSelf()
-    {
-        // Implement content loading logic for the top banner
-        GoldSprite = Atlas.CreateSprite("gold");
-        HeartSprite = Atlas.CreateSprite("heart");
-        SkullSprite = Atlas.CreateSprite("skull");
-        GearSprite = Atlas.CreateSprite("gear");
+        Core.SpriteBatch.End();
     }
 }
 

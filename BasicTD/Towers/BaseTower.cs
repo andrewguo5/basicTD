@@ -11,7 +11,7 @@ namespace BasicTD.Towers;
 public abstract class Tower
 {
     public Vector2 Position { get; set; }
-    public Sprite Sprite { get; set; }
+    public SpriteStack Sprite { get; set; }
     public abstract int TowerId { get; }
     public abstract float Range { get; } // in units? m
     public abstract int Damage { get; } // Let's just have int damage
@@ -24,7 +24,7 @@ public abstract class Tower
     public AnimatedSprite AttackAnimation;
 
 
-    public Tower(Vector2 position, Sprite sprite, AnimatedSprite attackAnimation)
+    public Tower(Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation)
     {
         Position = position;
         Sprite = sprite;
@@ -47,7 +47,7 @@ public abstract class Tower
     public virtual void Draw(SpriteBatch spriteBatch, Color color)
     {
         if (Sprite != null)
-            Sprite.Draw(spriteBatch, Position, color, 0f);
+            Sprite.Draw(spriteBatch, Position, color);
 
         if (AttackAnimation != null)
             AttackAnimation.Draw(spriteBatch, Position);

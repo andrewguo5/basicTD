@@ -15,7 +15,7 @@ public class Shop
     private BasicMapScene ParentScene; // Reference to the Scene
 
     public List<Rectangle> CardSlotManager { get; private set; }
-    private Rectangle CardSlot1;
+    private Rectangle CardSlot1;    
     private Rectangle CardSlot2;
     private Rectangle CardSlot3;
     private Rectangle CardSlot4;

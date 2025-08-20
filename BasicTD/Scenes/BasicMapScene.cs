@@ -104,7 +104,7 @@ public class BasicMapScene : BattleScene
         CardShop = new Shop(this, ShopRect);
 
         // Scene management
-        NextScene = new LineScene();
+        NextScene = new GameScene();
     }
 
     public override void InitializePath()

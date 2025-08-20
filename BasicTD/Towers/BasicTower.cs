@@ -18,7 +18,7 @@ namespace BasicTD.Towers
         public override int TowerId { get; } = -1; // Unique identifier for the
 
         public BasicTower(
-            Vector2 position, Sprite sprite, AnimatedSprite attackAnimation) : base(position, sprite, attackAnimation)
+            Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation) : base(position, sprite, attackAnimation)
         {
             // Additional initialization if needed
         }

@@ -40,8 +40,8 @@ public class TowerFactory
         {
             case TowerType.Basic:
                 return new BasicTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
-            case TowerType.Splash:
-                return new SplashTower(position, towerSprite, LoadActivationAnimation());
+            // case TowerType.Splash:
+            //     return new SplashTower(position, towerSprite, LoadActivationAnimation());
             default:
                 throw new ArgumentException($"Unknown tower type: {towerType}");
         }
@@ -68,7 +68,7 @@ public class TowerFactory
         headSprite.CenterOrigin();
         headSprite.Scale = SpriteScale;
 
-        return new SpriteStack(Vector2.Zero, new List<Sprite> { baseSprite, headSprite });
+        return new SpriteStack(new List<Sprite> { baseSprite, headSprite });
     }
 
     public AnimatedSprite LoadActivationAnimation()
@@ -78,22 +78,5 @@ public class TowerFactory
         activationAnimation.Scale = SpriteScale;
         activationAnimation.Repeat = false;
         return activationAnimation;
-    }
-
-    public AnimatedSprite LoadSplashAnimation()
-    {
-        AnimatedSprite splashAnimation = AttackAnimationAtlas.CreateAnimatedSprite("splash1-animation");
-        splashAnimation.Origin = new Vector2(0, splashAnimation.Height * 0.5f);
-        splashAnimation.Scale = new Vector2(0.25f, 0.25f);
-        splashAnimation.Repeat = false;
-        return splashAnimation;
-    }
-
-    public AnimatedSprite LoadWater4()
-    {
-        AnimatedSprite Water4Animation = Water4Atlas.CreateAnimatedSprite("Water4");
-        Water4Animation.Scale = new Vector2(0.3f, 0.3f);
-        Water4Animation.Repeat = false;
-        return Water4Animation;
     }
 }

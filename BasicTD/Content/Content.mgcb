@@ -75,21 +75,6 @@
 #begin images/side-banner-tilemap.xml
 /copy:images/side-banner-tilemap.xml
 
-#begin images/splash1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/splash1.png
-
-#begin images/splash1.xml
-/copy:images/splash1.xml
-
 #begin images/things-atlas-definition.xml
 /copy:images/things-atlas-definition.xml
 
@@ -122,36 +107,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/walls_floor.png
-
-#begin images/Water10.atlas.txt
-/copy:images/Water10.atlas.txt
-
-#begin images/Water10.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/Water10.png
-
-#begin images/Water4.atlas.txt
-/copy:images/Water4.atlas.txt
-
-#begin images/Water4.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/Water4.png
 
 #begin paths/beginner-map-std.xml
 /copy:paths/beginner-map-std.xml

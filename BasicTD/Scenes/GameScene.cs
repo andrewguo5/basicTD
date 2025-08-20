@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
@@ -36,14 +37,23 @@ public class GameScene : Scene
     private Texture2D WhitePixel;
 
     // Main component
-    public GameComponent Main { get; set; } 
+    public GComponent Main { get; set; }
 
+    // States
+    public bool DebugDraw { get; set; } = false;
 
     // Scene Manager
     public Scene NextScene { get; set; }
 
     // Font
     public SpriteFont GameFont;
+
+    // Props
+    private int VerticalOffset;
+    private int TextPadding;
+    private int SideBuffer;
+    private int HTileOffset;
+    private int VTileOffset;
 
     public GameScene() : base()
     {
@@ -52,6 +62,8 @@ public class GameScene : Scene
 
     public override void Initialize()
     {
+        NextScene = new BasicMapScene();
+
         // 1. Pre-load initialization
         base.Initialize();
 
@@ -99,7 +111,26 @@ public class GameScene : Scene
             sprite.Scale = CardSpriteScale;
         }
 
-        // Initialize Map: A class that tracks the placed towers, etc.
+        MapBounds = new Rectangle(
+            240, 100,
+            720, 420
+        );
+
+        // After pre-loading the scene, we can load the main component.
+        Main = new Components.Main(ScreenBounds, new Dictionary<string, dynamic>
+        {
+            { "VerticalOffset", 30 },
+            { "TextPadding", 10 },
+            { "SideBuffer", 30 },
+            { "HTileOffset", 24 },
+            { "VTileOffset", 16 },
+            { "MapBounds", MapBounds },
+            { "Atlas", Atlas },
+            { "CardAtlas", CardAtlas },
+            { "GameFont", GameFont },
+        });
+        Main.LoadContent();
+        Main.Initialize();
     }
 
     public override void LoadContent()
@@ -108,11 +139,11 @@ public class GameScene : Scene
         base.LoadContent();
 
         // Load Atlas
-        Atlas = Core.Content.Load<TextureAtlas>("Atlases/Atlas");
-        CardAtlas = Core.Content.Load<TextureAtlas>("Atlases/CardAtlas");
+        Atlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+        CardAtlas = TextureAtlas.FromFile(Core.Content, "images/card-shop-atlas.xml");
 
         // Load Fonts
-        GameFont = Core.Content.Load<SpriteFont>("Fonts/GameFont");
+        GameFont = Core.Content.Load<SpriteFont>("fonts/04B_30");
 
         // Load Sprites and Animations
         LoadSprites();
@@ -135,6 +166,7 @@ public class GameScene : Scene
             { "HeartSprite", Atlas.CreateSprite("heart") },
             { "SkullSprite", Atlas.CreateSprite("skull") },
             { "GearSprite", Atlas.CreateSprite("gear") },
+            { "TorchSprite", Atlas.CreateAnimatedSprite("torch-red-animation") },
             // Card Sprites
             { "CardCommonSprite", CardAtlas.CreateSprite("card-common") },
             { "CardUncommonSprite", CardAtlas.CreateSprite("card-uncommon") },
@@ -158,13 +190,70 @@ public class GameScene : Scene
 
         AnimationDictionary = new()
         {
-            { "TorchSprite", Atlas.CreateAnimatedSprite("torch-red-animation") },
         };
     }
 
     private void LoadEffects()
     {
+
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        // Toggle debug mode
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.D))
+            DebugDraw = !DebugDraw;
+
+        // Scene transition
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
+        {
+            Core.ChangeScene(NextScene);
+        }
         
+        Main.Update(gameTime);
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        Main.Draw(gameTime);
+
+        if (DebugDraw)
+        {
+            Core.SpriteBatch.Begin();
+            DrawScaffoldingLines(Core.SpriteBatch);
+            Core.SpriteBatch.End();
+        }
+    }
+    private void DrawScaffoldingLines(SpriteBatch spriteBatch)
+    {
+        // Top UI boundary: Separates the info UI from the map
+        Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, MapBounds.Top);
+
+        // Top UI subsection: Separates the top bar from the relic bar
+        Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, 60);
+
+        // Bottom player UI boundary: Separates the map from the player UI
+        Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, MapBounds.Bottom);
+
+        // Buffer for player UI boundary
+        Core.Scaffold.DrawHorizontalLineAtY(Core.SpriteBatch, MapBounds.Bottom + 40);
+
+        // Left and right map boundaries
+        Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Left);
+        Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Right);
+
+        // // Draw left and right side banner boundaries
+        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, SideBuffer);
+        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Left - SideBuffer);
+
+        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Right + SideBuffer);
+        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, Core.GraphicsDevice.Viewport.Width - sideBannerBuffer);
+
+        // // Draw guidelines for info banners
+        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, LeftInfoPanelRect, 2);
+        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, RightInfoPanelRect, 2);
+        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, TopBannerRect, 2);
+        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, ShopRect, 2);
     }
 
 }
