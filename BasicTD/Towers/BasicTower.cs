@@ -43,8 +43,8 @@ namespace BasicTD.Towers
 
             float delaySeconds = AttackAnimation.AnimationTime;
             creep.TakeDamage(Damage, delaySeconds);
-            float angle = (float)Math.Atan2(creep.CurrentPosition.Y - Position.Y, creep.CurrentPosition.X - Position.X);
-            AttackAnimation.Rotation = angle;
+            // float angle = (float)Math.Atan2(creep.CurrentPosition.Y - Position.Y, creep.CurrentPosition.X - Position.X);
+            // AttackAnimation.Rotation = angle;
             AttackAnimation.Play();
 
             // Reset attack cooldown

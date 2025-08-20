@@ -25,6 +25,15 @@
         <Region name="heart" x="80" y="0" width="16" height="16" />
         <Region name="skull" x="96" y="0" width="16" height="16" />
         <Region name="gear" x="112" y="0" width="16" height="16" />
+        <Region name="minibase" x="64" y="16" width="16" height="16" />
+        <Region name="activation-1" x="80" y="16" width="16" height="16" />
+        <Region name="activation-2" x="96" y="16" width="16" height="16" />
+        <Region name="activation-3" x="112" y="16" width="16" height="16" />
+        <Region name="mini-card-common" x="64" y="32" width="10" height="14" />
+        <Region name="mini-card-uncommon" x="74" y="32" width="10" height="14" />
+        <Region name="mini-card-rare" x="84" y="32" width="10" height="14" />
+        <Region name="mini-card-epic" x="64" y="46" width="10" height="14" />
+        <Region name="mini-card-legendary" x="74" y="46" width="10" height="14" />
     </Regions>
     <Animations>
         <Animation name="torch-yellow-animation" delay="200">
@@ -50,6 +59,11 @@
         <Animation name="grub-animation" delay="200">
             <Frame region="grub-1" />
             <Frame region="grub-2" />
+        </Animation>
+        <Animation name="activation-animation" delay="200">
+            <Frame region="activation-1" />
+            <Frame region="activation-2" />
+            <Frame region="activation-3" />
         </Animation>
     </Animations>
 </TextureAtlas>

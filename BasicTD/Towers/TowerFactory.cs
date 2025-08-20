@@ -1,6 +1,7 @@
 using System;
 using MonoGameLibrary.Graphics;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace BasicTD.Towers;
 
@@ -9,6 +10,12 @@ public enum TowerType
     Basic,
     Splash,
     Sniper,
+    Pulse,
+    Shockwave,
+    Light,
+    Heavy,
+    Beacon,
+    Vuln,
 }
 
 public class TowerFactory
@@ -28,22 +35,49 @@ public class TowerFactory
 
     public Tower CreateTower(Vector2 position, TowerType towerType)
     {
-        Sprite towerSprite;
+        SpriteStack towerSprite = CreateTowerSprite(towerType);
         switch (towerType)
         {
             case TowerType.Basic:
-                towerSprite = TowerAtlas.CreateSprite("lever-blue");
-                towerSprite.CenterOrigin();
-                towerSprite.Scale = SpriteScale;
-                return new BasicTower(position, towerSprite, LoadSplashAnimation());
+                return new BasicTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
             case TowerType.Splash:
-                towerSprite = TowerAtlas.CreateSprite("lever-green");
-                towerSprite.CenterOrigin();
-                towerSprite.Scale = SpriteScale;
-                return new SplashTower(position, towerSprite, LoadWater4());
+                return new SplashTower(position, towerSprite, LoadActivationAnimation());
             default:
                 throw new ArgumentException($"Unknown tower type: {towerType}");
         }
+    }
+
+    public SpriteStack CreateTowerSprite(TowerType towerType)
+    {
+        var baseSprite = towerType switch
+        {
+            TowerType.Basic => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Splash => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Sniper => TowerAtlas.CreateSprite("minibase"),
+            _ => throw new ArgumentException($"Unknown tower type: {towerType}")
+        };
+        baseSprite.CenterOrigin();
+        baseSprite.Scale = SpriteScale;
+
+        var headSprite = towerType switch
+        {
+            TowerType.Basic => TowerAtlas.CreateSprite("mini-card-common"),
+            TowerType.Splash => TowerAtlas.CreateSprite("mini-card-uncommon"),
+            _ => throw new ArgumentException($"Unknown tower type: {towerType}")
+        };
+        headSprite.CenterOrigin();
+        headSprite.Scale = SpriteScale;
+
+        return new SpriteStack(Vector2.Zero, new List<Sprite> { baseSprite, headSprite });
+    }
+
+    public AnimatedSprite LoadActivationAnimation()
+    {
+        AnimatedSprite activationAnimation = TowerAtlas.CreateAnimatedSprite("activation-animation");
+        activationAnimation.Origin = new Vector2(8, 8);
+        activationAnimation.Scale = SpriteScale;
+        activationAnimation.Repeat = false;
+        return activationAnimation;
     }
 
     public AnimatedSprite LoadSplashAnimation()

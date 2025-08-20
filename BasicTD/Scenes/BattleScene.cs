@@ -49,6 +49,7 @@ public abstract class BattleScene : Scene
     protected Sprite CardEpicSprite;
     protected Sprite CardLegendarySprite;
     protected Sprite CardNullSprite;
+    protected Sprite TowerBaseSprite;
     public List<Sprite> CardEmblemSprites;
     public List<Sprite> CardSymbolSprites;
 
@@ -58,6 +59,7 @@ public abstract class BattleScene : Scene
     protected TextureAtlas Water4Atlas;
     public AnimatedSprite Water10Animation;
     public AnimatedSprite Water4Animation;
+    public AnimatedSprite ActivationAnimation;
 
     // Path
     public Path Path { get; set; }
@@ -166,7 +168,16 @@ public abstract class BattleScene : Scene
         // Splash effect
         Water10Animation = LoadWater10();
         Water4Animation = LoadWater4();
+        ActivationAnimation = LoadActivationAnimation();
+    }
 
+    public AnimatedSprite LoadActivationAnimation()
+    {
+        AnimatedSprite activationAnimation = Atlas.CreateAnimatedSprite("activation-animation");
+        activationAnimation.Origin = new Vector2(0, activationAnimation.Height * 0.5f);
+        activationAnimation.Scale = new Vector2(0.25f, 0.25f);
+        activationAnimation.Repeat = false;
+        return activationAnimation;
     }
 
     public AnimatedSprite LoadSplashAnimation()
@@ -224,7 +235,7 @@ public abstract class BattleScene : Scene
         EndMarker = Atlas.CreateSprite("lever-red");
         ControlPointMarker = Atlas.CreateSprite("lever-yellow");
         TorchSprite = Atlas.CreateAnimatedSprite("torch-red-animation");
-        TowerSprite = Atlas.CreateSprite("lever-green");
+        TowerSprite = Atlas.CreateSprite("minibase");
         GoldSprite = Atlas.CreateSprite("gold");
         HeartSprite = Atlas.CreateSprite("heart");
         SkullSprite = Atlas.CreateSprite("skull");
@@ -235,6 +246,7 @@ public abstract class BattleScene : Scene
         CardEpicSprite = CardAtlas.CreateSprite("card-epic");
         CardLegendarySprite = CardAtlas.CreateSprite("card-legendary");
         CardNullSprite = CardAtlas.CreateSprite("card-null");
+        TowerBaseSprite = CardAtlas.CreateSprite("tower-base");
 
         // Load card emblem sprites
         CardEmblemSprites = new List<Sprite>()
@@ -249,7 +261,7 @@ public abstract class BattleScene : Scene
             CardAtlas.CreateSprite("symbol-pulse"),
             CardAtlas.CreateSprite("symbol-shockwave"),
             CardAtlas.CreateSprite("symbol-loop"),
-            CardAtlas.CreateSprite("symbol-square"),
+            CardAtlas.CreateSprite("symbol-square"),    
             CardAtlas.CreateSprite("symbol-oval"),
             CardAtlas.CreateSprite("symbol-spare"),
         };
