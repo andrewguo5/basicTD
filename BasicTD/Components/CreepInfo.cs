@@ -16,15 +16,16 @@ public class CreepInfo : GComponent
     private TextureAtlas Atlas;
     private Vector2 CreepStringLocation;
     private SpriteFont GameFont;
+    private Tilemap InfoPanelMap;
 
     public CreepInfo(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
     {
-        VerticalOffset = props["VerticalOffset"];
-        Padding = props["TextPadding"];
-        MapBounds = props["MapBounds"];
-        SideBuffer = props["SideBuffer"];
-        Atlas = props["Atlas"];
-        GameFont = props["GameFont"];
+        VerticalOffset = Props["VerticalOffset"];
+        Padding = Props["TextPadding"];
+        MapBounds = Props["MapBounds"];
+        SideBuffer = Props["SideBuffer"];
+        Atlas = Props["Atlas"];
+        GameFont = Props["GameFont"];
     }
 
 
@@ -38,11 +39,14 @@ public class CreepInfo : GComponent
 
     protected override void LoadContentSelf()
     {
+        InfoPanelMap = Tilemap.FromFile(Core.Content, "images/side-banner-tilemap.xml");
+        InfoPanelMap.Scale = Props["TilemapScale"];
     }
 
     protected override void DrawSelf(GameTime gameTime)
     {
         Core.SpriteBatch.Begin();
+        InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Creeps", CreepStringLocation, Color.White);
         Core.SpriteBatch.End();
     }

@@ -48,13 +48,6 @@ public class GameScene : Scene
     // Font
     public SpriteFont GameFont;
 
-    // Props
-    private int VerticalOffset;
-    private int TextPadding;
-    private int SideBuffer;
-    private int HTileOffset;
-    private int VTileOffset;
-
     public GameScene() : base()
     {
 
@@ -128,6 +121,7 @@ public class GameScene : Scene
             { "Atlas", Atlas },
             { "CardAtlas", CardAtlas },
             { "GameFont", GameFont },
+            { "TilemapScale", new Vector2(60f / 16f, 60f / 16f) }
         });
         Main.LoadContent();
         Main.Initialize();

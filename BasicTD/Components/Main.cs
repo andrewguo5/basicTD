@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using MonoGameLibrary;
 using MonoGameLibrary.Creeps;
 using MonoGameLibrary.Scenes;
+using MonoGameLibrary.Graphics;
 using System.Collections.Generic;
 
 namespace BasicTD.Components;
@@ -14,24 +15,29 @@ public class Main : GComponent
     private int SideBuffer;
     private int HTileOffset;
     private int VTileOffset;
+    private Vector2 TilemapScale;
+    private Tilemap InfoPanelMap;
+
     // private TextureAtlas Atlas;
 
     // private SpriteFont GameFont;
 
     public Main(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
     {
+        // Extraction
+        MapBounds = Props["MapBounds"];
+        VerticalOffset = Props["VerticalOffset"];
+        Padding = Props["TextPadding"];
+        SideBuffer = Props["SideBuffer"];
+        HTileOffset = Props["HTileOffset"];
+        VTileOffset = Props["VTileOffset"];
+        TilemapScale = Props["TilemapScale"];
+
         GComponent TopBanner;
         GComponent CreepInfo;
         GComponent Battlefield;
         GComponent Inventory;
         GComponent Shop;
-
-        MapBounds = props["MapBounds"];
-        VerticalOffset = props["VerticalOffset"];
-        Padding = props["TextPadding"];
-        SideBuffer = props["SideBuffer"];
-        HTileOffset = props["HTileOffset"];
-        VTileOffset = props["VTileOffset"];
 
         TopBanner = new TopBanner(
             new Rectangle(
@@ -40,7 +46,7 @@ public class Main : GComponent
                 Bounds.Width,
                 60
             ),
-            props
+            Props
         );
         CreepInfo = new CreepInfo(
             new Rectangle(
@@ -49,11 +55,11 @@ public class Main : GComponent
                 MapBounds.Left - 2 * SideBuffer - 2 * HTileOffset,
                 MapBounds.Height - 2 * VTileOffset
             ),
-            props
+            Props
         );
         Battlefield = new Battlefield(
             MapBounds,
-            props
+            Props
         );
         Inventory = new Inventory(
             new Rectangle(
@@ -62,7 +68,7 @@ public class Main : GComponent
                 MapBounds.Left - 2 * SideBuffer - 2 * HTileOffset,
                 MapBounds.Height - 2 * VTileOffset
             ),
-            props
+            Props
         );
         Shop = new Shop(
             new Rectangle(
@@ -71,7 +77,7 @@ public class Main : GComponent
                 MapBounds.Width,
                 Bounds.Height - (MapBounds.Bottom + 40)
             ),
-            props
+            Props
         );
 
         AddChildren([
@@ -85,12 +91,13 @@ public class Main : GComponent
 
     protected override void InitializeSelf()
     {
-        // Implement initialization logic for the main component
     }
 
     protected override void LoadContentSelf()
     {
-        // Implement content loading logic for the main component
+        // As the immediate parent of the CreepInfo and Inventory comopnents, we load
+        // the necessary tilemap here. This is a pattern that I want to keep in the GComponent model.
+        // Tilemap = Tilemap.FromFile(Core.Content, "images/tilemap-definition.xml");
     }
 
     protected override void DrawSelf(GameTime gameTime)

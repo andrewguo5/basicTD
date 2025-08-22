@@ -5,6 +5,7 @@ using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace BasicTD.Components;
 
@@ -93,15 +94,20 @@ public class Shop : GComponent
             CardAtlas.CreateSprite("symbol-pulse"),
             CardAtlas.CreateSprite("symbol-shockwave"),
             CardAtlas.CreateSprite("symbol-loop"),
-            CardAtlas.CreateSprite("symbol-square"),    
+            CardAtlas.CreateSprite("symbol-square"),
             CardAtlas.CreateSprite("symbol-oval"),
             CardAtlas.CreateSprite("symbol-spare"),
         };
+
+        foreach (Sprite sprite in CardSpriteManager.Concat(CardEmblemSprites).Concat(CardSymbolSprites))
+        {
+            sprite.Scale = new Vector2(2.0f, 2.0f);
+        }
     }
 
     protected override void DrawSelf(GameTime gameTime)
     {
-        Core.SpriteBatch.Begin();
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         DrawCards();
         DrawCardCosts();
 

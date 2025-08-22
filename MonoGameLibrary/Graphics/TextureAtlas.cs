@@ -208,19 +208,16 @@ public class TextureAtlas
                     {
                         case "rotate":
                             rotate = value == "true";
-                            Console.WriteLine("Rotate: " + value);
                             break;
                         case "xy":
                             var xy = value.Split(',', ' ', StringSplitOptions.RemoveEmptyEntries);
                             x = int.Parse(xy[0]);
                             y = int.Parse(xy[1]);
-                            Console.WriteLine("xy: " + value);
                             break;
                         case "size":
                             var size = value.Split(',', ' ', StringSplitOptions.RemoveEmptyEntries);
                             width = int.Parse(size[0]);
                             height = int.Parse(size[1]);
-                            Console.WriteLine("Size: " + value);
                             break;
                         case "offset":
                             var offset = value.Split(',', ' ', StringSplitOptions.RemoveEmptyEntries);
@@ -228,7 +225,6 @@ public class TextureAtlas
                             y_off = int.Parse(offset[1]);
                             break;
                         default:
-                            Console.WriteLine("Skip: " + tag);
                             break;
                     }
                 }
@@ -237,7 +233,6 @@ public class TextureAtlas
                     if (currentName != null)
                     {
                         // flush to atlas
-                        Console.WriteLine("Adding region: " + currentName);
                         if (rotate)
                             atlas.AddRegion(currentName, x, y, height, width, rotate, x_off - x, y_off - y);
                         else

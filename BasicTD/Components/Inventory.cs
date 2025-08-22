@@ -16,6 +16,7 @@ public class Inventory : GComponent
     private TextureAtlas Atlas;
     private Vector2 InventoryStringLocation;
     private SpriteFont GameFont;
+    private Tilemap InfoPanelMap;
 
     public Inventory(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
     {
@@ -38,11 +39,14 @@ public class Inventory : GComponent
 
     protected override void LoadContentSelf()
     {
+        InfoPanelMap = Tilemap.FromFile(Core.Content, "images/side-banner-tilemap.xml");
+        InfoPanelMap.Scale = Props["TilemapScale"];
     }
 
     protected override void DrawSelf(GameTime gameTime)
     {
-        Core.SpriteBatch.Begin();
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(MapBounds.Right + SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Inventory", InventoryStringLocation, Color.White);
         Core.SpriteBatch.End();
     }

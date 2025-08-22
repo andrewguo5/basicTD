@@ -19,6 +19,7 @@ public class TopBanner : GComponent
     private Vector2 GoldStringLocation;
     private Vector2 WaveStringLocation;
     private Vector2 GearIconLocation;
+    private List<Sprite> IconSpriteManager;
     private Sprite GoldSprite;
     private Sprite HeartSprite;
     private Sprite SkullSprite;
@@ -54,7 +55,7 @@ public class TopBanner : GComponent
             20
         );
         GearIconLocation = new Vector2(
-            Bounds.Width - SideBuffer - Padding - 40, 25
+            Bounds.Width - SideBuffer - Padding, 25
         );
     }
 
@@ -65,6 +66,17 @@ public class TopBanner : GComponent
         HeartSprite = Atlas.CreateSprite("heart");
         SkullSprite = Atlas.CreateSprite("skull");
         GearSprite = Atlas.CreateSprite("gear");
+        IconSpriteManager = [
+            GoldSprite,
+            HeartSprite,
+            SkullSprite,
+            GearSprite
+        ];
+        foreach (Sprite sprite in IconSpriteManager)
+        {
+            sprite.CenterOrigin();
+            sprite.Scale = new Vector2(2.5f, 2.5f);
+        }
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -74,7 +86,7 @@ public class TopBanner : GComponent
 
     protected override void DrawSelf(GameTime gameTime)
     {
-        Core.SpriteBatch.Begin();
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         // Draw the icons for lives, gold, and wave
         int iconPadding = 5;
         int iconDrop = 5;
@@ -137,7 +149,7 @@ public class TopBanner : GComponent
         );
         Core.SpriteBatch.DrawString(
             GameFont,
-            $"{1 / 5}",
+            $"{1}/{5}",
             WaveStringLocation,
             Color.White
         );
