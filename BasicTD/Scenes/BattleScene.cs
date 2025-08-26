@@ -274,7 +274,7 @@ public abstract class BattleScene : Scene
         Water4Atlas = TextureAtlas.FromSpineAtlas(Core.Content, "images/Water4.atlas.txt");
 
         // TowerFactory
-        TowerFactory = new(Atlas, SplashAtlas, Water4Atlas, SpriteScale);
+        TowerFactory = new(Atlas, SpriteScale);
 
         // Load fonts
         font = Core.Content.Load<SpriteFont>("fonts/04B_30");
@@ -318,14 +318,14 @@ public abstract class BattleScene : Scene
         {
             ClearStates();
             PlacingTower = true;
-            PlacingTowerType = TowerType.Basic;
+            PlacingTowerType = TowerType.Light;
         }
         // Toggle tower placement mode
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.W))
         {
             ClearStates();
             PlacingTower = true;
-            PlacingTowerType = TowerType.Splash;
+            PlacingTowerType = TowerType.Heavy;
         }
 
         // Spawn a creep

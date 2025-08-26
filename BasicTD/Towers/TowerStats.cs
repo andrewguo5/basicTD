@@ -4,32 +4,53 @@ namespace BasicTD.Towers;
 
 public static class TowerStats
 {
-    public static readonly Dictionary<string, float> BasicTowerStats = new Dictionary<string, float>
+    public static readonly Dictionary<string, float> LightTowerStats = new Dictionary<string, float>
     {
         { "Damage", 1f },
         { "Range", 3.0f },
         { "AttackSpeed", 1.0f }
     };
 
-    public static readonly Dictionary<string, float> SniperTowerStats = new Dictionary<string, float>
+    public static readonly Dictionary<string, float> HeavyTowerStats = new Dictionary<string, float>
     {
         { "Damage", 2f },
-        { "Range", 8.0f },
-        { "AttackSpeed", 0.5f }
+        { "Range", 3.0f },
+        { "AttackSpeed", 0.7f }
     };
 
-    public static readonly Dictionary<string, float> SplashTowerStats = new Dictionary<string, float>
+    public static readonly Dictionary<string, float> PulseTowerStats = new Dictionary<string, float>
     {
         { "Damage", 1f },
-        { "Range", 2.0f },
+        { "Range", 3.0f },
+        { "AttackSpeed", 1.0f }
+    };
+    public static readonly Dictionary<string, float> ShockwaveTowerStats = new Dictionary<string, float>
+    {
+        { "Damage", 1f },
+        { "Range", 3.0f },
+        { "AttackSpeed", 1.0f }
+    };
+    public static readonly Dictionary<string, float> VulnTowerStats = new Dictionary<string, float>
+    {
+        { "Damage", 1f },
+        { "Range", 3.0f },
+        { "AttackSpeed", 1.0f }
+    };
+    public static readonly Dictionary<string, float> BeaconTowerStats = new Dictionary<string, float>
+    {
+        { "Damage", 1f },
+        { "Range", 3.0f },
         { "AttackSpeed", 1.0f }
     };
 
     public static readonly Dictionary<TowerType, Dictionary<string, float>> AllTowerStats =
         new Dictionary<TowerType, Dictionary<string, float>>
         {
-            { TowerType.Basic, BasicTowerStats },
-            { TowerType.Sniper, SniperTowerStats },
-            { TowerType.Splash, SplashTowerStats }
+            { TowerType.Light, LightTowerStats },
+            { TowerType.Heavy, HeavyTowerStats },
+            { TowerType.Pulse, PulseTowerStats },
+            { TowerType.Shockwave, ShockwaveTowerStats },
+            { TowerType.Vuln, VulnTowerStats },
+            { TowerType.Beacon, BeaconTowerStats }
         };
 }

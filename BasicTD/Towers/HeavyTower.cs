@@ -5,19 +5,18 @@ using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Creeps;
 using System.Collections.Generic;
 using MonoGameLibrary;
-using Microsoft.VisualBasic;
 
 namespace BasicTD.Towers
 {
-    public class BasicTower : Tower
+    public class HeavyTower : Tower
     {
-        public static Dictionary<string, float> Stats => TowerStats.AllTowerStats[TowerType.Basic];
+        public static Dictionary<string, float> Stats => TowerStats.AllTowerStats[TowerType.Heavy];
         public override float AttackSpeed => Stats["AttackSpeed"];
         public override int Damage => (int)Stats["Damage"];
         public override float Range => Stats["Range"] * TDConstants.PixelsPerMeter;
         public override int TowerId { get; } = -1; // Unique identifier for the
 
-        public BasicTower(
+        public HeavyTower(
             Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation) : base(position, sprite, attackAnimation)
         {
             // Additional initialization if needed

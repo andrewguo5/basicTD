@@ -7,9 +7,6 @@ namespace BasicTD.Towers;
 
 public enum TowerType
 {
-    Basic,
-    Splash,
-    Sniper,
     Pulse,
     Shockwave,
     Light,
@@ -21,15 +18,11 @@ public enum TowerType
 public class TowerFactory
 {
     private TextureAtlas TowerAtlas;
-    private TextureAtlas AttackAnimationAtlas;
-    private TextureAtlas Water4Atlas;
     private Vector2 SpriteScale;
 
-    public TowerFactory(TextureAtlas towerAtlas, TextureAtlas attackAnimationAtlas, TextureAtlas water4Atlas, Vector2 spriteScale)
+    public TowerFactory(TextureAtlas towerAtlas, Vector2 spriteScale)
     {
         TowerAtlas = towerAtlas;
-        AttackAnimationAtlas = attackAnimationAtlas;
-        Water4Atlas = water4Atlas;
         SpriteScale = spriteScale;
     }
 
@@ -38,10 +31,18 @@ public class TowerFactory
         SpriteStack towerSprite = CreateTowerSprite(towerType);
         switch (towerType)
         {
-            case TowerType.Basic:
-                return new BasicTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
-            // case TowerType.Splash:
-            //     return new SplashTower(position, towerSprite, LoadActivationAnimation());
+            case TowerType.Light:
+                return new LightTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+            case TowerType.Heavy:
+                return new HeavyTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+            case TowerType.Pulse:
+                return new PulseTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+            case TowerType.Shockwave:
+                return new ShockwaveTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+            case TowerType.Beacon:
+                return new BeaconTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+            case TowerType.Vuln:
+                return new VulnTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
             default:
                 throw new ArgumentException($"Unknown tower type: {towerType}");
         }
@@ -51,9 +52,12 @@ public class TowerFactory
     {
         var baseSprite = towerType switch
         {
-            TowerType.Basic => TowerAtlas.CreateSprite("minibase"),
-            TowerType.Splash => TowerAtlas.CreateSprite("minibase"),
-            TowerType.Sniper => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Light => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Heavy => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Pulse => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Shockwave => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Vuln => TowerAtlas.CreateSprite("minibase"),
+            TowerType.Beacon => TowerAtlas.CreateSprite("minibase"),
             _ => throw new ArgumentException($"Unknown tower type: {towerType}")
         };
         baseSprite.CenterOrigin();
@@ -61,8 +65,12 @@ public class TowerFactory
 
         var headSprite = towerType switch
         {
-            TowerType.Basic => TowerAtlas.CreateSprite("mini-card-common"),
-            TowerType.Splash => TowerAtlas.CreateSprite("mini-card-uncommon"),
+            TowerType.Light => TowerAtlas.CreateSprite("mini-card-common"),
+            TowerType.Heavy => TowerAtlas.CreateSprite("mini-card-uncommon"),
+            TowerType.Pulse => TowerAtlas.CreateSprite("mini-card-rare"),
+            TowerType.Shockwave => TowerAtlas.CreateSprite("mini-card-epic"),
+            TowerType.Vuln => TowerAtlas.CreateSprite("mini-card-legendary"),
+            TowerType.Beacon => TowerAtlas.CreateSprite("mini-card-legendary"),
             _ => throw new ArgumentException($"Unknown tower type: {towerType}")
         };
         headSprite.CenterOrigin();
