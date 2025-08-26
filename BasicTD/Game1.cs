@@ -20,7 +20,7 @@ public class Game1 : Core
         base.Initialize();
 
         // Start with the Line Scene
-        ChangeScene(new Scenes.BasicMapScene());
+        ChangeScene(new Scenes.GameScene());
     }
 
     protected override void LoadContent()

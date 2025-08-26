@@ -18,7 +18,7 @@ public class Inventory : GComponent
     private SpriteFont GameFont;
     private Tilemap InfoPanelMap;
 
-    public Inventory(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
+    public Inventory(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
         VerticalOffset = props["VerticalOffset"];
         Padding = props["TextPadding"];

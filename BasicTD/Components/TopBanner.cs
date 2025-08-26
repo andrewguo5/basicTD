@@ -26,7 +26,7 @@ public class TopBanner : GComponent
     private Sprite GearSprite;
     private SpriteFont GameFont;
 
-    public TopBanner(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
+    public TopBanner(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
         Buffer = 120;
         Padding = props["TextPadding"];
@@ -149,7 +149,7 @@ public class TopBanner : GComponent
         );
         Core.SpriteBatch.DrawString(
             GameFont,
-            $"{1}/{5}",
+            $"{0}/{5}",
             WaveStringLocation,
             Color.White
         );

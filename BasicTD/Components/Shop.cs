@@ -6,6 +6,7 @@ using MonoGameLibrary.Scenes;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using BasicTD.Scenes;
 
 namespace BasicTD.Components;
 
@@ -14,8 +15,11 @@ public class Shop : GComponent
     private int VerticalOffset;
     private int Padding;
     private int SideBuffer;
+    private TextureAtlas Atlas;
     private TextureAtlas CardAtlas;
     private SpriteFont GameFont;
+    private Vector2 ShopStringLocation;
+    private Rectangle MapBounds;
     private List<Rectangle> CardSlotManager { get; set; }
     private Rectangle CardSlot1;
     private Rectangle CardSlot2;
@@ -32,13 +36,15 @@ public class Shop : GComponent
     private int RandomEmblemIndex;
     private int RandomSymbolIndex;
 
-    public Shop(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
+    public Shop(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
         VerticalOffset = props["VerticalOffset"];
         Padding = props["TextPadding"];
         SideBuffer = props["SideBuffer"];
         CardAtlas = props["CardAtlas"];
+        Atlas = props["Atlas"];
         GameFont = props["GameFont"];
+        MapBounds = props["MapBounds"];
 
         int X = Bounds.Left + 20;
         int Y = Bounds.Top + 15;
@@ -67,6 +73,11 @@ public class Shop : GComponent
             CardSlot5,
             CardSlot6
         };
+
+        ShopStringLocation = new Vector2(
+            Padding + SideBuffer,
+            MapBounds.Bottom + 2 * VerticalOffset
+        );
     }
 
     protected override void LoadContentSelf()
@@ -103,6 +114,10 @@ public class Shop : GComponent
         {
             sprite.Scale = new Vector2(2.0f, 2.0f);
         }
+
+        GoldSprite = Atlas.CreateSprite("gold");
+        GoldSprite.CenterOrigin();
+        GoldSprite.Scale = new Vector2(2.5f, 2.5f);
     }
 
     protected override void DrawSelf(GameTime gameTime)
@@ -110,15 +125,16 @@ public class Shop : GComponent
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         DrawCards();
         DrawCardCosts();
+        DrawText();
 
-        // if (ParentScene.DebugDraw)
-        // {
-        //     foreach (var rect in CardSlotManager)
-        //     {
-        //         // Draw the card slots
-        //         Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, rect, 1);
-        //     }
-        // }
+        if (((GameScene)ParentScene).DebugDraw)
+        {
+            foreach (var rect in CardSlotManager)
+            {
+                // Draw the card slots
+                Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, rect, 1);
+            }
+        }
         Core.SpriteBatch.End();
     }
 
@@ -188,7 +204,7 @@ public class Shop : GComponent
                 SpriteEffects.None,
                 0f
             );
-            
+
             // Draw the GoldSprite to the left of the cost string
             if (GoldSprite != null)
             {
@@ -196,6 +212,11 @@ public class Shop : GComponent
                 GoldSprite.Draw(Core.SpriteBatch, goldSpritePosition, highlightColor, new Vector2(0.8f, 0.8f));
             }
         }
+    }
+
+    private void DrawText()
+    {
+        Core.SpriteBatch.DrawString(GameFont, $"Shop", ShopStringLocation, Color.White);
     }
 }
 

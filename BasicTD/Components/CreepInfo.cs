@@ -18,7 +18,7 @@ public class CreepInfo : GComponent
     private SpriteFont GameFont;
     private Tilemap InfoPanelMap;
 
-    public CreepInfo(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
+    public CreepInfo(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
         VerticalOffset = Props["VerticalOffset"];
         Padding = Props["TextPadding"];
@@ -45,7 +45,7 @@ public class CreepInfo : GComponent
 
     protected override void DrawSelf(GameTime gameTime)
     {
-        Core.SpriteBatch.Begin();
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Creeps", CreepStringLocation, Color.White);
         Core.SpriteBatch.End();

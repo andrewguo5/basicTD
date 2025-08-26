@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
+using MonoGameLibrary.Creeps;
 using System.Collections.Generic;
 
 namespace BasicTD.Scenes;
@@ -22,7 +23,7 @@ public class GameScene : Scene
     // Sprite Managers
     private List<Sprite> SpriteManager;
     private List<Sprite> CardSpriteManager;
-    private Dictionary<string, Sprite> SpriteDictionary;
+    public Dictionary<string, Sprite> SpriteDictionary;
     private Vector2 SpriteScale = new(2.5f, 2.5f);
     private Vector2 CardSpriteScale = new(2f, 2f);
 
@@ -34,7 +35,7 @@ public class GameScene : Scene
     private Dictionary<string, AnimatedSprite> AnimationDictionary;
 
     // White pixel
-    private Texture2D WhitePixel;
+    public Texture2D WhitePixel;
 
     // Main component
     public GComponent Main { get; set; }
@@ -47,6 +48,9 @@ public class GameScene : Scene
 
     // Font
     public SpriteFont GameFont;
+
+    // Creeps
+    public List<Creep> CreepList;
 
     public GameScene() : base()
     {
@@ -110,7 +114,7 @@ public class GameScene : Scene
         );
 
         // After pre-loading the scene, we can load the main component.
-        Main = new Components.Main(ScreenBounds, new Dictionary<string, dynamic>
+        Main = new Components.Main(this, ScreenBounds, new Dictionary<string, dynamic>
         {
             { "VerticalOffset", 30 },
             { "TextPadding", 10 },

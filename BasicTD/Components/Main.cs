@@ -15,14 +15,12 @@ public class Main : GComponent
     private int SideBuffer;
     private int HTileOffset;
     private int VTileOffset;
-    private Vector2 TilemapScale;
-    private Tilemap InfoPanelMap;
 
     // private TextureAtlas Atlas;
 
     // private SpriteFont GameFont;
 
-    public Main(Rectangle bounds, Dictionary<string, dynamic> props = null) : base(bounds, props)
+    public Main(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
         // Extraction
         MapBounds = Props["MapBounds"];
@@ -31,7 +29,6 @@ public class Main : GComponent
         SideBuffer = Props["SideBuffer"];
         HTileOffset = Props["HTileOffset"];
         VTileOffset = Props["VTileOffset"];
-        TilemapScale = Props["TilemapScale"];
 
         GComponent TopBanner;
         GComponent CreepInfo;
@@ -40,6 +37,7 @@ public class Main : GComponent
         GComponent Shop;
 
         TopBanner = new TopBanner(
+            ParentScene,
             new Rectangle(
                 0,
                 0,
@@ -49,6 +47,7 @@ public class Main : GComponent
             Props
         );
         CreepInfo = new CreepInfo(
+            ParentScene,
             new Rectangle(
                 SideBuffer + HTileOffset,
                 MapBounds.Top + VerticalOffset,
@@ -58,10 +57,12 @@ public class Main : GComponent
             Props
         );
         Battlefield = new Battlefield(
+            ParentScene,
             MapBounds,
             Props
         );
         Inventory = new Inventory(
+            ParentScene,
             new Rectangle(
                 MapBounds.Right + SideBuffer + HTileOffset,
                 MapBounds.Top + VerticalOffset,
@@ -71,6 +72,7 @@ public class Main : GComponent
             Props
         );
         Shop = new Shop(
+            ParentScene,
             new Rectangle(
                 MapBounds.Left,
                 MapBounds.Bottom + 40,

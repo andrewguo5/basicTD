@@ -46,15 +46,18 @@ namespace MonoGameLibrary.Scenes;
 /// </summary>
 public abstract class GComponent
 {
+    protected Scene ParentScene;
     protected Rectangle Bounds { get; set; }
     protected List<GComponent> Children { get; set; }
     protected Dictionary<string, dynamic> Props;
 
     public GComponent(
+        Scene parent,
         Rectangle bounds,
         Dictionary<string, dynamic> props = null
     )
     {
+        ParentScene = parent;
         Bounds = bounds;
         Children = new List<GComponent>();
         Props = props ?? new Dictionary<string, dynamic>();
