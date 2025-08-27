@@ -46,6 +46,19 @@ public class Inventory : GComponent
     protected override void DrawSelf(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        // Draw banner
+        Core.Scaffold.DrawFilledRectangle(
+            Core.SpriteBatch,
+            new Rectangle(
+                MapBounds.Right + SideBuffer,
+                0,
+                Core.GraphicsDevice.Viewport.Width - (MapBounds.Right + 2 * SideBuffer),
+                Core.GraphicsDevice.Viewport.Height
+            ),
+            TDConstants.LightBG
+        );
+
         InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(MapBounds.Right + SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Inventory", InventoryStringLocation, Color.White);
         Core.SpriteBatch.End();

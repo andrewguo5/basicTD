@@ -123,6 +123,14 @@ public class Shop : GComponent
     protected override void DrawSelf(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        // Draw banner
+        Core.Scaffold.DrawFilledRectangle(
+            Core.SpriteBatch,
+            new Rectangle(0, MapBounds.Bottom + 40, Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height - (MapBounds.Bottom + 40)),
+            TDConstants.DarkBG
+        );
+
         DrawCards();
         DrawCardCosts();
         DrawText();

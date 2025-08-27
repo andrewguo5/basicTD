@@ -83,11 +83,11 @@ public class Main : GComponent
         );
 
         AddChildren([
-            TopBanner,
-            CreepInfo,
             Battlefield,
+            CreepInfo,
             Inventory,
-            Shop
+            Shop,
+            TopBanner
         ]);
     }
 
@@ -97,65 +97,16 @@ public class Main : GComponent
 
     protected override void LoadContentSelf()
     {
-        // As the immediate parent of the CreepInfo and Inventory comopnents, we load
-        // the necessary tilemap here. This is a pattern that I want to keep in the GComponent model.
-        // Tilemap = Tilemap.FromFile(Core.Content, "images/tilemap-definition.xml");
     }
 
     protected override void DrawSelf(GameTime gameTime)
     {
         // Clear the background with the main background color
         Core.GraphicsDevice.Clear(TDConstants.MainBG);
-
-        Core.SpriteBatch.Begin();
-        DrawBanners();
-        Core.SpriteBatch.End();
     }
 
     protected override void UpdateSelf(GameTime gameTime)
     {
         // Implement update logic for the main component
-    }
-
-    private void DrawBanners()
-    {
-        // Draw the side banners
-        // Draw left side banner rectangle
-        Core.Scaffold.DrawFilledRectangle(
-            Core.SpriteBatch,
-            new Rectangle(
-                SideBuffer,
-                0,
-                MapBounds.Left - 2 * SideBuffer,
-                Core.GraphicsDevice.Viewport.Height
-            ),
-            TDConstants.LightBG
-        );
-
-        // Draw right side banner rectangle
-        Core.Scaffold.DrawFilledRectangle(
-            Core.SpriteBatch,
-            new Rectangle(
-                MapBounds.Right + SideBuffer,
-                0,
-                Core.GraphicsDevice.Viewport.Width - (MapBounds.Right + 2 * SideBuffer),
-                Core.GraphicsDevice.Viewport.Height
-            ),
-            TDConstants.LightBG
-        );
-
-        // Draw the top banner
-        Core.Scaffold.DrawFilledRectangle(
-            Core.SpriteBatch,
-            new Rectangle(0, 0, Core.GraphicsDevice.Viewport.Width, 60),
-            TDConstants.DarkBG
-        );
-
-        // Draw the bottom banner
-        Core.Scaffold.DrawFilledRectangle(
-            Core.SpriteBatch,
-            new Rectangle(0, MapBounds.Bottom + 40, Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height - (MapBounds.Bottom + 40)),
-            TDConstants.DarkBG
-        );
     }
 }

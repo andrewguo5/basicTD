@@ -46,6 +46,19 @@ public class CreepInfo : GComponent
     protected override void DrawSelf(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        // Draw banner
+        Core.Scaffold.DrawFilledRectangle(
+            Core.SpriteBatch,
+            new Rectangle(
+                SideBuffer,
+                0,
+                MapBounds.Left - 2 * SideBuffer,
+                Core.GraphicsDevice.Viewport.Height
+            ),
+            TDConstants.LightBG
+        );
+
         InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Creeps", CreepStringLocation, Color.White);
         Core.SpriteBatch.End();

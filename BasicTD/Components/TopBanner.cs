@@ -87,6 +87,14 @@ public class TopBanner : GComponent
     protected override void DrawSelf(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        // Draw banner
+        Core.Scaffold.DrawFilledRectangle(
+            Core.SpriteBatch,
+            new Rectangle(0, 0, Core.GraphicsDevice.Viewport.Width, 60),
+            TDConstants.DarkBG
+        );
+
         // Draw the icons for lives, gold, and wave
         int iconPadding = 5;
         int iconDrop = 5;

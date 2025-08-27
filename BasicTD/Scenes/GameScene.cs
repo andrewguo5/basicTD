@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
-using MonoGameLibrary.Creeps;
-using MonoGameLibrary.Input;
-using BasicTD.Towers;
 using System.Collections.Generic;
 
 namespace BasicTD.Scenes;
@@ -49,26 +46,12 @@ public class GameScene : Scene
     public bool DebugDraw { get; set; } = false;
     public bool Paused = false;
     public bool Grayed = false;
-    public bool PlacingTower = false;
-    public bool SelectingTower = false;
 
     // Scene Manager
     public Scene NextScene { get; set; }
 
     // Font
     public SpriteFont GameFont;
-
-    // Creeps
-    public List<Creep> CreepList;
-
-    // Towers
-    public List<Tower> Towers;
-    public bool TowerPlacementValid;
-    public Tower SelectedTower;
-    public TowerType PlacingTowerType;
-    public TowerFactory TowerFactory;
-
-    // Toggleable Modes
 
     public GameScene() : base()
     {
