@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
+using MonoGameLibrary.Input;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -141,7 +142,12 @@ public class Shop : GComponent
             Reset();
         }
 
-        // Update logic for the shop can be added here if needed
+        UpdateHoverCard();
+        UpdatePurchaseCard();
+    }
+
+    private void UpdateHoverCard()
+    {
         Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
         foreach (var slot in CardSlotManager)
         {
@@ -154,6 +160,33 @@ public class Shop : GComponent
         }
         // If the mouse is not over any card slot, reset the hovered index
         hoveredCardSlotIndex = -1;
+    }
+
+    private void UpdatePurchaseCard()
+    {
+        if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && hoveredCardSlotIndex != -1)
+        {
+            CardSlot selectedSlot = CardSlotManager[hoveredCardSlotIndex];
+            Card selectedCard = selectedSlot.Card;
+
+            // Check if the player has enough gold to purchase the card
+            if (Player.Gold >= selectedCard.Cost)
+            {
+                // Deduct the cost from the player's gold
+                Player.Gold -= selectedCard.Cost;
+
+                // Logic to add the tower to the player's inventory or place it on the map
+                // For now, we will just print a message to the console
+                Console.WriteLine($"Purchased {selectedCard.Rarity} {selectedCard.TowerType} tower for {selectedCard.Cost} gold.");
+
+                // Regenerate the purchased card slot with a new random card
+                selectedSlot.GenerateCard();
+            }
+            else
+            {
+                Console.WriteLine("Not enough gold to purchase this card.");
+            }
+        }
     }
 
     public void Reset()
