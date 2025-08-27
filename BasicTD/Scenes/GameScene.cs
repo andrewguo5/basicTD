@@ -5,6 +5,8 @@ using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
 using MonoGameLibrary.Creeps;
+using MonoGameLibrary.Input;
+using BasicTD.Towers;
 using System.Collections.Generic;
 
 namespace BasicTD.Scenes;
@@ -31,6 +33,9 @@ public class GameScene : Scene
     private TextureAtlas Atlas;
     private TextureAtlas CardAtlas;
 
+    // Effects
+    public Effect CircleIndicator;
+
     // Animations
     private Dictionary<string, AnimatedSprite> AnimationDictionary;
 
@@ -42,6 +47,10 @@ public class GameScene : Scene
 
     // States
     public bool DebugDraw { get; set; } = false;
+    public bool Paused = false;
+    public bool Grayed = false;
+    public bool PlacingTower = false;
+    public bool SelectingTower = false;
 
     // Scene Manager
     public Scene NextScene { get; set; }
@@ -51,6 +60,15 @@ public class GameScene : Scene
 
     // Creeps
     public List<Creep> CreepList;
+
+    // Towers
+    public List<Tower> Towers;
+    public bool TowerPlacementValid;
+    public Tower SelectedTower;
+    public TowerType PlacingTowerType;
+    public TowerFactory TowerFactory;
+
+    // Toggleable Modes
 
     public GameScene() : base()
     {
@@ -125,7 +143,8 @@ public class GameScene : Scene
             { "Atlas", Atlas },
             { "CardAtlas", CardAtlas },
             { "GameFont", GameFont },
-            { "TilemapScale", new Vector2(60f / 16f, 60f / 16f) }
+            { "TilemapScale", new Vector2(60f / 16f, 60f / 16f) },
+            { "SpriteScale", SpriteScale }
         });
         Main.LoadContent();
         Main.Initialize();
@@ -149,6 +168,9 @@ public class GameScene : Scene
         // Create a white pixel texture for debug drawing
         WhitePixel = new Texture2D(Core.GraphicsDevice, 1, 1);
         WhitePixel.SetData(new[] { Color.White });
+
+        // Load effect
+        CircleIndicator = Core.Content.Load<Effect>("effects/circleIndicator");
     }
 
     private void LoadSprites()
@@ -202,12 +224,20 @@ public class GameScene : Scene
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.D))
             DebugDraw = !DebugDraw;
 
+        // Toggle pause mode
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.P))
+            Paused = !Paused;
+
+        // Toggle grayscale mode
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.G))
+            Grayed = !Grayed;
+
         // Scene transition
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
             Core.ChangeScene(NextScene);
         }
-        
+
         Main.Update(gameTime);
     }
 
@@ -239,19 +269,39 @@ public class GameScene : Scene
         // Left and right map boundaries
         Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Left);
         Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Right);
-
-        // // Draw left and right side banner boundaries
-        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, SideBuffer);
-        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Left - SideBuffer);
-
-        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, MapBounds.Right + SideBuffer);
-        // Core.Scaffold.DrawVerticalLineAtX(Core.SpriteBatch, Core.GraphicsDevice.Viewport.Width - sideBannerBuffer);
-
-        // // Draw guidelines for info banners
-        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, LeftInfoPanelRect, 2);
-        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, RightInfoPanelRect, 2);
-        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, TopBannerRect, 2);
-        // Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, ShopRect, 2);
     }
 
+    public Vector2 NormalizePosition(Vector2 location, Point bounds, Point offset)
+    {
+        return new Vector2(
+            (float)(location.X - offset.X) / bounds.X,
+            (float)(location.Y - offset.Y) / bounds.Y
+        );
+    }
+
+    public void DrawCircleIndicator(Vector2 location, float circleRadiusPx = 200f)
+    {
+        float circleRadius = circleRadiusPx / ScreenBounds.Height;
+        CircleIndicator.Parameters["circleRadius"].SetValue(circleRadius);
+        Vector2 normalizedMousePos = NormalizePosition(
+            location, new Point(ScreenBounds.Width, ScreenBounds.Height), ScreenBounds.Location
+        );
+        CircleIndicator.Parameters["mousePos"].SetValue(normalizedMousePos);
+        // Casts are necessary here to avoid integer division
+        CircleIndicator.Parameters["aspectRatio"]?.SetValue((float)ScreenBounds.Width / (float)ScreenBounds.Height);
+
+        // Create a matrix to convert from screen coordinates to normalized device coordinates
+        Matrix view = Matrix.Identity;
+        Matrix projection = Matrix.CreateOrthographicOffCenter(ScreenBounds.Left, ScreenBounds.Right, ScreenBounds.Bottom, ScreenBounds.Top, 0, 1);
+        CircleIndicator.Parameters["view_projection"]?.SetValue(view * projection);
+
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: CircleIndicator);
+        Core.SpriteBatch.Draw(WhitePixel, ScreenBounds, new Color(0, 0, 0, 128));
+        Core.SpriteBatch.End();
+    }
+
+    public void DrawCircleIndicator(float circleRadiusPx = 200f)
+    {
+        DrawCircleIndicator(Core.Input.Mouse.Position.ToVector2(), circleRadiusPx);
+    }
 }

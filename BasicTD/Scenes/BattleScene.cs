@@ -7,13 +7,10 @@ using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
 using BasicTD.Towers;
 using MonoGameLibrary.Creeps;
-using MonoGameLibrary.Coordinates;
 using MonoGameLibrary.Input;
 using System.Collections.Generic;
 
 using MonoGameLibrary.Collision;
-using System.Xml.Serialization;
-using System.Xml;
 
 namespace BasicTD.Scenes;
 
