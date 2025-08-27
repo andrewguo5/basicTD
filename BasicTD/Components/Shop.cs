@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using BasicTD.Scenes;
+using BasicTD.Towers;
 
 namespace BasicTD.Components;
 
@@ -20,6 +22,7 @@ public class Shop : GComponent
     private TextureAtlas CardAtlas => Props["CardAtlas"];
     private SpriteFont GameFont => Props["GameFont"];
     private Rectangle MapBounds => Props["MapBounds"];
+    private Vector2 SpriteScale => Props["SpriteScale"];
 
     // Component-specific content 
     private Vector2 ShopStringLocation;
@@ -35,6 +38,9 @@ public class Shop : GComponent
     private List<Sprite> CardEmblemSprites;
     private List<Sprite> CardSymbolSprites;
     private Sprite GoldSprite;
+
+    // Shop generation
+    private TowerFactory TowerFactory;
     Random random;
     private int RandomEmblemIndex;
     private int RandomSymbolIndex;
@@ -51,6 +57,8 @@ public class Shop : GComponent
         CardSlot4 = new Rectangle(CardSlot3.Right + padding, Y, 80, 132);
         CardSlot5 = new Rectangle(CardSlot4.Right + padding, Y, 80, 132);
         CardSlot6 = new Rectangle(CardSlot5.Right + padding, Y, 80, 132);
+
+        TowerFactory = new(SpriteScale);
     }
 
     protected override void InitializeSelf()
@@ -114,8 +122,15 @@ public class Shop : GComponent
         GoldSprite.CenterOrigin();
         GoldSprite.Scale = new Vector2(2.5f, 2.5f);
     }
+
     protected override void UpdateSelf(GameTime gameTime)
     {
+        // Reset scene
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.R))
+        {
+            Reset();
+        }
+
         // Update logic for the shop can be added here if needed
         Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
         foreach (var rect in CardSlotManager)
@@ -130,6 +145,12 @@ public class Shop : GComponent
         // If the mouse is not over any card slot, reset the hovered index
         hoveredCardSlotIndex = -1;
     }
+
+    public void Reset()
+    {
+        RandomSymbolIndex = random.Next(CardSymbolSprites.Count);
+    }
+
     protected override void DrawSelf(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -166,23 +187,29 @@ public class Shop : GComponent
             Color highlightColor = (hoveredCardSlotIndex == i) ? Color.White : Color.LightGray;
             card.Draw(Core.SpriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
 
-            // Draw a random emblem and random symbol on each card
-            if (CardEmblemSprites != null && CardEmblemSprites.Count > 0)
-            {
-                var emblemSprite = CardEmblemSprites[RandomEmblemIndex];
-                Vector2 emblemPosition = new Vector2(slotRect.X, slotRect.Y);
-                emblemSprite.Draw(Core.SpriteBatch, emblemPosition, highlightColor);
-            }
+            // Select a random TowerType from the TowerType enum
+            var towerTypes = Enum.GetValues(typeof(TowerType));
+            TowerType randomTowerType = (TowerType)towerTypes.GetValue(RandomSymbolIndex);
+            SpriteStack towerIcon = TowerFactory.CreateCardIcon(randomTowerType);
+            towerIcon.Draw(Core.SpriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
 
-            if (CardSymbolSprites != null && CardSymbolSprites.Count > 0)
-            {
-                var symbolSprite = CardSymbolSprites[RandomSymbolIndex];
-                Vector2 symbolPosition = new Vector2(slotRect.X, slotRect.Y);
-                symbolSprite.Draw(Core.SpriteBatch, symbolPosition, highlightColor);
-            }
+            // Draw a random emblem and random symbol on each card
+            // if (CardEmblemSprites != null && CardEmblemSprites.Count > 0)
+            // {
+            //     var emblemSprite = CardEmblemSprites[RandomEmblemIndex];
+            //     Vector2 emblemPosition = new Vector2(slotRect.X, slotRect.Y);
+            //     emblemSprite.Draw(Core.SpriteBatch, emblemPosition, highlightColor);
+            // }
+
+            // if (CardSymbolSprites != null && CardSymbolSprites.Count > 0)
+            // {
+            //     var symbolSprite = CardSymbolSprites[RandomSymbolIndex];
+            //     Vector2 symbolPosition = new Vector2(slotRect.X, slotRect.Y);
+            //     symbolSprite.Draw(Core.SpriteBatch, symbolPosition, highlightColor);
+            // }
         }
     }
-    
+
     private void DrawCardCosts()
     {
         // Draw the cost of each card in its corresponding slot

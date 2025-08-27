@@ -271,7 +271,7 @@ public abstract class BattleScene : Scene
         Water4Atlas = TextureAtlas.FromSpineAtlas(Core.Content, "images/Water4.atlas.txt");
 
         // TowerFactory
-        TowerFactory = new(Atlas, SpriteScale);
+        TowerFactory = new(SpriteScale);
 
         // Load fonts
         font = Core.Content.Load<SpriteFont>("fonts/04B_30");

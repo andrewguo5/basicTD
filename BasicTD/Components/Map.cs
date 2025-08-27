@@ -59,7 +59,7 @@ public class Battlefield : GComponent
         PlacedTowersList = new();
 
         TowerSprite = ((GameScene)ParentScene).SpriteDictionary["TowerSprite"];
-        TowerFactory = new(Atlas, SpriteScale);
+        TowerFactory = new(SpriteScale);
     }
 
     protected override void LoadContentSelf()

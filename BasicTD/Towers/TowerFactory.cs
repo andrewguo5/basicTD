@@ -1,6 +1,7 @@
 using System;
 using MonoGameLibrary.Graphics;
 using Microsoft.Xna.Framework;
+using MonoGameLibrary;
 using System.Collections.Generic;
 
 namespace BasicTD.Towers;
@@ -18,11 +19,13 @@ public enum TowerType
 public class TowerFactory
 {
     private TextureAtlas TowerAtlas;
+    private TextureAtlas CardAtlas;
     private Vector2 SpriteScale;
 
-    public TowerFactory(TextureAtlas towerAtlas, Vector2 spriteScale)
+    public TowerFactory(Vector2 spriteScale)
     {
-        TowerAtlas = towerAtlas;
+        TowerAtlas = TextureAtlas.FromFile(Core.Content, "images/things-atlas-definition.xml");
+        CardAtlas = TextureAtlas.FromFile(Core.Content, "images/card-shop-atlas.xml");
         SpriteScale = spriteScale;
     }
 
@@ -86,5 +89,32 @@ public class TowerFactory
         activationAnimation.Scale = SpriteScale;
         activationAnimation.Repeat = false;
         return activationAnimation;
+    }
+
+    public SpriteStack CreateCardIcon(TowerType towerType)
+    {
+        Sprite emblemSprite = towerType switch {
+            TowerType.Light => CardAtlas.CreateSprite("emblem-bullet"),
+            TowerType.Heavy => CardAtlas.CreateSprite("emblem-bullet"),
+            TowerType.Pulse => CardAtlas.CreateSprite("emblem-shield"),
+            TowerType.Shockwave => CardAtlas.CreateSprite("emblem-shield"),
+            TowerType.Vuln => CardAtlas.CreateSprite("emblem-gem"),
+            TowerType.Beacon => CardAtlas.CreateSprite("emblem-gem"),
+            _ => throw new ArgumentException($"Unknown tower type: {towerType}")
+        };
+        emblemSprite.Scale = new Vector2(2.0f, 2.0f);
+        
+        Sprite symbolSprite = towerType switch {
+            TowerType.Light => CardAtlas.CreateSprite("symbol-loop"),
+            TowerType.Heavy => CardAtlas.CreateSprite("symbol-square"),
+            TowerType.Pulse => CardAtlas.CreateSprite("symbol-pulse"),
+            TowerType.Shockwave => CardAtlas.CreateSprite("symbol-shockwave"),
+            TowerType.Vuln => CardAtlas.CreateSprite("symbol-spare"),
+            TowerType.Beacon => CardAtlas.CreateSprite("symbol-oval"),
+            _ => throw new ArgumentException($"Unknown tower type: {towerType}")
+        };
+        symbolSprite.Scale = new Vector2(2.0f, 2.0f);
+        
+        return new SpriteStack(new List<Sprite> { emblemSprite, symbolSprite });
     }
 }
