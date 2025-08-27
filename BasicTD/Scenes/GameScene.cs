@@ -53,6 +53,9 @@ public class GameScene : Scene
     // Font
     public SpriteFont GameFont;
 
+    // Player
+    public Player Player;
+
     public GameScene() : base()
     {
 
@@ -61,6 +64,7 @@ public class GameScene : Scene
     public override void Initialize()
     {
         NextScene = new LineScene();
+        Player = new Player(startingGold: 100, startingHealth: 20);
 
         // 1. Pre-load initialization
         base.Initialize();

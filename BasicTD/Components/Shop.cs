@@ -26,13 +26,13 @@ public class Shop : GComponent
 
     // Component-specific content 
     private Vector2 ShopStringLocation;
-    private List<Rectangle> CardSlotManager { get; set; }
-    private Rectangle CardSlot1;
-    private Rectangle CardSlot2;
-    private Rectangle CardSlot3;
-    private Rectangle CardSlot4;
-    private Rectangle CardSlot5;
-    private Rectangle CardSlot6;
+    private List<CardSlot> CardSlotManager { get; set; }
+    private CardSlot CardSlot0;
+    private CardSlot CardSlot1;
+    private CardSlot CardSlot2;
+    private CardSlot CardSlot3;
+    private CardSlot CardSlot4;
+    private CardSlot CardSlot5;
     private int hoveredCardSlotIndex = -1;
     private List<Sprite> CardSpriteManager;
     private List<Sprite> CardEmblemSprites;
@@ -42,8 +42,9 @@ public class Shop : GComponent
     // Shop generation
     private TowerFactory TowerFactory;
     Random random;
-    private int RandomEmblemIndex;
     private int RandomSymbolIndex;
+    // Player properties
+    private Player Player => ((GameScene)ParentScene).Player;
 
     public Shop(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
@@ -51,12 +52,12 @@ public class Shop : GComponent
         int Y = Bounds.Top + 15;
         int padding = 40;
 
-        CardSlot1 = new Rectangle(X, Y, 80, 132);
-        CardSlot2 = new Rectangle(CardSlot1.Right + padding, Y, 80, 132);
-        CardSlot3 = new Rectangle(CardSlot2.Right + padding, Y, 80, 132);
-        CardSlot4 = new Rectangle(CardSlot3.Right + padding, Y, 80, 132);
-        CardSlot5 = new Rectangle(CardSlot4.Right + padding, Y, 80, 132);
-        CardSlot6 = new Rectangle(CardSlot5.Right + padding, Y, 80, 132);
+        CardSlot0 = new(CardAtlas, new Rectangle(X, Y, 80, 132), 0);
+        CardSlot1 = new(CardAtlas, new Rectangle(CardSlot0.Bounds.Right + padding, Y, 80, 132), 1);
+        CardSlot2 = new(CardAtlas, new Rectangle(CardSlot1.Bounds.Right + padding, Y, 80, 132), 1);
+        CardSlot3 = new(CardAtlas, new Rectangle(CardSlot2.Bounds.Right + padding, Y, 80, 132), 2);
+        CardSlot4 = new(CardAtlas, new Rectangle(CardSlot3.Bounds.Right + padding, Y, 80, 132), 3);
+        CardSlot5 = new(CardAtlas, new Rectangle(CardSlot4.Bounds.Right + padding, Y, 80, 132), 4);
 
         TowerFactory = new(SpriteScale);
     }
@@ -64,23 +65,32 @@ public class Shop : GComponent
     protected override void InitializeSelf()
     {
         random = new Random();
-        RandomEmblemIndex = random.Next(CardEmblemSprites.Count);
         RandomSymbolIndex = random.Next(CardSymbolSprites.Count);
 
-        CardSlotManager = new List<Rectangle>
+        CardSlotManager = new List<CardSlot>
         {
+            CardSlot0,
             CardSlot1,
             CardSlot2,
             CardSlot3,
             CardSlot4,
-            CardSlot5,
-            CardSlot6
+            CardSlot5
         };
 
         ShopStringLocation = new Vector2(
             Padding + SideBuffer,
             MapBounds.Bottom + 2 * VerticalOffset
         );
+
+        GenerateCards();
+    }
+
+    private void GenerateCards()
+    {
+        foreach (var slot in CardSlotManager)
+        {
+            slot.GenerateCard();
+        }
     }
 
     protected override void LoadContentSelf()
@@ -133,12 +143,12 @@ public class Shop : GComponent
 
         // Update logic for the shop can be added here if needed
         Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
-        foreach (var rect in CardSlotManager)
+        foreach (var slot in CardSlotManager)
         {
-            if (rect.Contains(mousePos))
+            if (slot.Bounds.Contains(mousePos))
             {
                 // If the mouse is over a card slot, set the hovered index
-                hoveredCardSlotIndex = CardSlotManager.IndexOf(rect);
+                hoveredCardSlotIndex = CardSlotManager.IndexOf(slot);
                 return;
             }
         }
@@ -148,7 +158,7 @@ public class Shop : GComponent
 
     public void Reset()
     {
-        RandomSymbolIndex = random.Next(CardSymbolSprites.Count);
+        GenerateCards();
     }
 
     protected override void DrawSelf(GameTime gameTime)
@@ -168,10 +178,10 @@ public class Shop : GComponent
 
         if (((GameScene)ParentScene).DebugDraw)
         {
-            foreach (var rect in CardSlotManager)
+            foreach (var slot in CardSlotManager)
             {
                 // Draw the card slots
-                Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, rect, 1);
+                Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, slot.Bounds, 1);
             }
         }
         Core.SpriteBatch.End();
@@ -180,54 +190,39 @@ public class Shop : GComponent
     private void DrawCards()
     {
         // Draw each card at its corresponding card slot location
-        for (int i = 0; i < CardSpriteManager.Count && i < CardSlotManager.Count; i++)
+        for (int i = 0; i < CardSlotManager.Count; i++)
         {
-            var card = CardSpriteManager[i];
-            var slotRect = CardSlotManager[i];
+            CardSlot slot = CardSlotManager[i];
+            Rectangle slotRect = slot.Bounds;
+
             Color highlightColor = (hoveredCardSlotIndex == i) ? Color.White : Color.LightGray;
-            card.Draw(Core.SpriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
+            slot.Card.Draw(new Vector2(slotRect.X, slotRect.Y), highlightColor);
 
-            // Select a random TowerType from the TowerType enum
-            var towerTypes = Enum.GetValues(typeof(TowerType));
-            TowerType randomTowerType = (TowerType)towerTypes.GetValue(RandomSymbolIndex);
-            SpriteStack towerIcon = TowerFactory.CreateCardIcon(randomTowerType);
+            SpriteStack towerIcon = TowerFactory.CreateCardIcon(slot.Card.TowerType);
             towerIcon.Draw(Core.SpriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
-
-            // Draw a random emblem and random symbol on each card
-            // if (CardEmblemSprites != null && CardEmblemSprites.Count > 0)
-            // {
-            //     var emblemSprite = CardEmblemSprites[RandomEmblemIndex];
-            //     Vector2 emblemPosition = new Vector2(slotRect.X, slotRect.Y);
-            //     emblemSprite.Draw(Core.SpriteBatch, emblemPosition, highlightColor);
-            // }
-
-            // if (CardSymbolSprites != null && CardSymbolSprites.Count > 0)
-            // {
-            //     var symbolSprite = CardSymbolSprites[RandomSymbolIndex];
-            //     Vector2 symbolPosition = new Vector2(slotRect.X, slotRect.Y);
-            //     symbolSprite.Draw(Core.SpriteBatch, symbolPosition, highlightColor);
-            // }
         }
     }
 
     private void DrawCardCosts()
     {
         // Draw the cost of each card in its corresponding slot
-        for (int i = 0; i < CardSpriteManager.Count && i < CardSlotManager.Count; i++)
+        for (int i = 0; i < CardSlotManager.Count; i++)
         {
-            var card = CardSpriteManager[i];
-            var slotRect = CardSlotManager[i];
-            Vector2 costPosition = new Vector2(slotRect.X + slotRect.Width / 2, slotRect.Bottom - 18); // Adjust position as needed
+            CardSlot slot = CardSlotManager[i];
+            Rectangle slotRect = slot.Bounds;
+            Vector2 costPosition = new Vector2(slotRect.X + slotRect.Width / 2, slotRect.Bottom - 18);
 
             Color highlightColor = (hoveredCardSlotIndex == i) ? Color.White : Color.LightGray;
+            int cardCost = slot.Card.Cost;
+
             Core.SpriteBatch.DrawString(
                 GameFont,
-                $"{i + 1}",
+                $"{cardCost}",
                 costPosition,
                 highlightColor,
                 0f,
                 Vector2.Zero,
-                1f, // 1/3 scale
+                1f,
                 SpriteEffects.None,
                 0f
             );
@@ -247,4 +242,108 @@ public class Shop : GComponent
     }
 }
 
-        
+public class CardSlot
+{
+    private TextureAtlas CardAtlas;
+    public Rectangle Bounds { get; set; }
+    public int Index { get; set; }
+    public Card Card { get; set; }
+
+    public CardSlot(TextureAtlas cardAtlas, Rectangle bounds, int index, Card card)
+    {
+        CardAtlas = cardAtlas;
+        Bounds = bounds;
+        Index = index;
+        Card = card;
+    }
+
+    public CardSlot(TextureAtlas cardAtlas, Rectangle bounds, int index, int level = 0)
+    {
+        CardAtlas = cardAtlas;
+        Bounds = bounds;
+        Index = index;
+        GenerateCard(level);
+    }
+
+    public void GenerateCard(int level = 0)
+    {
+        Card = new Card(CardAtlas, level);
+    }
+}
+
+public enum CardRarity
+{
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary,
+    Null
+}
+
+public class Card
+{
+    private TextureAtlas CardAtlas;
+    public TowerType TowerType { get; set; }
+    public CardRarity Rarity { get; set; }
+    public int Cost => GetCost();
+
+    public Card(TextureAtlas cardAtlas, TowerType towerType, CardRarity rarity, int cost)
+    {
+        CardAtlas = cardAtlas;
+        TowerType = towerType;
+        Rarity = rarity;
+    }
+
+    public Card(TextureAtlas cardAtlas, int level = 0)
+    {
+        CardAtlas = cardAtlas;
+        // Level affects the rarity distribution. For now we will just generate
+        // random cards regardless of level.
+        var rarities = Enum.GetValues(typeof(CardRarity)).Cast<CardRarity>().Where(r => r != CardRarity.Null).ToArray();
+        var towerTypes = Enum.GetValues(typeof(TowerType)).Cast<TowerType>().ToArray();
+        var rand = new Random();
+
+        Rarity = rarities[rand.Next(rarities.Length)];
+        TowerType = towerTypes[rand.Next(towerTypes.Length)];
+    }
+
+    public int GetCost()
+    {
+        int rarityCost = Rarity switch
+        {
+            CardRarity.Common => 1,
+            CardRarity.Uncommon => 2,
+            CardRarity.Rare => 3,
+            CardRarity.Epic => 4,
+            CardRarity.Legendary => 5,
+            CardRarity.Null => 0,
+            _ => 0
+        };
+
+        return rarityCost;
+    }
+
+    public Sprite CardSprite()
+    {
+        Sprite cardSprite = Rarity switch
+        {
+            CardRarity.Common => CardAtlas.CreateSprite("card-common"),
+            CardRarity.Uncommon => CardAtlas.CreateSprite("card-uncommon"),
+            CardRarity.Rare => CardAtlas.CreateSprite("card-rare"),
+            CardRarity.Epic => CardAtlas.CreateSprite("card-epic"),
+            CardRarity.Legendary => CardAtlas.CreateSprite("card-legendary"),
+            CardRarity.Null => CardAtlas.CreateSprite("card-null"),
+            _ => throw new ArgumentException($"Unknown rarity: {Rarity}")
+        };
+        cardSprite.Scale = new Vector2(2.0f, 2.0f);
+
+        return cardSprite;
+    }
+
+    public void Draw(Vector2 position, Color highlightColor)
+    {
+        Sprite cardSprite = CardSprite();
+        cardSprite.Draw(Core.SpriteBatch, position, highlightColor);
+    }
+}

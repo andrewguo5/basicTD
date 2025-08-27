@@ -1,3 +1,4 @@
+using BasicTD.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
@@ -30,6 +31,9 @@ public class TopBanner : GComponent
     private Sprite HeartSprite;
     private Sprite SkullSprite;
     private Sprite GearSprite;
+
+    // Player properties
+    private Player Player => ((GameScene)ParentScene).Player;
 
     public TopBanner(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
@@ -144,13 +148,13 @@ public class TopBanner : GComponent
 
         Core.SpriteBatch.DrawString(
             GameFont,
-            $"{20}",
+            $"{Player.Health}",
             LivesStringLocation,
             Color.White
         );
         Core.SpriteBatch.DrawString(
             GameFont,
-            $"{100}",
+            $"{Player.Gold}",
             GoldStringLocation,
             Color.White
         );
