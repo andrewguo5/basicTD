@@ -25,7 +25,7 @@ public class LinkedArcScene : BattleScene
         base.Initialize();
         // NOTE: Content has been loaded after this line
         // Scene management
-        NextScene = new BasicMapScene();
+        NextScene = new GameScene();
     }
 
     public override void InitializePath()

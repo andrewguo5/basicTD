@@ -9,31 +9,30 @@ namespace BasicTD.Components;
 
 public class TopBanner : GComponent
 {
-    private int Buffer;
-    private int Padding;
-    private int SideBuffer;
-    private Rectangle MapBounds;
-    private TextureAtlas Atlas;
+    // Props
+    private int Buffer => 120;
+    private int Padding => Props["TextPadding"];
+    private int SideBuffer => Props["SideBuffer"];
+    private Rectangle MapBounds => Props["MapBounds"];
+    private TextureAtlas Atlas => Props["Atlas"];
+    private SpriteFont GameFont => Props["GameFont"];
+
+    // Strings
     private Vector2 NameStringLocation;
     private Vector2 LivesStringLocation;
     private Vector2 GoldStringLocation;
     private Vector2 WaveStringLocation;
     private Vector2 GearIconLocation;
+    
+    // Component-specific content
     private List<Sprite> IconSpriteManager;
     private Sprite GoldSprite;
     private Sprite HeartSprite;
     private Sprite SkullSprite;
     private Sprite GearSprite;
-    private SpriteFont GameFont;
 
     public TopBanner(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
-        Buffer = 120;
-        Padding = props["TextPadding"];
-        MapBounds = props["MapBounds"];
-        SideBuffer = props["SideBuffer"];
-        Atlas = props["Atlas"];
-        GameFont = props["GameFont"];
     }
 
     protected override void InitializeSelf()
@@ -61,17 +60,18 @@ public class TopBanner : GComponent
 
     protected override void LoadContentSelf()
     {
-        // Implement content loading logic for the top banner
         GoldSprite = Atlas.CreateSprite("gold");
         HeartSprite = Atlas.CreateSprite("heart");
         SkullSprite = Atlas.CreateSprite("skull");
         GearSprite = Atlas.CreateSprite("gear");
+
         IconSpriteManager = [
             GoldSprite,
             HeartSprite,
             SkullSprite,
             GearSprite
         ];
+
         foreach (Sprite sprite in IconSpriteManager)
         {
             sprite.CenterOrigin();
@@ -81,7 +81,6 @@ public class TopBanner : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
-        // Implement update logic for the top banner
     }
 
     protected override void DrawSelf(GameTime gameTime)

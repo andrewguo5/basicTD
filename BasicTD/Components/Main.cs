@@ -9,27 +9,14 @@ namespace BasicTD.Components;
 
 public class Main : GComponent
 {
-    private Rectangle MapBounds;
-    private int VerticalOffset;
-    private int Padding;
-    private int SideBuffer;
-    private int HTileOffset;
-    private int VTileOffset;
-
-    // private TextureAtlas Atlas;
-
-    // private SpriteFont GameFont;
+    private Rectangle MapBounds => Props["MapBounds"];
+    private int VerticalOffset => Props["VerticalOffset"];
+    private int SideBuffer => Props["SideBuffer"];
+    private int HTileOffset => Props["HTileOffset"];
+    private int VTileOffset => Props["VTileOffset"];
 
     public Main(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
-        // Extraction
-        MapBounds = Props["MapBounds"];
-        VerticalOffset = Props["VerticalOffset"];
-        Padding = Props["TextPadding"];
-        SideBuffer = Props["SideBuffer"];
-        HTileOffset = Props["HTileOffset"];
-        VTileOffset = Props["VTileOffset"];
-
         GComponent TopBanner;
         GComponent CreepInfo;
         GComponent Battlefield;
@@ -82,6 +69,7 @@ public class Main : GComponent
             Props
         );
 
+        // Control draw order here by re-ordering children
         AddChildren([
             Battlefield,
             CreepInfo,
@@ -99,14 +87,13 @@ public class Main : GComponent
     {
     }
 
+    protected override void UpdateSelf(GameTime gameTime)
+    {
+    }
+
     protected override void DrawSelf(GameTime gameTime)
     {
-        // Clear the background with the main background color
         Core.GraphicsDevice.Clear(TDConstants.MainBG);
     }
 
-    protected override void UpdateSelf(GameTime gameTime)
-    {
-        // Implement update logic for the main component
-    }
 }

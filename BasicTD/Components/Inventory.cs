@@ -9,25 +9,18 @@ namespace BasicTD.Components;
 
 public class Inventory : GComponent
 {
-    private int VerticalOffset;
-    private int Padding;
-    private int SideBuffer;
-    private Rectangle MapBounds;
-    private TextureAtlas Atlas;
+    private int VerticalOffset => Props["VerticalOffset"];
+    private int Padding => Props["TextPadding"];
+    private int SideBuffer => Props["SideBuffer"];
+    private Rectangle MapBounds => Props["MapBounds"];
+    private TextureAtlas Atlas => Props["Atlas"];
     private Vector2 InventoryStringLocation;
-    private SpriteFont GameFont;
+    private SpriteFont GameFont => Props["GameFont"];
     private Tilemap InfoPanelMap;
 
     public Inventory(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
-        VerticalOffset = props["VerticalOffset"];
-        Padding = props["TextPadding"];
-        MapBounds = props["MapBounds"];
-        SideBuffer = props["SideBuffer"];
-        Atlas = props["Atlas"];
-        GameFont = props["GameFont"];
     }
-
 
     protected override void InitializeSelf()
     {
@@ -41,6 +34,10 @@ public class Inventory : GComponent
     {
         InfoPanelMap = Tilemap.FromFile(Core.Content, "images/side-banner-tilemap.xml");
         InfoPanelMap.Scale = Props["TilemapScale"];
+    }
+
+    protected override void UpdateSelf(GameTime gameTime)
+    {
     }
 
     protected override void DrawSelf(GameTime gameTime)
@@ -62,10 +59,6 @@ public class Inventory : GComponent
         InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(MapBounds.Right + SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Inventory", InventoryStringLocation, Color.White);
         Core.SpriteBatch.End();
-    }
-
-    protected override void UpdateSelf(GameTime gameTime)
-    {
     }
 }
 

@@ -12,14 +12,17 @@ namespace BasicTD.Components;
 
 public class Shop : GComponent
 {
-    private int VerticalOffset;
-    private int Padding;
-    private int SideBuffer;
-    private TextureAtlas Atlas;
-    private TextureAtlas CardAtlas;
-    private SpriteFont GameFont;
+    // Props
+    private int VerticalOffset => Props["VerticalOffset"];
+    private int Padding => Props["TextPadding"];
+    private int SideBuffer => Props["SideBuffer"];
+    private TextureAtlas Atlas => Props["Atlas"];
+    private TextureAtlas CardAtlas => Props["CardAtlas"];
+    private SpriteFont GameFont => Props["GameFont"];
+    private Rectangle MapBounds => Props["MapBounds"];
+
+    // Component-specific content 
     private Vector2 ShopStringLocation;
-    private Rectangle MapBounds;
     private List<Rectangle> CardSlotManager { get; set; }
     private Rectangle CardSlot1;
     private Rectangle CardSlot2;
@@ -38,14 +41,6 @@ public class Shop : GComponent
 
     public Shop(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
-        VerticalOffset = props["VerticalOffset"];
-        Padding = props["TextPadding"];
-        SideBuffer = props["SideBuffer"];
-        CardAtlas = props["CardAtlas"];
-        Atlas = props["Atlas"];
-        GameFont = props["GameFont"];
-        MapBounds = props["MapBounds"];
-
         int X = Bounds.Left + 20;
         int Y = Bounds.Top + 15;
         int padding = 40;
@@ -119,7 +114,22 @@ public class Shop : GComponent
         GoldSprite.CenterOrigin();
         GoldSprite.Scale = new Vector2(2.5f, 2.5f);
     }
-
+    protected override void UpdateSelf(GameTime gameTime)
+    {
+        // Update logic for the shop can be added here if needed
+        Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
+        foreach (var rect in CardSlotManager)
+        {
+            if (rect.Contains(mousePos))
+            {
+                // If the mouse is over a card slot, set the hovered index
+                hoveredCardSlotIndex = CardSlotManager.IndexOf(rect);
+                return;
+            }
+        }
+        // If the mouse is not over any card slot, reset the hovered index
+        hoveredCardSlotIndex = -1;
+    }
     protected override void DrawSelf(GameTime gameTime)
     {
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -145,24 +155,6 @@ public class Shop : GComponent
         }
         Core.SpriteBatch.End();
     }
-
-    protected override void UpdateSelf(GameTime gameTime)
-    {
-        // Update logic for the shop can be added here if needed
-        Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
-        foreach (var rect in CardSlotManager)
-        {
-            if (rect.Contains(mousePos))
-            {
-                // If the mouse is over a card slot, set the hovered index
-                hoveredCardSlotIndex = CardSlotManager.IndexOf(rect);
-                return;
-            }
-        }
-        // If the mouse is not over any card slot, reset the hovered index
-        hoveredCardSlotIndex = -1;
-    }
-
 
     private void DrawCards()
     {
@@ -190,7 +182,7 @@ public class Shop : GComponent
             }
         }
     }
-
+    
     private void DrawCardCosts()
     {
         // Draw the cost of each card in its corresponding slot

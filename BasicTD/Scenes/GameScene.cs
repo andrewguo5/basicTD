@@ -60,7 +60,7 @@ public class GameScene : Scene
 
     public override void Initialize()
     {
-        NextScene = new BasicMapScene();
+        NextScene = new LineScene();
 
         // 1. Pre-load initialization
         base.Initialize();
