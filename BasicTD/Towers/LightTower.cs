@@ -28,7 +28,8 @@ namespace BasicTD.Towers
             foreach (var creep in creepsInRange)
             {
                 {
-                    AttackOne(creep);
+                    if (creep.Alive)
+                        AttackOne(creep);
                 }
             }
         }

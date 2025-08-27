@@ -22,7 +22,7 @@ namespace MonoGameLibrary.Creeps
         private Queue<DamageTimer> DamageTimers = new();
         private float DamageRecency = 0.0f;
         public bool Alive { get; private set; }
-        public bool Dead => !Alive && (DamageRecency <= 0.0f);
+        public bool Expired => !Alive && (DamageRecency <= 0.0f);
 
         public Creep(Path path, float speed, AnimatedSprite animatedSprite)
         {
@@ -77,8 +77,11 @@ namespace MonoGameLibrary.Creeps
                 timer.Tick(seconds);
                 if (timer.Expired)
                 {
-                    DamageRecency = 1.0f;
-                    Health -= timer.Damage;
+                    if (Alive)
+                    {
+                        DamageRecency = 1.0f;
+                        Health -= timer.Damage;
+                    }
                 }
                 else
                 {

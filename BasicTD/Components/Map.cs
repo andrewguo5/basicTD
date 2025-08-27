@@ -26,7 +26,6 @@ public class Battlefield : GComponent
     private Tilemap PlatformTilemap;
     private Path BattlePath;
     private Sprite TowerSprite;
-    private AnimatedSprite CreepSprite;
     private TowerFactory TowerFactory;
 
     // Component-specific data structures
@@ -60,7 +59,6 @@ public class Battlefield : GComponent
         PlacedTowersList = new();
 
         TowerSprite = ((GameScene)ParentScene).SpriteDictionary["TowerSprite"];
-        CreepSprite = (AnimatedSprite)((GameScene)ParentScene).SpriteDictionary["TorchSprite"];
         TowerFactory = new(Atlas, SpriteScale);
     }
 
@@ -165,6 +163,9 @@ public class Battlefield : GComponent
     private void SpawnCreep()
     {
         // Todo: Make a CreepManager class that handles all creep logic
+        AnimatedSprite CreepSprite = Atlas.CreateAnimatedSprite("torch-red-animation");
+        CreepSprite.CenterOrigin();
+        CreepSprite.Scale = SpriteScale;
         SpawnedCreepList.Add(
             new Creep(
                 BattlePath,
@@ -242,14 +243,14 @@ public class Battlefield : GComponent
 
     private void UpdateCreepList(GameTime gameTime)
     {
-        List<Creep> deadCreeps = new();
+        List<Creep> expiredCreeps = new();
         foreach (var creep in SpawnedCreepList)
         {
-            if (creep.Dead)
-                deadCreeps.Add(creep);
+            if (creep.Expired)
+                expiredCreeps.Add(creep);
         }
 
-        foreach (var creep in deadCreeps)
+        foreach (var creep in expiredCreeps)
         {
             SpawnedCreepList.Remove(creep);
         }
@@ -257,7 +258,7 @@ public class Battlefield : GComponent
         if (SpawnedCreepList.Count == 0)
         {
             // Add a new Creep
-            SpawnedCreepList.Add(new Creep(BattlePath, CreepSpeed, CreepSprite));
+            SpawnCreep();
         }
     }
 

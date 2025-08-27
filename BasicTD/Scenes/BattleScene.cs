@@ -444,7 +444,7 @@ public abstract class BattleScene : Scene
         List<Creep> deadCreeps = new();
         foreach (var creep in CreepList)
         {
-            if (creep.Dead)
+            if (creep.Expired)
                 deadCreeps.Add(creep);
         }
 
