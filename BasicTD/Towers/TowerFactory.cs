@@ -93,7 +93,8 @@ public class TowerFactory
 
     public SpriteStack CreateCardIcon(TowerType towerType)
     {
-        Sprite emblemSprite = towerType switch {
+        Sprite emblemSprite = towerType switch
+        {
             TowerType.Light => CardAtlas.CreateSprite("emblem-bullet"),
             TowerType.Heavy => CardAtlas.CreateSprite("emblem-bullet"),
             TowerType.Pulse => CardAtlas.CreateSprite("emblem-shield"),
@@ -103,8 +104,9 @@ public class TowerFactory
             _ => throw new ArgumentException($"Unknown tower type: {towerType}")
         };
         emblemSprite.Scale = new Vector2(2.0f, 2.0f);
-        
-        Sprite symbolSprite = towerType switch {
+
+        Sprite symbolSprite = towerType switch
+        {
             TowerType.Light => CardAtlas.CreateSprite("symbol-loop"),
             TowerType.Heavy => CardAtlas.CreateSprite("symbol-square"),
             TowerType.Pulse => CardAtlas.CreateSprite("symbol-pulse"),
@@ -114,7 +116,7 @@ public class TowerFactory
             _ => throw new ArgumentException($"Unknown tower type: {towerType}")
         };
         symbolSprite.Scale = new Vector2(2.0f, 2.0f);
-        
+
         return new SpriteStack(new List<Sprite> { emblemSprite, symbolSprite });
     }
 }

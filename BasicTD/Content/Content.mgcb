@@ -117,3 +117,6 @@
 #begin paths/multi-path.xml
 /copy:paths/multi-path.xml
 
+#begin tower-info.json
+/copy:tower-info.json
+

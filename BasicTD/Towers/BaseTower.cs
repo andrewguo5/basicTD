@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BasicTD.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Collision;
@@ -10,9 +11,16 @@ namespace BasicTD.Towers;
 
 public abstract class Tower
 {
+    // Represents a placed tower
+    // See also: TowerCard
     public Vector2 Position { get; set; }
     public SpriteStack Sprite { get; set; }
     public abstract int TowerId { get; }
+    // public abstract string Name { get; }
+    // public abstract string ShortName { get; }
+    // public abstract string Description { get; }
+    // public abstract TowerType Type { get; }
+    // public abstract CardRarity Rarity { get; } // Same as power level
     public abstract float Range { get; } // in units? m
     public abstract int Damage { get; } // Let's just have int damage
     public abstract float AttackSpeed { get; } // in hertz

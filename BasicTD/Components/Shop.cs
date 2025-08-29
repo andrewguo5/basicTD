@@ -42,8 +42,7 @@ public class Shop : GComponent
 
     // Shop generation
     private TowerFactory TowerFactory;
-    Random random;
-    private int RandomSymbolIndex;
+
     // Player properties
     private Player Player => ((GameScene)ParentScene).Player;
 
@@ -65,9 +64,6 @@ public class Shop : GComponent
 
     protected override void InitializeSelf()
     {
-        random = new Random();
-        RandomSymbolIndex = random.Next(CardSymbolSprites.Count);
-
         CardSlotManager = new List<CardSlot>
         {
             CardSlot0,
@@ -174,10 +170,7 @@ public class Shop : GComponent
             {
                 // Deduct the cost from the player's gold
                 Player.Gold -= selectedCard.Cost;
-
-                // Logic to add the tower to the player's inventory or place it on the map
-                // For now, we will just print a message to the console
-                Console.WriteLine($"Purchased {selectedCard.Rarity} {selectedCard.TowerType} tower for {selectedCard.Cost} gold.");
+                Player.PurchaseCard(selectedCard);
 
                 // Regenerate the purchased card slot with a new random card
                 selectedSlot.GenerateCard();
@@ -378,5 +371,11 @@ public class Card
     {
         Sprite cardSprite = CardSprite();
         cardSprite.Draw(Core.SpriteBatch, position, highlightColor);
+    }
+
+    public void Draw(Vector2 position, Color highlightColor, Vector2 scale)
+    {
+        Sprite cardSprite = CardSprite();
+        cardSprite.Draw(Core.SpriteBatch, position, highlightColor, scale);
     }
 }

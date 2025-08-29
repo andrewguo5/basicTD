@@ -1,0 +1,82 @@
+{
+  "Towers": [
+    {
+      "Id": 0,
+      "Name": "Light Tower",
+      "Nick": "LGT",
+      "Desc": "Fast attacking tower with moderate Damage.",
+      "Stats": [
+        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
+        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
+        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
+        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+      ]
+    },
+    {
+      "Id": 1,
+      "Name": "Heavy Tower",
+      "Nick": "HVY",
+      "Desc": "Slow attacking tower with high Damage.",
+      "Stats": [
+        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
+        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
+        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
+        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+      ]
+    },
+    {
+      "Id": 2,
+      "Name": "Pulse Tower",
+      "Nick": "PUL",
+      "Desc": "Emits a pulse which stuns nearby enemies.",
+      "Stats": [
+        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
+        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
+        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
+        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+      ]
+    },
+    {
+      "Id": 3,
+      "Name": "Shockwave Tower",
+      "Nick": "WAV",
+      "Desc": "Launches a shockwave in a line that knocks enemies back.",
+      "Stats": [
+        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
+        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
+        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
+        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+      ]
+    },
+    {
+      "Id": 4,
+      "Name": "Beacon Tower",
+      "Nick": "BEA",
+      "Desc": "Emits a beacon that buffs nearby T.",
+      "Stats": [
+        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
+        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
+        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
+        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+      ]
+    },
+    {
+      "Id": 5,
+      "Name": "Vuln Tower",
+      "Nick": "VLN",
+      "Desc": "Applies debuffs to enemies hit.",
+      "Stats": [
+        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
+        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
+        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
+        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+      ]
+    }
+  ]
+}
