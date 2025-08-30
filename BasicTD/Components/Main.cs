@@ -37,7 +37,7 @@ public class Main : GComponent
             ParentScene,
             new Rectangle(
                 SideBuffer + HTileOffset,
-                MapBounds.Top + VerticalOffset,
+                MapBounds.Top + VerticalOffset / 2,
                 MapBounds.Left - 2 * SideBuffer - 2 * HTileOffset,
                 MapBounds.Height - 2 * VTileOffset
             ),
@@ -52,7 +52,7 @@ public class Main : GComponent
             ParentScene,
             new Rectangle(
                 MapBounds.Right + SideBuffer + HTileOffset,
-                MapBounds.Top + VerticalOffset,
+                MapBounds.Top + VerticalOffset / 2,
                 MapBounds.Left - 2 * SideBuffer - 2 * HTileOffset,
                 MapBounds.Height - 2 * VTileOffset
             ),

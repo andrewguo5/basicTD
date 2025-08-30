@@ -23,7 +23,6 @@ public class Shop : GComponent
     private TextureAtlas CardAtlas => Props["CardAtlas"];
     private SpriteFont GameFont => Props["GameFont"];
     private Rectangle MapBounds => Props["MapBounds"];
-    private Vector2 SpriteScale => Props["SpriteScale"];
 
     // Component-specific content 
     private Vector2 ShopStringLocation;
@@ -41,7 +40,7 @@ public class Shop : GComponent
     private Sprite GoldSprite;
 
     // Shop generation
-    private TowerFactory TowerFactory;
+    private TowerFactory TowerFactory => ((GameScene)ParentScene).TowerFactory;
 
     // Player properties
     private Player Player => ((GameScene)ParentScene).Player;
@@ -58,8 +57,6 @@ public class Shop : GComponent
         CardSlot3 = new(CardAtlas, new Rectangle(CardSlot2.Bounds.Right + padding, Y, 80, 132), 2);
         CardSlot4 = new(CardAtlas, new Rectangle(CardSlot3.Bounds.Right + padding, Y, 80, 132), 3);
         CardSlot5 = new(CardAtlas, new Rectangle(CardSlot4.Bounds.Right + padding, Y, 80, 132), 4);
-
-        TowerFactory = new(SpriteScale);
     }
 
     protected override void InitializeSelf()
@@ -166,18 +163,10 @@ public class Shop : GComponent
             Card selectedCard = selectedSlot.Card;
 
             // Check if the player has enough gold to purchase the card
-            if (Player.Gold >= selectedCard.Cost)
+            if (Player.PurchaseCard(selectedCard))
             {
-                // Deduct the cost from the player's gold
-                Player.Gold -= selectedCard.Cost;
-                Player.PurchaseCard(selectedCard);
-
                 // Regenerate the purchased card slot with a new random card
                 selectedSlot.GenerateCard();
-            }
-            else
-            {
-                Console.WriteLine("Not enough gold to purchase this card.");
             }
         }
     }

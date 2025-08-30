@@ -28,14 +28,28 @@ public class Player
         Inventory = inventory;
     }
 
-    public void PurchaseCard(Card card)
+    public bool PurchaseCard(Card card)
     {
         if (Inventory == null)
         {
             throw new InvalidOperationException("Inventory not set for player.");
         }
-
-        Console.WriteLine($"Added {card.Rarity} {card.TowerType} tower to inventory.");
-        Inventory.AddCard(card);
+        if (Gold >= card.Cost)
+        {
+            if (Inventory.Cards.Count >= 5)
+            {
+                System.Console.WriteLine("Inventory full. Cannot purchase more cards.");
+                return false;
+            }
+            Inventory.AddCard(card);
+            Gold -= card.Cost;
+            System.Console.WriteLine($"Added {card.Rarity} {card.TowerType} tower to inventory.");
+            return true;
+        }
+        else
+        {
+            System.Console.WriteLine($"Not enough gold to purchase {card.Rarity} {card.TowerType} tower.");
+            return false;
+        }
     }
 }

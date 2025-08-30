@@ -26,6 +26,14 @@ public class SpriteStack
             Sprites.Add(sprite);
     }
 
+    public void CenterOrigin()
+    {
+        foreach (var sprite in Sprites)
+        {
+            sprite.CenterOrigin();
+        }
+    }
+
     public void Draw(SpriteBatch spriteBatch, Vector2 position)
     {
         foreach (var sprite in Sprites)
@@ -40,4 +48,13 @@ public class SpriteStack
             sprite.Draw(spriteBatch, position, color);
         }
     }
+
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, Vector2 scale)
+    {
+        foreach (var sprite in Sprites)
+        {
+            sprite.Draw(spriteBatch, position, color, scale);
+        }
+    }
+
 }

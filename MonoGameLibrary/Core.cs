@@ -62,6 +62,8 @@ public class Core : Game
 
     public static Scaffold Scaffold { get; private set; }
 
+    public static Scene CurrentScene => s_activeScene;
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>

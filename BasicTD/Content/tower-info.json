@@ -3,7 +3,7 @@
     {
       "Id": 0,
       "Name": "Light Tower",
-      "Nick": "LGT",
+      "Nick": "LITE",
       "Desc": "Fast attacking tower with moderate Damage.",
       "Stats": [
         { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
@@ -16,7 +16,7 @@
     {
       "Id": 1,
       "Name": "Heavy Tower",
-      "Nick": "HVY",
+      "Nick": "HEVY",
       "Desc": "Slow attacking tower with high Damage.",
       "Stats": [
         { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
@@ -29,7 +29,7 @@
     {
       "Id": 2,
       "Name": "Pulse Tower",
-      "Nick": "PUL",
+      "Nick": "PLSE",
       "Desc": "Emits a pulse which stuns nearby enemies.",
       "Stats": [
         { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
@@ -42,7 +42,7 @@
     {
       "Id": 3,
       "Name": "Shockwave Tower",
-      "Nick": "WAV",
+      "Nick": "WAVE",
       "Desc": "Launches a shockwave in a line that knocks enemies back.",
       "Stats": [
         { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
@@ -55,7 +55,7 @@
     {
       "Id": 4,
       "Name": "Beacon Tower",
-      "Nick": "BEA",
+      "Nick": "BCON",
       "Desc": "Emits a beacon that buffs nearby T.",
       "Stats": [
         { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
@@ -68,7 +68,7 @@
     {
       "Id": 5,
       "Name": "Vuln Tower",
-      "Nick": "VLN",
+      "Nick": "VULN",
       "Desc": "Applies debuffs to enemies hit.",
       "Stats": [
         { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },

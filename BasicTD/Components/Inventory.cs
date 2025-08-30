@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
+using MonoGameLibrary.Input;
 using System.Collections.Generic;
 using BasicTD.Scenes;
 using BasicTD.Towers;
-using System.Threading;
 
 namespace BasicTD.Components;
 
@@ -18,11 +18,12 @@ public class Inventory : GComponent
     private Rectangle MapBounds => Props["MapBounds"];
     private TextureAtlas Atlas => Props["Atlas"];
     private Vector2 InventoryStringLocation;
+    private Vector2 SupplyStringLocation;
     private SpriteFont GameFont => Props["GameFont"];
     private Tilemap InfoPanelMap;
 
     // Contents
-    private List<Card> Cards;
+    public List<Card> Cards;
     private Stack<CardPlacard> CardPlacards;
     private CardPlacard FocusedPlacard;
     // private int CurrentPlacardHeight = 0;
@@ -40,6 +41,10 @@ public class Inventory : GComponent
             Padding + SideBuffer + MapBounds.Right,
             MapBounds.Top - VerticalOffset
         );
+        SupplyStringLocation = new Vector2(
+            Bounds.Left,
+            Bounds.Bottom - VerticalOffset
+        );
 
         Cards = new List<Card>();
         CardPlacards = new Stack<CardPlacard>();
@@ -52,9 +57,9 @@ public class Inventory : GComponent
         Cards.Add(card);
         CardPlacards.Push(new CardPlacard(
             new Rectangle(
-                MapBounds.Right + SideBuffer + Padding,
-                MapBounds.Top + VerticalOffset + Padding + (CardPlacards.Count * (60 + Padding)),
-                Bounds.Width - 2 * SideBuffer - 2 * Padding,
+                Bounds.Left,
+                Bounds.Top + (CardPlacards.Count * 60),
+                Bounds.Width,
                 60
             ),
             card,
@@ -71,6 +76,7 @@ public class Inventory : GComponent
     protected override void UpdateSelf(GameTime gameTime)
     {
         UpdateFocusedPlacard();
+        UpdateClickPlacard();
     }
 
     private void UpdateFocusedPlacard()
@@ -85,6 +91,34 @@ public class Inventory : GComponent
             }
         }
         FocusedPlacard = null;
+    }
+
+    private void UpdateClickPlacard()
+    {
+        if (FocusedPlacard != null && Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left))
+        {
+            // Place tower logic
+            if (Cards.Contains(FocusedPlacard.Card))
+            {
+                ((GameScene)ParentScene).Battlefield.StartPlacingTower(FocusedPlacard.Card.TowerType);
+                Cards.Remove(FocusedPlacard.Card);
+                CardPlacards = new Stack<CardPlacard>();
+                for (int i = 0; i < Cards.Count; i++)
+                {
+                    CardPlacards.Push(new CardPlacard(
+                        new Rectangle(
+                            Bounds.Left,
+                            Bounds.Top + (i * 60),
+                            Bounds.Width,
+                            60
+                        ),
+                        Cards[i],
+                        Player.TowerInfo
+                    ));
+                }
+                FocusedPlacard = null;
+            }
+        }
     }
 
     protected override void DrawSelf(GameTime gameTime)
@@ -105,9 +139,19 @@ public class Inventory : GComponent
 
         InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(MapBounds.Right + SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Inventory", InventoryStringLocation, Color.White);
+
+        Color supplyColor = Cards.Count >= 5 ? TDConstants.RedBG : Color.White;
+        Core.SpriteBatch.DrawString(GameFont, $"{Cards.Count}/{5}", SupplyStringLocation, supplyColor);
         Core.SpriteBatch.End();
-        
+
         DrawPlacards();
+
+        if (((GameScene)Core.CurrentScene).DebugDraw)
+        {
+            Core.SpriteBatch.Begin();
+            Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, Bounds, 2);
+            Core.SpriteBatch.End();
+        }
     }
 
     public void DrawPlacards()
@@ -125,9 +169,12 @@ public class Inventory : GComponent
 public class CardPlacard
 {
     public Rectangle Bounds { get; }
-    private Card Card { get; }
+    public Card Card { get; }
     private int Quantity;
     private TowerInfo TowerInfo;
+    private GameScene GameScene => (GameScene)Core.CurrentScene;
+    private TowerFactory TowerFactory => GameScene.TowerFactory;
+
     public CardPlacard(Rectangle bounds, Card card, TowerInfo towerInfo)
     {
         Bounds = bounds;
@@ -142,14 +189,25 @@ public class CardPlacard
 
         int Padding = 2;
 
-        // Draw card background
-        Core.Scaffold.DrawFilledRectangle(Core.SpriteBatch, Bounds, TDConstants.LightBG);
+        var imageRect = new Rectangle(
+            Bounds.X + Padding,
+            Bounds.Y + Padding,
+            (int)((Bounds.Height - 2 * Padding) * (5f / 7f)),
+            Bounds.Height - 2 * Padding
+        );
 
-        var imageRect = new Rectangle(Bounds.X + Padding, Bounds.Y + Padding, Bounds.Height - 2 * Padding, Bounds.Height - 2 * Padding);
+        // Draw card
         Color highlightColor = focused ? Color.White : Color.LightGray;
         float heightRatio = (float)imageRect.Height / Card.CardSprite().Height;
         Vector2 scale = new Vector2(heightRatio, heightRatio);
         Card.Draw(imageRect.Location.ToVector2(), highlightColor: highlightColor, scale: scale);
+
+        // Draw icon
+        SpriteStack towerIcon = TowerFactory.CreateCardIcon(Card.TowerType);
+        Vector2 cardCenter = new Vector2(imageRect.Center.X, imageRect.Center.Y);
+        towerIcon.CenterOrigin();
+        towerIcon.Draw(Core.SpriteBatch, cardCenter, highlightColor, scale: Vector2.One * 0.9f);
+
         // Draw card name
         var namePos = new Vector2(imageRect.Right + Padding, Bounds.Y + Padding);
         string nick = TowerInfo.GetTowerStat(Card.TowerType).Nick;
@@ -157,8 +215,11 @@ public class CardPlacard
 
         // Draw quantity
         Vector2 stringSize = gameFont.MeasureString($"x{Quantity}");
-        var qtyPos = new Vector2(Bounds.Right - Padding - stringSize.Y, Bounds.Y + Padding);
+        var qtyPos = new Vector2(Bounds.Right - Padding - stringSize.X, Bounds.Y + Padding + stringSize.Y);
         Core.SpriteBatch.DrawString(gameFont, $"x{Quantity}", qtyPos, Color.White);
+
+        if (GameScene.DebugDraw)
+            Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, Bounds, 1);
 
         Core.SpriteBatch.End();
     }

@@ -4,7 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary;
+using BasicTD.Towers;
 using System.Collections.Generic;
+using System.Data;
+using BasicTD.Components;
 
 namespace BasicTD.Scenes;
 
@@ -29,6 +32,7 @@ public class GameScene : Scene
     // Atlas
     private TextureAtlas Atlas;
     private TextureAtlas CardAtlas;
+    public TowerFactory TowerFactory;
 
     // Effects
     public Effect CircleIndicator;
@@ -53,8 +57,9 @@ public class GameScene : Scene
     // Font
     public SpriteFont GameFont;
 
-    // Player
+    // Globals
     public Player Player;
+    public Battlefield Battlefield;
 
     public GameScene() : base()
     {
@@ -70,6 +75,8 @@ public class GameScene : Scene
         base.Initialize();
 
         // 3. Post-load initialization
+        TowerFactory = new(SpriteScale);
+
         SpriteManager =
         [
             SpriteDictionary["StartMarker"],
@@ -133,6 +140,7 @@ public class GameScene : Scene
             { "TilemapScale", new Vector2(60f / 16f, 60f / 16f) },
             { "SpriteScale", SpriteScale }
         });
+
         Main.LoadContent();
         Main.Initialize();
     }

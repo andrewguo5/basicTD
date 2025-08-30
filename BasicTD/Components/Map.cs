@@ -11,6 +11,7 @@ using MonoGameLibrary.Paths;
 using MonoGameLibrary.Input;
 using System.Collections.Generic;
 using MonoGameLibrary.Creeps;
+using System.Runtime.CompilerServices;
 
 namespace BasicTD.Components;
 
@@ -26,7 +27,7 @@ public class Battlefield : GComponent
     private Tilemap PlatformTilemap;
     private Path BattlePath;
     private Sprite TowerSprite;
-    private TowerFactory TowerFactory;
+    private TowerFactory TowerFactory => ((GameScene)ParentScene).TowerFactory;
 
     // Component-specific data structures
     private List<Creep> SpawnedCreepList;
@@ -59,7 +60,9 @@ public class Battlefield : GComponent
         PlacedTowersList = new();
 
         TowerSprite = ((GameScene)ParentScene).SpriteDictionary["TowerSprite"];
-        TowerFactory = new(SpriteScale);
+
+        // hook
+        ((GameScene)ParentScene).Battlefield = this;
     }
 
     protected override void LoadContentSelf()
@@ -89,17 +92,13 @@ public class Battlefield : GComponent
         // Toggle tower placement mode
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Q))
         {
-            ClearStates();
-            PlacingTower = true;
-            PlacingTowerType = TowerType.Light;
+            StartPlacingTower(TowerType.Light);
         }
 
         // Toggle tower placement mode
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.W))
         {
-            ClearStates();
-            PlacingTower = true;
-            PlacingTowerType = TowerType.Heavy;
+            StartPlacingTower(TowerType.Heavy);
         }
 
         // Spawn a creep
@@ -146,6 +145,12 @@ public class Battlefield : GComponent
         UpdateCreepList(gameTime);
     }
 
+    public void StartPlacingTower(TowerType towerType)
+    {
+        ClearStates();
+        PlacingTower = true;
+        PlacingTowerType = towerType;
+    }
 
     private void ClearStates()
     {
