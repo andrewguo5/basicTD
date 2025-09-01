@@ -100,7 +100,7 @@ public class Inventory : GComponent
             // Place tower logic
             if (Cards.Contains(FocusedPlacard.Card))
             {
-                ((GameScene)ParentScene).Battlefield.StartPlacingTower(FocusedPlacard.Card.TowerType);
+                ((GameScene)ParentScene).Battlefield.StartPlacingTower(FocusedPlacard.Card.TowerType, FocusedPlacard.Card.Level);
                 Cards.Remove(FocusedPlacard.Card);
                 CardPlacards = new Stack<CardPlacard>();
                 for (int i = 0; i < Cards.Count; i++)

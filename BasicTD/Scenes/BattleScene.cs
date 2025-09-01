@@ -421,7 +421,7 @@ public abstract class BattleScene : Scene
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                Towers.Add(TowerFactory.CreateTower(mousePos, PlacingTowerType));
+                Towers.Add(TowerFactory.CreateTower(mousePos, PlacingTowerType, 1));
                 PlacingTower = false;
             }
         }
@@ -541,7 +541,7 @@ public abstract class BattleScene : Scene
                 TowerSprite.Draw(Core.SpriteBatch, mousePos, SemiTransparentRed, 0f);
 
             Core.SpriteBatch.End();
-            DrawCircleIndicator(circleRadiusPx: TowerStats.AllTowerStats[PlacingTowerType]["Range"] * TDConstants.PixelsPerMeter);
+            DrawCircleIndicator(circleRadiusPx: 3 * TDConstants.PixelsPerMeter);
         }
     }
 

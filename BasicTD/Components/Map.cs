@@ -36,6 +36,7 @@ public class Battlefield : GComponent
 
     // Tower placement variables
     private TowerType PlacingTowerType;
+    private int PlacingTowerLevel;
     private bool PlacingTower;
     private bool TowerPlacementValid;
     private bool SelectingTower;
@@ -44,6 +45,7 @@ public class Battlefield : GComponent
     // Game States
     private bool Paused => ((GameScene)ParentScene).Paused;
     private bool DebugDraw => ((GameScene)ParentScene).DebugDraw;
+    private Player Player => ((GameScene)ParentScene).Player;
 
     public Battlefield(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
@@ -92,13 +94,13 @@ public class Battlefield : GComponent
         // Toggle tower placement mode
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Q))
         {
-            StartPlacingTower(TowerType.Light);
+            StartPlacingTower(TowerType.Light, level: 1);
         }
 
         // Toggle tower placement mode
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.W))
         {
-            StartPlacingTower(TowerType.Heavy);
+            StartPlacingTower(TowerType.Heavy, level: 1);
         }
 
         // Spawn a creep
@@ -145,11 +147,12 @@ public class Battlefield : GComponent
         UpdateCreepList(gameTime);
     }
 
-    public void StartPlacingTower(TowerType towerType)
+    public void StartPlacingTower(TowerType towerType, int level)
     {
         ClearStates();
         PlacingTower = true;
         PlacingTowerType = towerType;
+        PlacingTowerLevel = level;
     }
 
     private void ClearStates()
@@ -228,7 +231,7 @@ public class Battlefield : GComponent
 
             if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && TowerPlacementValid)
             {
-                PlacedTowersList.Add(TowerFactory.CreateTower(mousePos, PlacingTowerType));
+                PlacedTowersList.Add(TowerFactory.CreateTower(mousePos, PlacingTowerType, PlacingTowerLevel));
                 PlacingTower = false;
             }
         }
@@ -332,7 +335,7 @@ public class Battlefield : GComponent
 
             Core.SpriteBatch.End();
             ((GameScene)ParentScene).DrawCircleIndicator(
-                circleRadiusPx: TowerStats.AllTowerStats[PlacingTowerType]["Range"] * TDConstants.PixelsPerMeter
+                circleRadiusPx: Player.TowerInfo.GetTowerStat(PlacingTowerType, PlacingTowerLevel).Range * TDConstants.PixelsPerMeter
             );
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BasicTD.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary;
 using MonoGameLibrary.Collision;
 using MonoGameLibrary.Creeps;
 using MonoGameLibrary.Graphics;
@@ -15,27 +16,30 @@ public abstract class Tower
     // See also: TowerCard
     public Vector2 Position { get; set; }
     public SpriteStack Sprite { get; set; }
+    public int Level;
+    public abstract TowerInfo.TowerStatLine TowerStatLine { get; }
     public abstract int TowerId { get; }
-    // public abstract string Name { get; }
-    // public abstract string ShortName { get; }
-    // public abstract string Description { get; }
-    // public abstract TowerType Type { get; }
-    // public abstract CardRarity Rarity { get; } // Same as power level
-    public abstract float Range { get; } // in units? m
-    public abstract int Damage { get; } // Let's just have int damage
-    public abstract float AttackSpeed { get; } // in hertz
-    public float AttackCooldown = 0f; // in seconds
+    public virtual float Range => TowerStatLine.Range * TDConstants.PixelsPerMeter;
+    public virtual int Damage => TowerStatLine.Damage;
+    public virtual float Speed => TowerStatLine.Speed;
+    public float AttackCooldown = 0f;
     private int TowerBoxRadius = 16;
     private Hitbox TowerBox;
     public AnimatedSprite AttackAnimation;
+    public static TowerInfo TowerInfo;
 
+    static Tower()
+    {
+        TowerInfo = TowerInfo.FromJsonFile(Core.Content, "tower-info.json");
+    }
 
-    public Tower(Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation)
+    public Tower(Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation, int level = 1)
     {
         Position = position;
         Sprite = sprite;
         TowerBox = new Hitbox(Position, TowerBoxRadius);
         AttackAnimation = attackAnimation;
+        Level = level;
     }
 
     public void Update(GameTime gameTime)

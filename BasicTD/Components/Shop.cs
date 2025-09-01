@@ -302,6 +302,7 @@ public class Card
     public TowerType TowerType { get; set; }
     public CardRarity Rarity { get; set; }
     public int Cost => GetCost();
+    public int Level => GetLevel();
 
     public Card(TextureAtlas cardAtlas, TowerType towerType, CardRarity rarity, int cost)
     {
@@ -337,6 +338,22 @@ public class Card
         };
 
         return rarityCost;
+    }
+
+    public int GetLevel()
+    {
+        int rarityLevel = Rarity switch
+        {
+            CardRarity.Common => 1,
+            CardRarity.Uncommon => 2,
+            CardRarity.Rare => 3,
+            CardRarity.Epic => 4,
+            CardRarity.Legendary => 5,
+            CardRarity.Null => 1,
+            _ => 1
+        };
+
+        return rarityLevel;
     }
 
     public Sprite CardSprite()

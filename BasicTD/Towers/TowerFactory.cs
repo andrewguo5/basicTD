@@ -29,29 +29,29 @@ public class TowerFactory
         SpriteScale = spriteScale;
     }
 
-    public Tower CreateTower(Vector2 position, TowerType towerType)
+    public Tower CreateTower(Vector2 position, TowerType towerType, int level)
     {
-        SpriteStack towerSprite = CreateTowerSprite(towerType);
+        SpriteStack towerSprite = CreateTowerSprite(towerType, level);
         switch (towerType)
         {
             case TowerType.Light:
-                return new LightTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+                return new LightTower(position, towerSprite, LoadActivationAnimation(), level); // TODO: refactor
             case TowerType.Heavy:
-                return new HeavyTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+                return new HeavyTower(position, towerSprite, LoadActivationAnimation(), level); // TODO: refactor
             case TowerType.Pulse:
-                return new PulseTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+                return new PulseTower(position, towerSprite, LoadActivationAnimation(), level); // TODO: refactor
             case TowerType.Shockwave:
-                return new ShockwaveTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+                return new ShockwaveTower(position, towerSprite, LoadActivationAnimation(), level); // TODO: refactor
             case TowerType.Beacon:
-                return new BeaconTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+                return new BeaconTower(position, towerSprite, LoadActivationAnimation(), level); // TODO: refactor
             case TowerType.Vuln:
-                return new VulnTower(position, towerSprite, LoadActivationAnimation()); // TODO: refactor
+                return new VulnTower(position, towerSprite, LoadActivationAnimation(), level); // TODO: refactor
             default:
                 throw new ArgumentException($"Unknown tower type: {towerType}");
         }
     }
 
-    public SpriteStack CreateTowerSprite(TowerType towerType)
+    public SpriteStack CreateTowerSprite(TowerType towerType, int level)
     {
         var baseSprite = towerType switch
         {
@@ -66,20 +66,25 @@ public class TowerFactory
         baseSprite.CenterOrigin();
         baseSprite.Scale = SpriteScale;
 
-        var headSprite = towerType switch
+        var cardSprite = level switch
         {
-            TowerType.Light => TowerAtlas.CreateSprite("mini-card-common"),
-            TowerType.Heavy => TowerAtlas.CreateSprite("mini-card-uncommon"),
-            TowerType.Pulse => TowerAtlas.CreateSprite("mini-card-rare"),
-            TowerType.Shockwave => TowerAtlas.CreateSprite("mini-card-epic"),
-            TowerType.Vuln => TowerAtlas.CreateSprite("mini-card-legendary"),
-            TowerType.Beacon => TowerAtlas.CreateSprite("mini-card-legendary"),
-            _ => throw new ArgumentException($"Unknown tower type: {towerType}")
+            1 => TowerAtlas.CreateSprite("mini-card-common"),
+            2 => TowerAtlas.CreateSprite("mini-card-uncommon"),
+            3 => TowerAtlas.CreateSprite("mini-card-rare"),
+            4 => TowerAtlas.CreateSprite("mini-card-epic"),
+            5 => TowerAtlas.CreateSprite("mini-card-legendary"),
+            _ => throw new ArgumentException($"Unknown tower level: {level}")
         };
-        headSprite.CenterOrigin();
-        headSprite.Scale = SpriteScale;
+        cardSprite.CenterOrigin();
+        cardSprite.Scale = SpriteScale;
 
-        return new SpriteStack(new List<Sprite> { baseSprite, headSprite });
+        SpriteStack headSprite = CreateCardIcon(towerType);
+        headSprite.CenterOrigin();
+        headSprite.Scale = new Vector2(1f, 1f);
+
+        SpriteStack towerSprite = new SpriteStack(new List<Sprite> { baseSprite, cardSprite });
+        towerSprite.AddSpriteStack(headSprite);
+        return towerSprite;
     }
 
     public AnimatedSprite LoadActivationAnimation()

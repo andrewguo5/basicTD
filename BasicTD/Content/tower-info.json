@@ -6,11 +6,11 @@
       "Nick": "LITE",
       "Desc": "Fast attacking tower with moderate Damage.",
       "Stats": [
-        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
-        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
-        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
-        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
-        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+        { "Level": 1, "Damage": 1, "Range": 6, "Speed": 2 },
+        { "Level": 2, "Damage": 1, "Range": 6, "Speed": 4 },
+        { "Level": 3, "Damage": 1, "Range": 6, "Speed": 6 },
+        { "Level": 4, "Damage": 2, "Range": 6, "Speed": 6 },
+        { "Level": 5, "Damage": 4, "Range": 6, "Speed": 9 }
       ]
     },
     {
@@ -19,11 +19,11 @@
       "Nick": "HEVY",
       "Desc": "Slow attacking tower with high Damage.",
       "Stats": [
-        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
-        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
-        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
-        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
-        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+        { "Level": 1, "Damage": 3, "Range": 6, "Speed": 1 },
+        { "Level": 2, "Damage": 6, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 9, "Range": 6, "Speed": 1 },
+        { "Level": 4, "Damage": 18, "Range": 6, "Speed": 1 },
+        { "Level": 5, "Damage": 54, "Range": 6, "Speed": 1 }
       ]
     },
     {
@@ -32,11 +32,11 @@
       "Nick": "PLSE",
       "Desc": "Emits a pulse which stuns nearby enemies.",
       "Stats": [
-        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
-        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
-        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
-        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
-        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+        { "Level": 1, "Damage": 1, "Range": 4, "Speed": 1 },
+        { "Level": 2, "Damage": 2, "Range": 4, "Speed": 1 },
+        { "Level": 3, "Damage": 3, "Range": 4, "Speed": 1 },
+        { "Level": 4, "Damage": 4, "Range": 5, "Speed": 1 },
+        { "Level": 5, "Damage": 5, "Range": 6, "Speed": 1 }
       ]
     },
     {
@@ -45,11 +45,11 @@
       "Nick": "WAVE",
       "Desc": "Launches a shockwave in a line that knocks enemies back.",
       "Stats": [
-        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
-        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
-        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
-        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
-        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+        { "Level": 1, "Damage": 1, "Range": 6, "Speed": 1 },
+        { "Level": 2, "Damage": 2, "Range": 6, "Speed": 1 },
+        { "Level": 3, "Damage": 3, "Range": 6, "Speed": 1 },
+        { "Level": 4, "Damage": 4, "Range": 6, "Speed": 1.5 },
+        { "Level": 5, "Damage": 6, "Range": 6, "Speed": 2 }
       ]
     },
     {
@@ -58,11 +58,11 @@
       "Nick": "BCON",
       "Desc": "Emits a beacon that buffs nearby T.",
       "Stats": [
-        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
-        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
-        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
-        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
-        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+        { "Level": 1, "Damage": 1, "Range": 6, "Speed": 2 },
+        { "Level": 2, "Damage": 1, "Range": 6, "Speed": 2 },
+        { "Level": 3, "Damage": 1, "Range": 6, "Speed": 2 },
+        { "Level": 4, "Damage": 2, "Range": 6, "Speed": 2 },
+        { "Level": 5, "Damage": 4, "Range": 6, "Speed": 2 }
       ]
     },
     {
@@ -71,11 +71,11 @@
       "Nick": "VULN",
       "Desc": "Applies debuffs to enemies hit.",
       "Stats": [
-        { "Level": 1, "Damage": 10, "Range": 5, "Speed": 1 },
-        { "Level": 2, "Damage": 15, "Range": 6, "Speed": 1 },
-        { "Level": 3, "Damage": 20, "Range": 7, "Speed": 1 },
-        { "Level": 4, "Damage": 25, "Range": 8, "Speed": 1 },
-        { "Level": 5, "Damage": 30, "Range": 9, "Speed": 1 }
+        { "Level": 1, "Damage": 1, "Range": 6, "Speed": 2 },
+        { "Level": 2, "Damage": 1, "Range": 6, "Speed": 2 },
+        { "Level": 3, "Damage": 1, "Range": 6, "Speed": 2 },
+        { "Level": 4, "Damage": 2, "Range": 6, "Speed": 2 },
+        { "Level": 5, "Damage": 4, "Range": 6, "Speed": 2 }
       ]
     }
   ]

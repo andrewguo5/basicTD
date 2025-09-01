@@ -1,23 +1,24 @@
-using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Creeps;
 using System.Collections.Generic;
-using MonoGameLibrary;
+
 
 namespace BasicTD.Towers
 {
     public class LightTower : Tower
     {
-        public static Dictionary<string, float> Stats => TowerStats.AllTowerStats[TowerType.Light];
-        public override float AttackSpeed => Stats["AttackSpeed"];
-        public override int Damage => (int)Stats["Damage"];
-        public override float Range => Stats["Range"] * TDConstants.PixelsPerMeter;
-        public override int TowerId { get; } = -1; // Unique identifier for the
+        private static TowerInfo.TowerStat TowerStat;
+        public override TowerInfo.TowerStatLine TowerStatLine => TowerStat.GetStatsForLevel(Level);
+        public override int TowerId => TowerStat.Id;
+
+        static LightTower()
+        {
+            TowerStat = TowerInfo.GetTowerStat(TowerType.Light);
+        }
 
         public LightTower(
-            Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation) : base(position, sprite, attackAnimation)
+            Vector2 position, SpriteStack sprite, AnimatedSprite attackAnimation, int level) : base(position, sprite, attackAnimation, level)
         {
             // Additional initialization if needed
         }
@@ -48,7 +49,7 @@ namespace BasicTD.Towers
             AttackAnimation.Play();
 
             // Reset attack cooldown
-            AttackCooldown = 1f / AttackSpeed;
+            AttackCooldown = 1f / Speed;
         }
 
     }
