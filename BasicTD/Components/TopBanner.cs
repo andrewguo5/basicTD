@@ -35,6 +35,7 @@ public class TopBanner : GComponent
 
     // Player properties
     private Player Player => ((GameScene)ParentScene).Player;
+    private Battlefield Battlefield => ((GameScene)ParentScene).Battlefield;
 
     public TopBanner(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
@@ -171,7 +172,7 @@ public class TopBanner : GComponent
         );
         Core.SpriteBatch.DrawString(
             GameFont,
-            $"{0}/{5}",
+            $"{Battlefield.CurrentWave}/{5}",
             WaveStringLocation,
             Color.White
         );

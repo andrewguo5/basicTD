@@ -34,6 +34,8 @@ public class Battlefield : GComponent
     private List<Creep> SpawnedCreepList;
     private float CreepSpeed = 150f;
     private List<Tower> PlacedTowersList;
+    public int CurrentWave = 0;
+    private Queue<CreepSpawner> SpawnerQueue;
 
     // Tower placement variables
     private TowerType PlacingTowerType;
@@ -42,7 +44,6 @@ public class Battlefield : GComponent
     private bool TowerPlacementValid;
     private bool SelectingTower;
     private Tower SelectedTower;
-
 
     // Game States
     private bool Paused => ((GameScene)ParentScene).Paused;
@@ -64,6 +65,7 @@ public class Battlefield : GComponent
         PlacedTowersList = new();
 
         TowerSprite = ((GameScene)ParentScene).SpriteDictionary["TowerSprite"];
+        SpawnerQueue = new Queue<CreepSpawner>();
 
         // hook
         ((GameScene)ParentScene).Battlefield = this;
@@ -147,6 +149,9 @@ public class Battlefield : GComponent
 
         // Creeps die and are removed
         UpdateCreepList(gameTime);
+
+        // Spawn creeps from the spawner queue
+        UpdateSpawnerQueue(gameTime);
     }
 
     public void StartPlacingTower(TowerType towerType, int level)
@@ -279,6 +284,26 @@ public class Battlefield : GComponent
         }
     }
 
+    private void UpdateSpawnerQueue(GameTime gameTime)
+    {
+        if (SpawnerQueue != null && SpawnerQueue.Count > 0)
+        {
+            CreepSpawner spawner = SpawnerQueue.Peek();
+            spawner.TimeSinceLastSpawn += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (spawner.TimeSinceLastSpawn >= spawner.SpawnInterval)
+            {
+                if (spawner.Count <= 0)
+                {
+                    SpawnerQueue.Dequeue();
+                    return;
+                }
+                SpawnedCreepList.Add(spawner.Creep);
+                spawner.Count -= 1;
+                spawner.TimeSinceLastSpawn = 0f;
+            }
+        }
+    }
+
     protected override void DrawSelf(GameTime gameTime)
     {
         DrawPlatform();
@@ -355,9 +380,41 @@ public class Battlefield : GComponent
             ((GameScene)ParentScene).DrawCircleIndicator(SelectedTower.Position, SelectedTower.Range);
         }
     }
-    
+
     public void StartNextWave()
     {
-        SpawnCreep();
+        if (CurrentWave >= 5)
+            return;
+
+        CurrentWave += 1;
+
+        for (int i = 0; i < CurrentWave * 3; i++)
+        {
+            AnimatedSprite CreepSprite = Atlas.CreateAnimatedSprite("torch-red-animation");
+            CreepSprite.CenterOrigin();
+            CreepSprite.Scale = SpriteScale;
+            SpawnerQueue.Enqueue(new CreepSpawner(
+                new Creep(
+                    BattlePath,
+                    CreepSpeed,
+                    CreepSprite
+                ),
+                spawnInterval: 1f / 6f
+            ));
+        }
+    }
+}
+
+public class CreepSpawner
+{
+    public Creep Creep;
+    public float SpawnInterval;
+    public float TimeSinceLastSpawn = 0f;
+    public int Count = 1;
+
+    public CreepSpawner(Creep creep, float spawnInterval)
+    {
+        Creep = creep;
+        SpawnInterval = spawnInterval;
     }
 }
