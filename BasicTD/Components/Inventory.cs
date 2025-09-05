@@ -5,6 +5,7 @@ using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary.Input;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 using BasicTD.Scenes;
 using BasicTD.Towers;
 
@@ -75,9 +76,22 @@ public class Inventory : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        // Reset scene
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.R))
+        {
+            Reset();
+        }
         UpdateFocusedPlacard();
         UpdateClickPlacard();
     }
+
+    public void Reset()
+    {
+        Cards.Clear();
+        CardPlacards.Clear();
+        FocusedPlacard = null;
+    }
+
 
     private void UpdateFocusedPlacard()
     {

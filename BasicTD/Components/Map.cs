@@ -85,7 +85,7 @@ public class Battlefield : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
-        // Spawn a creep
+    // Spawn a creep
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.A))
         {
             SpawnCreep();
@@ -256,10 +256,17 @@ public class Battlefield : GComponent
         {
             if (creep.Expired)
                 expiredCreeps.Add(creep);
+
+            if (creep.DamageToDeal > 0)
+            {
+                Player.Health -= creep.DamageToDeal;
+                creep.DamageToDeal = 0;
+            }
         }
 
         foreach (var creep in expiredCreeps)
         {
+            Player.Gold += creep.Bounty;
             SpawnedCreepList.Remove(creep);
         }
 

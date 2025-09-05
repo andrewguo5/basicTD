@@ -1,6 +1,7 @@
 using BasicTD.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
@@ -85,6 +86,16 @@ public class TopBanner : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        // Reset scene
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.R))
+        {
+            Reset();
+        }
+    }
+
+    public void Reset()
+    {
+        Player.Reset();
     }
 
     protected override void DrawSelf(GameTime gameTime)

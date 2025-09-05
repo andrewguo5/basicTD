@@ -165,8 +165,8 @@ public class Shop : GComponent
             // Check if the player has enough gold to purchase the card
             if (Player.PurchaseCard(selectedCard))
             {
-                // Regenerate the purchased card slot with a new random card
-                selectedSlot.GenerateCard();
+                // Fill with null until shop is rerolled.
+                selectedSlot.NullifyCard();
             }
         }
     }
@@ -213,8 +213,11 @@ public class Shop : GComponent
             Color highlightColor = (hoveredCardSlotIndex == i) ? Color.White : Color.LightGray;
             slot.Card.Draw(new Vector2(slotRect.X, slotRect.Y), highlightColor);
 
-            SpriteStack towerIcon = TowerFactory.CreateCardIcon(slot.Card.TowerType);
-            towerIcon.Draw(Core.SpriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
+            if (slot.Card.Rarity != CardRarity.Null)
+            {   
+                SpriteStack towerIcon = TowerFactory.CreateCardIcon(slot.Card.TowerType);
+                towerIcon.Draw(Core.SpriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
+            }
         }
     }
 
@@ -282,7 +285,15 @@ public class CardSlot
 
     public void GenerateCard(int level = 0)
     {
-        Card = new Card(CardAtlas, level);
+        List<TowerType> options = [
+            TowerType.Light, TowerType.Heavy
+        ];
+        Card = new Card(CardAtlas, level, options);
+    }
+
+    public void NullifyCard()
+    {
+        Card = new Card(CardAtlas, TowerType.Light, CardRarity.Null, 0);
     }
 }
 
@@ -311,17 +322,113 @@ public class Card
         Rarity = rarity;
     }
 
-    public Card(TextureAtlas cardAtlas, int level = 0)
+    public Card(TextureAtlas cardAtlas)
     {
         CardAtlas = cardAtlas;
-        // Level affects the rarity distribution. For now we will just generate
-        // random cards regardless of level.
         var rarities = Enum.GetValues(typeof(CardRarity)).Cast<CardRarity>().Where(r => r != CardRarity.Null).ToArray();
         var towerTypes = Enum.GetValues(typeof(TowerType)).Cast<TowerType>().ToArray();
         var rand = new Random();
 
         Rarity = rarities[rand.Next(rarities.Length)];
         TowerType = towerTypes[rand.Next(towerTypes.Length)];
+    }
+
+    public Card(TextureAtlas cardAtlas, int level)
+    {
+        CardAtlas = cardAtlas;
+        Rarity = RandomRarity(RarityDistributionForLevel(level));
+        TowerType = RandomTowerType(Enum.GetValues(typeof(TowerType)).Cast<TowerType>().ToList());
+    }
+    public Card(TextureAtlas cardAtlas, int level, List<TowerType> towerTypeOptions)
+    {
+        CardAtlas = cardAtlas;
+        Rarity = RandomRarity(RarityDistributionForLevel(level));
+        TowerType = RandomTowerType(towerTypeOptions);
+    }
+
+    public CardRarity RandomRarity(List<CardRarity> options, List<float> probabilities)
+    {
+        var rand = new Random();
+        double sample = rand.NextDouble();
+        double cumulative = 0.0;
+
+        for (int i = 0; i < options.Count; i++)
+        {
+            cumulative += probabilities[i];
+            if (sample < cumulative)
+            {
+                return options[i];
+            }
+        }
+
+        return options.Last();
+    }
+
+    public CardRarity RandomRarity(Dictionary<CardRarity, float> rarityProbabilities)
+    {
+        return RandomRarity(rarityProbabilities.Keys.ToList(), rarityProbabilities.Values.ToList());
+    }
+
+    public Dictionary<CardRarity, float> RarityDistributionForLevel(int level)
+    {
+        return level switch
+        {
+            0 => new Dictionary<CardRarity, float>
+                {
+                    { CardRarity.Common, 1f },
+                    { CardRarity.Uncommon, 0f },
+                    { CardRarity.Rare, 0f },
+                    { CardRarity.Epic, 0f },
+                    { CardRarity.Legendary, 0f },
+                },
+            1 => new Dictionary<CardRarity, float>
+                {
+                    { CardRarity.Common, 0.8f },
+                    { CardRarity.Uncommon, 0.2f },
+                    { CardRarity.Rare, 0f },
+                    { CardRarity.Epic, 0f },
+                    { CardRarity.Legendary, 0f },
+                },
+            2 => new Dictionary<CardRarity, float>
+                {
+                    { CardRarity.Common, 0.4f },
+                    { CardRarity.Uncommon, 0.4f },
+                    { CardRarity.Rare, 0.2f },
+                    { CardRarity.Epic, 0f },
+                    { CardRarity.Legendary, 0f },
+                },
+            3 => new Dictionary<CardRarity, float>
+                {
+                    { CardRarity.Common, 0.1f },
+                    { CardRarity.Uncommon, 0.4f },
+                    { CardRarity.Rare, 0.4f },
+                    { CardRarity.Epic, 0.1f },
+                    { CardRarity.Legendary, 0f },
+                },
+            4 => new Dictionary<CardRarity, float>
+                {
+                    { CardRarity.Common, 0.05f },
+                    { CardRarity.Uncommon, 0.15f },
+                    { CardRarity.Rare, 0.6f },
+                    { CardRarity.Epic, 0.2f },
+                    { CardRarity.Legendary, 0f },
+                },
+            5 => new Dictionary<CardRarity, float>
+                {
+                    { CardRarity.Common, 0f },
+                    { CardRarity.Uncommon, 0.1f },
+                    { CardRarity.Rare, 0.4f },
+                    { CardRarity.Epic, 0.4f },
+                    { CardRarity.Legendary, 0.1f },
+                },
+            _ => throw new ArgumentException($"Unsupported level: {level}"),
+        };
+    }
+
+    public TowerType RandomTowerType(List<TowerType> options)
+    {
+        var rand = new Random();
+        return options[rand.Next(options.Count)];
     }
 
     public int GetCost()

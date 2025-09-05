@@ -34,8 +34,14 @@ public class Player
         {
             throw new InvalidOperationException("Inventory not set for player.");
         }
+
         if (Gold >= card.Cost)
         {
+            if (card.Rarity == CardRarity.Null)
+            {
+                return false;
+            }
+
             if (Inventory.Cards.Count >= 5)
             {
                 System.Console.WriteLine("Inventory full. Cannot purchase more cards.");
@@ -51,5 +57,12 @@ public class Player
             System.Console.WriteLine($"Not enough gold to purchase {card.Rarity} {card.TowerType} tower.");
             return false;
         }
+    }
+
+    public void Reset()
+    {
+        Gold = 100;
+        Health = 20;
+        // Inventory?.Reset();
     }
 }

@@ -23,6 +23,8 @@ namespace MonoGameLibrary.Creeps
         private float DamageRecency = 0.0f;
         public bool Alive { get; private set; }
         public bool Expired => !Alive && (DamageRecency <= 0.0f);
+        public int DamageToDeal { get; set; } = 0;
+        public int Bounty => 1;
 
         public Creep(Path path, float speed, AnimatedSprite animatedSprite)
         {
@@ -62,6 +64,7 @@ namespace MonoGameLibrary.Creeps
                 float residualDistance = distanceToMove - RemainingDistance;
                 CurrentPosition = Path.ComputePositionFromDistance(residualDistance);
                 CurrentDistance = residualDistance; // Reset current distance to the residual distance
+                DamageToDeal += 1;
             }
             else
             {
