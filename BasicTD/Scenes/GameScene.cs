@@ -299,4 +299,9 @@ public class GameScene : Scene
     {
         DrawCircleIndicator(Core.Input.Mouse.Position.ToVector2(), circleRadiusPx);
     }
+
+    public void StartNextWave()
+    {
+        Battlefield.StartNextWave();
+    }
 }

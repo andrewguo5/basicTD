@@ -42,6 +42,22 @@ public class Shop : GComponent
     // Shop generation
     private TowerFactory TowerFactory => ((GameScene)ParentScene).TowerFactory;
 
+    // Button
+    private Rectangle RerollButtonBounds => new Rectangle(
+        SideBuffer,
+        Bounds.Top + 60,
+        MapBounds.Left - 2 * SideBuffer,
+        80
+    );
+
+    // Next Wave Button
+    private Rectangle NextWaveButtonBounds => new Rectangle(
+        MapBounds.Right + SideBuffer,
+        Bounds.Top + 60,
+        MapBounds.Left - 2 * SideBuffer,
+        80
+    );
+
     // Player properties
     private Player Player => ((GameScene)ParentScene).Player;
 
@@ -137,6 +153,8 @@ public class Shop : GComponent
 
         UpdateHoverCard();
         UpdatePurchaseCard();
+        UpdateRerollShop();
+        UpdateNextWave();
     }
 
     private void UpdateHoverCard()
@@ -171,6 +189,26 @@ public class Shop : GComponent
         }
     }
 
+    private void UpdateRerollShop()
+    {
+        if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && RerollButtonBounds.Contains(Core.Input.Mouse.Position))
+        {
+            if (Player.Gold >= 2)
+            {
+                Player.Gold -= 2;
+                GenerateCards();
+            }
+        }
+    }
+
+    private void UpdateNextWave()
+    {
+        if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && NextWaveButtonBounds.Contains(Core.Input.Mouse.Position))
+        {
+            ((GameScene)ParentScene).StartNextWave();
+        }
+    }
+
     public void Reset()
     {
         GenerateCards();
@@ -187,6 +225,7 @@ public class Shop : GComponent
             TDConstants.DarkBG
         );
 
+        DrawButtons();
         DrawCards();
         DrawCardCosts();
         DrawText();
@@ -198,8 +237,34 @@ public class Shop : GComponent
                 // Draw the card slots
                 Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, slot.Bounds, 1);
             }
+
+            Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, RerollButtonBounds, 2);
+            Core.Scaffold.DrawRectanglePerimeter(Core.SpriteBatch, NextWaveButtonBounds, 2);
         }
         Core.SpriteBatch.End();
+    }
+
+    private void DrawButtons()
+    {
+        // Reroll Button
+        Color rerollButtonColor = TDConstants.LightBG;
+        Core.Scaffold.DrawFilledRectangle(Core.SpriteBatch, RerollButtonBounds, rerollButtonColor);
+        Vector2 rerollTextSize = GameFont.MeasureString("Reroll 2g");
+        Vector2 rerollTextPosition = new Vector2(
+            RerollButtonBounds.Center.X - rerollTextSize.X / 2,
+            RerollButtonBounds.Center.Y - rerollTextSize.Y / 2
+        );
+        Core.SpriteBatch.DrawString(GameFont, "Reroll 2g", rerollTextPosition, Color.White);
+
+        // Next Wave Button
+        Color nextWaveButtonColor = TDConstants.LightBG;
+        Core.Scaffold.DrawFilledRectangle(Core.SpriteBatch, NextWaveButtonBounds, nextWaveButtonColor);
+        Vector2 nextWaveTextSize = GameFont.MeasureString("Next Wave");
+        Vector2 nextWaveTextPosition = new Vector2(
+            NextWaveButtonBounds.Center.X - nextWaveTextSize.X / 2,
+            NextWaveButtonBounds.Center.Y - nextWaveTextSize.Y / 2
+        );
+        Core.SpriteBatch.DrawString(GameFont, "Next Wave", nextWaveTextPosition, Color.White);
     }
 
     private void DrawCards()
@@ -214,7 +279,7 @@ public class Shop : GComponent
             slot.Card.Draw(new Vector2(slotRect.X, slotRect.Y), highlightColor);
 
             if (slot.Card.Rarity != CardRarity.Null)
-            {   
+            {
                 SpriteStack towerIcon = TowerFactory.CreateCardIcon(slot.Card.TowerType);
                 towerIcon.Draw(Core.SpriteBatch, new Vector2(slotRect.X, slotRect.Y), highlightColor);
             }

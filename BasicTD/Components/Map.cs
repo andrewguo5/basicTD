@@ -22,6 +22,7 @@ public class Battlefield : GComponent
     private SpriteFont GameFont => Props["GameFont"];
     private Rectangle MapBounds => Props["MapBounds"];
     private Vector2 SpriteScale => Props["SpriteScale"];
+    private int SideBuffer => Props["SideBuffer"];
 
     // Component-specific Content
     private Tilemap PlatformTilemap;
@@ -41,6 +42,7 @@ public class Battlefield : GComponent
     private bool TowerPlacementValid;
     private bool SelectingTower;
     private Tower SelectedTower;
+
 
     // Game States
     private bool Paused => ((GameScene)ParentScene).Paused;
@@ -85,7 +87,7 @@ public class Battlefield : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
-    // Spawn a creep
+        // Spawn a creep
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.A))
         {
             SpawnCreep();
@@ -352,5 +354,10 @@ public class Battlefield : GComponent
         {
             ((GameScene)ParentScene).DrawCircleIndicator(SelectedTower.Position, SelectedTower.Range);
         }
+    }
+    
+    public void StartNextWave()
+    {
+        SpawnCreep();
     }
 }
