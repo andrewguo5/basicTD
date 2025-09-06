@@ -8,6 +8,7 @@ using BasicTD.Towers;
 using System.Collections.Generic;
 using System.Data;
 using BasicTD.Components;
+using System;
 
 namespace BasicTD.Scenes;
 
@@ -69,7 +70,7 @@ public class GameScene : Scene
     public override void Initialize()
     {
         NextScene = new LineScene();
-        Player = new Player(startingGold: 100, startingHealth: 20);
+        Player = new Player(startingGold: 5, startingHealth: 20);
 
         // 1. Pre-load initialization
         base.Initialize();
@@ -303,5 +304,11 @@ public class GameScene : Scene
     public void StartNextWave()
     {
         Battlefield.StartNextWave();
+    }
+
+    public void Win()
+    {
+        // TODO
+        // Console.WriteLine("You win!");
     }
 }

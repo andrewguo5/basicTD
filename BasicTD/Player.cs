@@ -11,6 +11,7 @@ public class Player
     public int Gold { get; set; }
     public int Health { get; set; }
     public Inventory Inventory { get; set; }
+    public int Level { get; set; }
 
     // Why here? Perhaps certain relics can interact with it.
     public TowerInfo TowerInfo { get; set; }
@@ -19,6 +20,7 @@ public class Player
     {
         Gold = startingGold;
         Health = startingHealth;
+        Level = 0;
         TowerInfo = TowerInfo.FromJsonFile(Core.Content, "tower-info.json");
     }
 

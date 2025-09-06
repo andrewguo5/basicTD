@@ -63,16 +63,17 @@ public class Shop : GComponent
 
     public Shop(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
+        // Bounds can be simplified: perhaps let the CardSlots figure it out based on index (currently unused)
         int X = Bounds.Left + 20;
         int Y = Bounds.Top + 15;
         int padding = 40;
 
-        CardSlot0 = new(CardAtlas, new Rectangle(X, Y, 80, 132), 0);
-        CardSlot1 = new(CardAtlas, new Rectangle(CardSlot0.Bounds.Right + padding, Y, 80, 132), 1);
-        CardSlot2 = new(CardAtlas, new Rectangle(CardSlot1.Bounds.Right + padding, Y, 80, 132), 1);
-        CardSlot3 = new(CardAtlas, new Rectangle(CardSlot2.Bounds.Right + padding, Y, 80, 132), 2);
-        CardSlot4 = new(CardAtlas, new Rectangle(CardSlot3.Bounds.Right + padding, Y, 80, 132), 3);
-        CardSlot5 = new(CardAtlas, new Rectangle(CardSlot4.Bounds.Right + padding, Y, 80, 132), 4);
+        CardSlot0 = new(CardAtlas, new Rectangle(X, Y, 80, 132), 0, level: Player.Level, active: true);
+        CardSlot1 = new(CardAtlas, new Rectangle(CardSlot0.Bounds.Right + padding, Y, 80, 132), 1, level: Player.Level, active: true);
+        CardSlot2 = new(CardAtlas, new Rectangle(CardSlot1.Bounds.Right + padding, Y, 80, 132), 2, level: Player.Level, active: true);
+        CardSlot3 = new(CardAtlas, new Rectangle(CardSlot2.Bounds.Right + padding, Y, 80, 132), 3, level: Player.Level, active: false);
+        CardSlot4 = new(CardAtlas, new Rectangle(CardSlot3.Bounds.Right + padding, Y, 80, 132), 4, level: Player.Level, active: false);
+        CardSlot5 = new(CardAtlas, new Rectangle(CardSlot4.Bounds.Right + padding, Y, 80, 132), 5, level: Player.Level, active: false);
     }
 
     protected override void InitializeSelf()
@@ -99,7 +100,8 @@ public class Shop : GComponent
     {
         foreach (var slot in CardSlotManager)
         {
-            slot.GenerateCard();
+            if (slot.Active)
+                slot.GenerateCard();
         }
     }
 
@@ -162,7 +164,7 @@ public class Shop : GComponent
         Vector2 mousePos = Core.Input.Mouse.Position.ToVector2();
         foreach (var slot in CardSlotManager)
         {
-            if (slot.Bounds.Contains(mousePos))
+            if (slot.Bounds.Contains(mousePos) && slot.Active && slot.Card.Rarity != CardRarity.Null)
             {
                 // If the mouse is over a card slot, set the hovered index
                 hoveredCardSlotIndex = CardSlotManager.IndexOf(slot);
@@ -292,6 +294,9 @@ public class Shop : GComponent
         for (int i = 0; i < CardSlotManager.Count; i++)
         {
             CardSlot slot = CardSlotManager[i];
+            if (!slot.Active)
+                continue;
+                
             Rectangle slotRect = slot.Bounds;
             Vector2 costPosition = new Vector2(slotRect.X + slotRect.Width / 2, slotRect.Bottom - 18);
 
@@ -331,21 +336,43 @@ public class CardSlot
     public Rectangle Bounds { get; set; }
     public int Index { get; set; }
     public Card Card { get; set; }
+    public bool Active;
 
+    /// <summary>
+    /// Constructor with a predefined Card. Since a card is passed in,
+    /// we assume that the slot is active.
+    /// </summary>
+    /// <param name="cardAtlas"></param>
+    /// <param name="bounds"></param>
+    /// <param name="index"></param>
+    /// <param name="card"></param>
     public CardSlot(TextureAtlas cardAtlas, Rectangle bounds, int index, Card card)
     {
         CardAtlas = cardAtlas;
         Bounds = bounds;
         Index = index;
         Card = card;
+        Active = true;
     }
 
-    public CardSlot(TextureAtlas cardAtlas, Rectangle bounds, int index, int level = 0)
+    /// <summary>
+    /// Constructor that generates a random card for the slot based on the level.
+    /// If inactive, then no card is generated and the slot is empty.
+    /// </summary>
+    /// <param name="cardAtlas"></param>
+    /// <param name="bounds"></param>
+    /// <param name="index"></param>
+    /// <param name="level"></param>
+    public CardSlot(TextureAtlas cardAtlas, Rectangle bounds, int index, int level, bool active)
     {
         CardAtlas = cardAtlas;
         Bounds = bounds;
         Index = index;
-        GenerateCard(level);
+        Active = active;
+        if (Active)
+            GenerateCard(level);
+        else
+            NullifyCard();
     }
 
     public void GenerateCard(int level = 0)
@@ -500,11 +527,11 @@ public class Card
     {
         int rarityCost = Rarity switch
         {
-            CardRarity.Common => 1,
-            CardRarity.Uncommon => 2,
-            CardRarity.Rare => 3,
-            CardRarity.Epic => 4,
-            CardRarity.Legendary => 5,
+            CardRarity.Common => 3,
+            CardRarity.Uncommon => 5,
+            CardRarity.Rare => 8,
+            CardRarity.Epic => 13,
+            CardRarity.Legendary => 21,
             CardRarity.Null => 0,
             _ => 0
         };

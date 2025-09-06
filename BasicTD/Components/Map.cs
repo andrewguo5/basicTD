@@ -56,12 +56,7 @@ public class Battlefield : GComponent
 
     protected override void InitializeSelf()
     {
-        SpawnedCreepList = new List<Creep> {
-            new Creep(
-                BattlePath,
-                CreepSpeed,
-                (AnimatedSprite)((GameScene)ParentScene).SpriteDictionary["TorchSprite"])
-        };
+        SpawnedCreepList = new List<Creep> {};
         PlacedTowersList = new();
 
         TowerSprite = ((GameScene)ParentScene).SpriteDictionary["TowerSprite"];
@@ -280,7 +275,10 @@ public class Battlefield : GComponent
         if (SpawnedCreepList.Count == 0)
         {
             // Add a new Creep
-            SpawnCreep();
+            if (CurrentWave >= 5)
+            {
+                ((GameScene)ParentScene).Win();
+            }
         }
     }
 
