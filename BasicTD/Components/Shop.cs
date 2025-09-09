@@ -78,6 +78,9 @@ public class Shop : GComponent
 
     protected override void InitializeSelf()
     {
+        // hook
+        ((GameScene)ParentScene).Shop = this;
+
         CardSlotManager = new List<CardSlot>
         {
             CardSlot0,
@@ -96,12 +99,12 @@ public class Shop : GComponent
         GenerateCards();
     }
 
-    private void GenerateCards()
+    public void GenerateCards(int level = 0)
     {
         foreach (var slot in CardSlotManager)
         {
             if (slot.Active)
-                slot.GenerateCard();
+                slot.GenerateCard(level);
         }
     }
 
@@ -467,51 +470,51 @@ public class Card
         {
             0 => new Dictionary<CardRarity, float>
                 {
-                    { CardRarity.Common, 1f },
-                    { CardRarity.Uncommon, 0f },
-                    { CardRarity.Rare, 0f },
-                    { CardRarity.Epic, 0f },
-                    { CardRarity.Legendary, 0f },
-                },
-            1 => new Dictionary<CardRarity, float>
-                {
                     { CardRarity.Common, 0.8f },
                     { CardRarity.Uncommon, 0.2f },
                     { CardRarity.Rare, 0f },
                     { CardRarity.Epic, 0f },
                     { CardRarity.Legendary, 0f },
                 },
+            1 => new Dictionary<CardRarity, float>
+                {
+                    { CardRarity.Common, 0.2f },
+                    { CardRarity.Uncommon, 0.8f },
+                    { CardRarity.Rare, 0f },
+                    { CardRarity.Epic, 0f },
+                    { CardRarity.Legendary, 0f },
+                },
             2 => new Dictionary<CardRarity, float>
                 {
-                    { CardRarity.Common, 0.4f },
-                    { CardRarity.Uncommon, 0.4f },
-                    { CardRarity.Rare, 0.2f },
+                    { CardRarity.Common, 0f },
+                    { CardRarity.Uncommon, 0.2f },
+                    { CardRarity.Rare, 0.8f },
                     { CardRarity.Epic, 0f },
                     { CardRarity.Legendary, 0f },
                 },
             3 => new Dictionary<CardRarity, float>
                 {
-                    { CardRarity.Common, 0.1f },
-                    { CardRarity.Uncommon, 0.4f },
-                    { CardRarity.Rare, 0.4f },
-                    { CardRarity.Epic, 0.1f },
+                    { CardRarity.Common, 0f },
+                    { CardRarity.Uncommon, 0f },
+                    { CardRarity.Rare, 0.2f },
+                    { CardRarity.Epic, 0.8f },
                     { CardRarity.Legendary, 0f },
                 },
             4 => new Dictionary<CardRarity, float>
                 {
-                    { CardRarity.Common, 0.05f },
-                    { CardRarity.Uncommon, 0.15f },
-                    { CardRarity.Rare, 0.6f },
-                    { CardRarity.Epic, 0.2f },
-                    { CardRarity.Legendary, 0f },
+                    { CardRarity.Common, 0f },
+                    { CardRarity.Uncommon, 0f },
+                    { CardRarity.Rare, 0f },
+                    { CardRarity.Epic, 0.8f },
+                    { CardRarity.Legendary, 0.8f },
                 },
             5 => new Dictionary<CardRarity, float>
                 {
                     { CardRarity.Common, 0f },
-                    { CardRarity.Uncommon, 0.1f },
-                    { CardRarity.Rare, 0.4f },
-                    { CardRarity.Epic, 0.4f },
-                    { CardRarity.Legendary, 0.1f },
+                    { CardRarity.Uncommon, 0f },
+                    { CardRarity.Rare, 0f },
+                    { CardRarity.Epic, 0f },
+                    { CardRarity.Legendary, 1f },
                 },
             _ => throw new ArgumentException($"Unsupported level: {level}"),
         };

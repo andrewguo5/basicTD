@@ -4,6 +4,7 @@ using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using System.Collections.Generic;
+using BasicTD.Scenes;
 
 namespace BasicTD.Components;
 
@@ -17,6 +18,8 @@ public class CreepInfo : GComponent
     private Vector2 CreepStringLocation;
     private SpriteFont GameFont => Props["GameFont"];
     private Tilemap InfoPanelMap;
+    private Vector2 WaveStringLocation;
+    private Battlefield Battlefield => ((GameScene)ParentScene).Battlefield;
 
     public CreepInfo(Scene parent, Rectangle bounds, Dictionary<string, dynamic> props = null) : base(parent, bounds, props)
     {
@@ -28,6 +31,11 @@ public class CreepInfo : GComponent
         CreepStringLocation = new Vector2(
             Padding + SideBuffer,
             MapBounds.Top - VerticalOffset
+        );
+
+        WaveStringLocation = new Vector2(
+            Bounds.Left,
+            Bounds.Bottom - VerticalOffset
         );
     }
 
@@ -59,6 +67,7 @@ public class CreepInfo : GComponent
 
         InfoPanelMap.Draw(Core.SpriteBatch, new Vector2(SideBuffer, MapBounds.Top));
         Core.SpriteBatch.DrawString(GameFont, $"Creeps", CreepStringLocation, Color.White);
+        Core.SpriteBatch.DrawString(GameFont, $"{Battlefield.CurrentWave}/{5}", WaveStringLocation, Color.White);
         Core.SpriteBatch.End();
     }
 }

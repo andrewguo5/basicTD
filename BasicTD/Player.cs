@@ -16,10 +16,9 @@ public class Player
     // Why here? Perhaps certain relics can interact with it.
     public TowerInfo TowerInfo { get; set; }
 
-    public Player(int startingGold, int startingHealth)
+    public Player()
     {
-        Gold = startingGold;
-        Health = startingHealth;
+        Reset();
         Level = 0;
         TowerInfo = TowerInfo.FromJsonFile(Core.Content, "tower-info.json");
     }
@@ -63,8 +62,7 @@ public class Player
 
     public void Reset()
     {
-        Gold = 100;
+        Gold = 5;
         Health = 20;
-        // Inventory?.Reset();
     }
 }

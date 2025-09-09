@@ -61,6 +61,7 @@ public class GameScene : Scene
     // Globals
     public Player Player;
     public Battlefield Battlefield;
+    public Shop Shop;
 
     public GameScene() : base()
     {
@@ -70,7 +71,7 @@ public class GameScene : Scene
     public override void Initialize()
     {
         NextScene = new LineScene();
-        Player = new Player(startingGold: 5, startingHealth: 20);
+        Player = new Player();
 
         // 1. Pre-load initialization
         base.Initialize();
@@ -229,10 +230,10 @@ public class GameScene : Scene
             Grayed = !Grayed;
 
         // Scene transition
-        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
-        {
-            Core.ChangeScene(NextScene);
-        }
+        // if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
+        // {
+        //     Core.ChangeScene(NextScene);
+        // }
 
         Main.Update(gameTime);
     }
@@ -310,5 +311,11 @@ public class GameScene : Scene
     {
         // TODO
         // Console.WriteLine("You win!");
+    }
+
+    public void Lose()
+    {
+        // TODO
+        // Console.WriteLine("You lose!");
     }
 }

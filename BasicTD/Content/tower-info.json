@@ -7,10 +7,10 @@
       "Desc": "Fast attacking tower with moderate Damage.",
       "Stats": [
         { "Level": 1, "Damage": 1, "Range": 6, "Speed": 2 },
-        { "Level": 2, "Damage": 1, "Range": 6, "Speed": 4 },
-        { "Level": 3, "Damage": 1, "Range": 6, "Speed": 6 },
-        { "Level": 4, "Damage": 2, "Range": 6, "Speed": 6 },
-        { "Level": 5, "Damage": 4, "Range": 6, "Speed": 9 }
+        { "Level": 2, "Damage": 2, "Range": 6, "Speed": 4 },
+        { "Level": 3, "Damage": 2, "Range": 6, "Speed": 6 },
+        { "Level": 4, "Damage": 3, "Range": 6, "Speed": 6 },
+        { "Level": 5, "Damage": 3, "Range": 6, "Speed": 9 }
       ]
     },
     {
@@ -19,11 +19,11 @@
       "Nick": "HEVY",
       "Desc": "Slow attacking tower with high Damage.",
       "Stats": [
-        { "Level": 1, "Damage": 3, "Range": 6, "Speed": 1 },
-        { "Level": 2, "Damage": 6, "Range": 6, "Speed": 1 },
-        { "Level": 3, "Damage": 9, "Range": 6, "Speed": 1 },
-        { "Level": 4, "Damage": 18, "Range": 6, "Speed": 1 },
-        { "Level": 5, "Damage": 54, "Range": 6, "Speed": 1 }
+        { "Level": 1, "Damage": 4, "Range": 6, "Speed": 0.5 },
+        { "Level": 2, "Damage": 8, "Range": 6, "Speed": 0.5 },
+        { "Level": 3, "Damage": 12, "Range": 6, "Speed": 0.5 },
+        { "Level": 4, "Damage": 18, "Range": 6, "Speed": 0.5 },
+        { "Level": 5, "Damage": 27, "Range": 6, "Speed": 0.5 }
       ]
     },
     {

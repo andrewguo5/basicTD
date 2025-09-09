@@ -11,7 +11,6 @@ using MonoGameLibrary.Paths;
 using MonoGameLibrary.Input;
 using System.Collections.Generic;
 using MonoGameLibrary.Creeps;
-using System.Runtime.CompilerServices;
 
 namespace BasicTD.Components;
 
@@ -41,9 +40,14 @@ public class Battlefield : GComponent
     private TowerType PlacingTowerType;
     private int PlacingTowerLevel;
     private bool PlacingTower;
+    private Card PlacingTowerCard;
     private bool TowerPlacementValid;
     private bool SelectingTower;
     private Tower SelectedTower;
+
+    // Game state variables
+    public bool AttackPhase;
+    public bool BuildPhase;
 
     // Game States
     private bool Paused => ((GameScene)ParentScene).Paused;
@@ -56,7 +60,7 @@ public class Battlefield : GComponent
 
     protected override void InitializeSelf()
     {
-        SpawnedCreepList = new List<Creep> {};
+        SpawnedCreepList = new List<Creep> { };
         PlacedTowersList = new();
 
         TowerSprite = ((GameScene)ParentScene).SpriteDictionary["TowerSprite"];
@@ -64,6 +68,9 @@ public class Battlefield : GComponent
 
         // hook
         ((GameScene)ParentScene).Battlefield = this;
+
+        AttackPhase = false;
+        BuildPhase = true;
     }
 
     protected override void LoadContentSelf()
@@ -80,7 +87,6 @@ public class Battlefield : GComponent
         );
         BattlePath.LoadSprites(Atlas);
     }
-
 
     protected override void UpdateSelf(GameTime gameTime)
     {
@@ -147,18 +153,47 @@ public class Battlefield : GComponent
 
         // Spawn creeps from the spawner queue
         UpdateSpawnerQueue(gameTime);
+
+        UpdateBattleState(gameTime);
     }
 
-    public void StartPlacingTower(TowerType towerType, int level)
+    public bool StartPlacingTower(TowerType towerType, int level)
     {
+        if (!BuildPhase)
+            return false;
+
         ClearStates();
         PlacingTower = true;
+        PlacingTowerCard = null;
         PlacingTowerType = towerType;
         PlacingTowerLevel = level;
+        return true;
+    }
+
+    public bool StartPlacingTower(Card card)
+    {
+        if (!BuildPhase)
+            return false;
+
+        ClearStates();
+        PlacingTower = true;
+        PlacingTowerCard = card;
+        PlacingTowerType = card.TowerType;
+        PlacingTowerLevel = card.Level;
+        return true;
     }
 
     private void ClearStates()
     {
+        if (PlacingTower)
+        {
+            // Put it back in the inventory
+            if (PlacingTowerCard != null)
+            {
+                Player.Inventory.AddCard(PlacingTowerCard);
+            }
+            PlacingTowerCard = null;
+        }
         PlacingTower = false;
         SelectingTower = false;
     }
@@ -271,15 +306,6 @@ public class Battlefield : GComponent
             Player.Gold += creep.Bounty;
             SpawnedCreepList.Remove(creep);
         }
-
-        if (SpawnedCreepList.Count == 0)
-        {
-            // Add a new Creep
-            if (CurrentWave >= 5)
-            {
-                ((GameScene)ParentScene).Win();
-            }
-        }
     }
 
     private void UpdateSpawnerQueue(GameTime gameTime)
@@ -298,6 +324,46 @@ public class Battlefield : GComponent
                 SpawnedCreepList.Add(spawner.Creep);
                 spawner.Count -= 1;
                 spawner.TimeSinceLastSpawn = 0f;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Check for win/loss conditions and update game state accordingly.
+    /// </summary>
+    /// <param name="gameTime"></param>
+    private void UpdateBattleState(GameTime gameTime)
+    {
+        if (AttackPhase)
+        {
+            if (Player.Health <= 0)
+            {
+                ((GameScene)ParentScene).Lose();
+            }
+
+            if (SpawnedCreepList.Count == 0 && SpawnerQueue.Count == 0 && CurrentWave > 0)
+            {
+                if (CurrentWave >= 5)
+                {
+                    ((GameScene)ParentScene).Win();
+                }
+
+                AttackPhase = false;
+                BuildPhase = true;
+                // Reset the shop
+                ((GameScene)ParentScene).Shop.GenerateCards(Player.Level);
+                // Earn end of round rewards
+                // Player.Gold += CurrentWave * 2;
+                // Level up player
+                Player.Level += 1;
+            }
+        }
+        else if (BuildPhase)
+        {
+            // Transition to AttackPhase if player presses space
+            if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
+            {
+                StartNextWave();
             }
         }
     }
@@ -381,12 +447,52 @@ public class Battlefield : GComponent
 
     public void StartNextWave()
     {
-        if (CurrentWave >= 5)
+        if (CurrentWave >= 5 || AttackPhase)
             return;
 
         CurrentWave += 1;
 
-        for (int i = 0; i < CurrentWave * 3; i++)
+        int SmallCreepToSpawn = CurrentWave switch
+        {
+            1 => 3,
+            2 => 10,
+            3 => 3,
+            4 => 0,
+            5 => 0,
+            _ => 0
+        };
+
+        int MediumCreepToSpawn = CurrentWave switch
+        {
+            1 => 0,
+            2 => 0,
+            3 => 7,
+            4 => 3,
+            5 => 0,
+            _ => 0
+        };
+
+        int BigCreepToSpawn = CurrentWave switch
+        {
+            1 => 0,
+            2 => 0,
+            3 => 0,
+            4 => 7,
+            5 => 0,
+            _ => 0
+        };
+
+        int BossCreepToSpawn = CurrentWave switch
+        {
+            1 => 0,
+            2 => 0,
+            3 => 0,
+            4 => 0,
+            5 => 1,
+            _ => 0
+        };
+
+        for (int i = 0; i < SmallCreepToSpawn; i++)
         {
             AnimatedSprite CreepSprite = Atlas.CreateAnimatedSprite("torch-red-animation");
             CreepSprite.CenterOrigin();
@@ -400,6 +506,51 @@ public class Battlefield : GComponent
                 spawnInterval: 1f / 6f
             ));
         }
+        for (int i = 0; i < MediumCreepToSpawn; i++)
+        {
+            AnimatedSprite CreepSprite = Atlas.CreateAnimatedSprite("torch-blue-animation");
+            CreepSprite.CenterOrigin();
+            CreepSprite.Scale = SpriteScale;
+            SpawnerQueue.Enqueue(new CreepSpawner(
+                new MediumCreep(
+                    BattlePath,
+                    CreepSpeed,
+                    CreepSprite
+                ),
+                spawnInterval: 1f / 6f
+            ));
+        }
+        for (int i = 0; i < BigCreepToSpawn; i++)
+        {
+            AnimatedSprite CreepSprite = Atlas.CreateAnimatedSprite("torch-yellow-animation");
+            CreepSprite.CenterOrigin();
+            CreepSprite.Scale = SpriteScale;
+            SpawnerQueue.Enqueue(new CreepSpawner(
+                new BigCreep(
+                    BattlePath,
+                    CreepSpeed,
+                    CreepSprite
+                ),
+                spawnInterval: 1f / 6f
+            ));
+        }
+        for (int i = 0; i < BossCreepToSpawn; i++)
+        {
+            AnimatedSprite CreepSprite = Atlas.CreateAnimatedSprite("torch-green-animation");
+            CreepSprite.CenterOrigin();
+            CreepSprite.Scale = SpriteScale;
+            SpawnerQueue.Enqueue(new CreepSpawner(
+                new BossCreep(
+                    BattlePath,
+                    CreepSpeed,
+                    CreepSprite
+                ),
+                spawnInterval: 1f / 6f
+            ));
+        }
+
+        AttackPhase = true;
+        BuildPhase = false;
     }
 }
 

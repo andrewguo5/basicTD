@@ -172,7 +172,7 @@ public class TopBanner : GComponent
         );
         Core.SpriteBatch.DrawString(
             GameFont,
-            $"{Battlefield.CurrentWave}/{5}",
+            $"{Player.Level}/{5}",
             WaveStringLocation,
             Color.White
         );

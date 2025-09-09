@@ -16,7 +16,7 @@ namespace MonoGameLibrary.Creeps
         private float CurrentDistance;
         public Vector2 CurrentPosition;
         private float RemainingDistance => Path.Length - CurrentDistance;
-        private int Health = 3;
+        protected virtual int Health { get; set; } = 3;
         private float Speed;
         private AnimatedSprite AnimatedSprite;
         private Queue<DamageTimer> DamageTimers = new();
