@@ -23,14 +23,12 @@ public class TopBanner : GComponent
     private Vector2 NameStringLocation;
     private Vector2 LivesStringLocation;
     private Vector2 GoldStringLocation;
-    private Vector2 WaveStringLocation;
     private Vector2 GearIconLocation;
     
     // Component-specific content
     private List<Sprite> IconSpriteManager;
     private Sprite GoldSprite;
     private Sprite HeartSprite;
-    private Sprite SkullSprite;
     private Sprite GearSprite;
 
     // Player properties
