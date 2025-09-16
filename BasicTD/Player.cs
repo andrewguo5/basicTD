@@ -63,6 +63,6 @@ public class Player
     public void Reset()
     {
         Gold = 5;
-        Health = 20;
+        Health = 3;
     }
 }

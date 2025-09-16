@@ -58,6 +58,8 @@ public class Shop : GComponent
         80
     );
 
+    public bool NextWaveIsReset => ((GameScene)ParentScene).Won || ((GameScene)ParentScene).Lost;
+
     // Player properties
     private Player Player => ((GameScene)ParentScene).Player;
 
@@ -150,13 +152,18 @@ public class Shop : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        UpdateHoverCard();
+        UpdateResetButton();
+        if (((GameScene)ParentScene).Won || ((GameScene)ParentScene).Lost)
+        {
+            return;
+        }
+
         // Reset scene
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.R))
         {
             Reset();
         }
-
-        UpdateHoverCard();
         UpdatePurchaseCard();
         UpdateRerollShop();
         UpdateNextWave();
@@ -201,7 +208,7 @@ public class Shop : GComponent
             if (Player.Gold >= 2)
             {
                 Player.Gold -= 2;
-                GenerateCards();
+                GenerateCards(Player.Level);
             }
         }
     }
@@ -211,6 +218,18 @@ public class Shop : GComponent
         if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && NextWaveButtonBounds.Contains(Core.Input.Mouse.Position))
         {
             ((GameScene)ParentScene).StartNextWave();
+        }
+    }
+
+    private void UpdateResetButton()
+    {
+        if (Core.Input.Mouse.WasButtonJustPressed(MouseButton.Left) && NextWaveButtonBounds.Contains(Core.Input.Mouse.Position))
+        {
+            if (NextWaveIsReset)
+            {
+                // Reset the game if the next wave is a reset
+                ((GameScene)ParentScene).Reset();
+            }
         }
     }
 
@@ -264,12 +283,14 @@ public class Shop : GComponent
         // Next Wave Button
         Color nextWaveButtonColor = TDConstants.LightBG;
         Core.Scaffold.DrawFilledRectangle(Core.SpriteBatch, NextWaveButtonBounds, nextWaveButtonColor);
-        Vector2 nextWaveTextSize = GameFont.MeasureString("Next Wave");
+
+        string Text = NextWaveIsReset ? "Reset" : "Next Wave";
+        Vector2 nextWaveTextSize = GameFont.MeasureString(Text);
         Vector2 nextWaveTextPosition = new Vector2(
             NextWaveButtonBounds.Center.X - nextWaveTextSize.X / 2,
             NextWaveButtonBounds.Center.Y - nextWaveTextSize.Y / 2
         );
-        Core.SpriteBatch.DrawString(GameFont, "Next Wave", nextWaveTextPosition, Color.White);
+        Core.SpriteBatch.DrawString(GameFont, Text, nextWaveTextPosition, Color.White);
     }
 
     private void DrawCards()

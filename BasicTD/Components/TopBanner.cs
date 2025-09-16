@@ -48,14 +48,10 @@ public class TopBanner : GComponent
             20
         );
         LivesStringLocation = new Vector2(
-            Padding + MapBounds.Right - Buffer * 3,
-            20
-        );
-        GoldStringLocation = new Vector2(
             Padding + MapBounds.Right - Buffer * 2,
             20
         );
-        WaveStringLocation = new Vector2(
+        GoldStringLocation = new Vector2(
             Padding + MapBounds.Right - Buffer,
             20
         );
@@ -68,13 +64,11 @@ public class TopBanner : GComponent
     {
         GoldSprite = Atlas.CreateSprite("gold");
         HeartSprite = Atlas.CreateSprite("heart");
-        SkullSprite = Atlas.CreateSprite("skull");
         GearSprite = Atlas.CreateSprite("gear");
 
         IconSpriteManager = [
             GoldSprite,
             HeartSprite,
-            SkullSprite,
             GearSprite
         ];
 
@@ -134,16 +128,6 @@ public class TopBanner : GComponent
             goldIconPosition
         );
 
-        // Draw wave icon
-        Vector2 waveIconPosition = new Vector2(
-            WaveStringLocation.X - 20 - iconPadding,
-            WaveStringLocation.Y + iconDrop
-        );
-        SkullSprite.Draw(
-            Core.SpriteBatch,
-            waveIconPosition
-        );
-
         // Draw settings icon
         GearSprite.Draw(
             Core.SpriteBatch,
@@ -153,7 +137,7 @@ public class TopBanner : GComponent
         // Draw strings
         Core.SpriteBatch.DrawString(
             GameFont,
-            "Bishop",
+            "Basic TD",
             NameStringLocation,
             Color.White
         );
@@ -168,12 +152,6 @@ public class TopBanner : GComponent
             GameFont,
             $"{Player.Gold}",
             GoldStringLocation,
-            Color.White
-        );
-        Core.SpriteBatch.DrawString(
-            GameFont,
-            $"{Player.Level}/{5}",
-            WaveStringLocation,
             Color.White
         );
         Core.SpriteBatch.End();

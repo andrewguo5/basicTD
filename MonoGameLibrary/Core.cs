@@ -172,11 +172,11 @@ public class Core : Game
         base.Draw(gameTime);
     }
 
-    public static void ChangeScene(Scene next)
+    public static void ChangeScene(Scene next, bool force = false)
     {
         // Only change if the next scene value is different
         // from the currently active scene.
-        if (s_activeScene != next) // can use equals??
+        if (s_activeScene != next || force) // can use equals??
         {
             s_nextScene = next;
         }

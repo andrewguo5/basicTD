@@ -22,6 +22,8 @@ public class Main : GComponent
         GComponent Battlefield;
         GComponent Inventory;
         GComponent Shop;
+        GComponent WinScreen;
+        GComponent LoseScreen;
 
         TopBanner = new TopBanner(
             ParentScene,
@@ -68,6 +70,26 @@ public class Main : GComponent
             ),
             Props
         );
+        WinScreen = new WinScreen(
+            ParentScene,
+            new Rectangle(
+                Bounds.Left,
+                Bounds.Top,
+                Bounds.Width,
+                Bounds.Height
+            ),
+            Props
+        );
+        LoseScreen = new LoseScreen(
+            ParentScene,
+            new Rectangle(
+                Bounds.Left,
+                Bounds.Top,
+                Bounds.Width,
+                Bounds.Height
+            ),
+            Props
+        );
 
         // Control draw order here by re-ordering children
         AddChildren([
@@ -75,7 +97,9 @@ public class Main : GComponent
             CreepInfo,
             Inventory,
             Shop,
-            TopBanner
+            TopBanner,
+            WinScreen,
+            LoseScreen
         ]);
     }
 

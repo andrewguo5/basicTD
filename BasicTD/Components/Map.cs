@@ -90,10 +90,9 @@ public class Battlefield : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
-        // Spawn a creep
-        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.A))
+        if (((GameScene)ParentScene).Won || ((GameScene)ParentScene).Lost)
         {
-            SpawnCreep();
+            return;
         }
 
         // Toggle tower placement mode
@@ -138,7 +137,7 @@ public class Battlefield : GComponent
         {
             Reset();
         }
-
+        
         // Move creeps
         UpdateCreep(gameTime);
 

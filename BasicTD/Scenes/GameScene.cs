@@ -51,6 +51,8 @@ public class GameScene : Scene
     public bool DebugDraw { get; set; } = false;
     public bool Paused = false;
     public bool Grayed = false;
+    public bool Lost = false;
+    public bool Won = false;
 
     // Scene Manager
     public Scene NextScene { get; set; }
@@ -310,12 +312,17 @@ public class GameScene : Scene
     public void Win()
     {
         // TODO
-        // Console.WriteLine("You win!");
+        Won = true;
     }
 
     public void Lose()
     {
         // TODO
-        // Console.WriteLine("You lose!");
+        Lost = true;
+    }
+
+    public void Reset()
+    {
+        Core.ChangeScene(new GameScene(), force: true);
     }
 }

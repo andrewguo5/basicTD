@@ -76,6 +76,11 @@ public class Inventory : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        if (((GameScene)ParentScene).Won || ((GameScene)ParentScene).Lost)
+        {
+            return;
+        }
+        
         // Reset scene
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.R))
         {
