@@ -70,23 +70,26 @@ public class Main : GComponent
             ),
             Props
         );
+
+        int PopPadding = 120;
+
         WinScreen = new WinScreen(
             ParentScene,
             new Rectangle(
-                Bounds.Left,
-                Bounds.Top,
-                Bounds.Width,
-                Bounds.Height
+                MapBounds.Left + PopPadding,
+                MapBounds.Top + PopPadding,
+                MapBounds.Width - PopPadding * 2,
+                MapBounds.Height - PopPadding * 2
             ),
             Props
         );
         LoseScreen = new LoseScreen(
             ParentScene,
             new Rectangle(
-                Bounds.Left,
-                Bounds.Top,
-                Bounds.Width,
-                Bounds.Height
+                MapBounds.Left + PopPadding,
+                MapBounds.Top + PopPadding,
+                MapBounds.Width - PopPadding * 2,
+                MapBounds.Height - PopPadding * 2
             ),
             Props
         );

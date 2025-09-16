@@ -18,6 +18,7 @@ public class LoseScreen : GComponent
     private Rectangle MapBounds => Props["MapBounds"];
     private TextureAtlas Atlas => Props["Atlas"];
     private SpriteFont GameFont => Props["GameFont"];
+    public bool Visible = true;
 
     // Player properties
     private Player Player => ((GameScene)ParentScene).Player;
@@ -37,24 +38,31 @@ public class LoseScreen : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        if (((GameScene)ParentScene).Lost)
+        {
+            if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Escape))
+                Visible = !Visible;
+        }
     }
 
     protected override void DrawSelf(GameTime gameTime)
     {
+        if (!Visible) return;
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
         string loseString = "You Lose!";
         Vector2 loseStringSize = GameFont.MeasureString(loseString);
 
         if (((GameScene)ParentScene).Lost)
         {
             // Draw the lose screen if the player has lost
-            Core.GraphicsDevice.Clear(Color.Black * 0.75f);
+            Core.Scaffold.DrawFilledRectangle(Core.SpriteBatch, Bounds, Color.Black * 0.75f);
             Core.SpriteBatch.DrawString(
                 GameFont,
                 loseString,
                 new Vector2(
-                    (Bounds.Width - loseStringSize.X) / 2,
-                    (Bounds.Height - loseStringSize.Y) / 2
+                    Bounds.Left + (Bounds.Width - loseStringSize.X) / 2,
+                    Bounds.Top + (Bounds.Height - loseStringSize.Y) / 2
                 ),
                 Color.Red
             );

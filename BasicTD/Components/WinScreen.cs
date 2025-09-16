@@ -6,6 +6,7 @@ using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace BasicTD.Components;
 
@@ -18,6 +19,8 @@ public class WinScreen : GComponent
     private Rectangle MapBounds => Props["MapBounds"];
     private TextureAtlas Atlas => Props["Atlas"];
     private SpriteFont GameFont => Props["GameFont"];
+
+    public bool Visible = true;
 
     // Player properties
     private Player Player => ((GameScene)ParentScene).Player;
@@ -37,24 +40,31 @@ public class WinScreen : GComponent
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        if (((GameScene)ParentScene).Won)
+        {
+            if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Escape))
+                Visible = !Visible;
+        }
     }
 
     protected override void DrawSelf(GameTime gameTime)
     {
+        if (!Visible) return;
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
         string winString = "You Win!";
         Vector2 winStringSize = GameFont.MeasureString(winString);
 
         if (((GameScene)ParentScene).Won)
         {
             // Draw the win screen if the player has won
-            Core.GraphicsDevice.Clear(Color.Black * 0.75f);
+            Core.Scaffold.DrawFilledRectangle(Core.SpriteBatch, Bounds, Color.Black * 0.75f);
             Core.SpriteBatch.DrawString(
                 GameFont,
                 winString,
                 new Vector2(
-                    (Bounds.Width - winStringSize.X) / 2,
-                    (Bounds.Height - winStringSize.Y) / 2
+                    Bounds.Left + (Bounds.Width - winStringSize.X) / 2,
+                    Bounds.Top + (Bounds.Height - winStringSize.Y) / 2
                 ),
                 Color.Lime
             );

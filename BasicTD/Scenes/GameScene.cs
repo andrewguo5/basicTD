@@ -231,6 +231,10 @@ public class GameScene : Scene
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.G))
             Grayed = !Grayed;
 
+        // Toggle win
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.W))
+            Won = true;
+
         // Scene transition
         // if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Space))
         // {
