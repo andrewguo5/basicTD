@@ -20,7 +20,7 @@ public class Player
     {
         Reset();
         Level = 0;
-        TowerInfo = TowerInfo.FromJsonFile(Core.Content, "tower-info.json");
+        TowerInfo = TowerInfo.FromJsonFile(Core.Content, "stats/tower-info.json");
     }
 
     public void SetInventory(Inventory inventory)
